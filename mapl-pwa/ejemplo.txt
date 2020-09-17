@@ -1,0 +1,18 @@
+' Ejemplo que suma dos números
+' introducidos por teclado
+
+' Si se ejecuta en GVM:
+' - Pulse F7 para ejecutar cada 
+'   instrucción
+' - Pulse F6 para retroceder una
+'   instrucción
+
+
+in
+in
+
+add
+
+out
+
+' halt    ' Opcional. Sin esto, se pone automáticamente

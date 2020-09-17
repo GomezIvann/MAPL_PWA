@@ -1,0 +1,8 @@
+' Prueba código simple suma
+in 
+in
+
+add
+
+out
+halt
