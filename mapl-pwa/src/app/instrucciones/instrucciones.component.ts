@@ -13,25 +13,30 @@ export class InstruccionesComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   cargar(files: FileList) {
     this.fileToUpload = files.item(0);
-    let reader = new FileReader();
     let tipoTexto = /text.*/; // solo archivos de texto
 
-    if (this.fileToUpload.type.match(tipoTexto)) {
-      reader.onload = (e) => {
-        const content = reader.result.toString().trim();
-        document.getElementById("codeTextArea").innerHTML = content;
-      }
-      reader.readAsText(this.fileToUpload);
+    if (this.fileToUpload.type.match(tipoTexto))
+      this.cargarPrograma();
+  }
 
-      // Leemos y cargamos el programa
-      let parser = new Parser(this.fileToUpload);
-      this.program = parser.read();
+  /**
+   * Metodo que lee el fichero subido por el usuario y lo convierte en un programa
+   * entendible por el interprete
+   */
+  private cargarPrograma() {
+    let reader = new FileReader();
+    reader.onload = (e) => {
+      const content = reader.result.toString().trim();
+      document.getElementById("codeTextArea").innerHTML = content;
     }
+    reader.readAsText(this.fileToUpload);
+
+    let parser = new Parser(this.fileToUpload);
+    this.program = parser.read();
   }
 
   ejecutar() {

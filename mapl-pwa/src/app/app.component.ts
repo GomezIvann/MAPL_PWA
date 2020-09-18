@@ -12,6 +12,7 @@ export class AppComponent {
   ngOnInit(): void {
     this.soportaApiFile();
   }
+  
   soportaApiFile() {
     var pTexto = "";
     var soporta = false;
@@ -24,7 +25,7 @@ export class AppComponent {
       pTexto = "- Este navegador no soporta API File."
         + " El programa no puede funcionar correctamente.";
 
-    document.getElementById("soporteAPIFile").innerHTML = pTexto;
+    console.log(pTexto);
     return soporta;
   }
 }

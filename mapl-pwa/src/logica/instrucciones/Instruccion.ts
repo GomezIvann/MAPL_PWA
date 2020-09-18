@@ -1,4 +1,6 @@
+import { Stack } from '../Stack';
+
 export abstract class Instruccion {
 	constructor(){}
-	abstract execute(): void;
+	abstract execute(stack: Stack<number>);
 }

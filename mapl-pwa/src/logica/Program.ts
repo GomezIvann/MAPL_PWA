@@ -7,9 +7,14 @@ import { Stack } from './Stack';
  */
 export class Program {
     codigo: Instruccion[] = [];
-    programStack: Stack<number>;
+    stack: Stack<number> = new Stack<number>(1000);
+
+    constructor() {
+        this.codigo = [];
+        this.stack = new Stack<number>(1000);
+    }
 
     run() {
-        this.codigo.forEach(i => i.execute());
+        this.codigo.forEach(i => i.execute(this.stack));
     }
 }
