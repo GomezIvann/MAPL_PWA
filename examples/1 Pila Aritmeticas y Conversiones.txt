@@ -1,11 +1,11 @@
 ' Instrucciones:
 ' - F7 para ejecutar una
-'   instrucci髇.
+'   instrucci贸n.
 ' - F6 para retroceder.
 
 
 '-----------------------------------------
-' 1. Manipulaci髇 b醩ica de la pila
+' 1. Manipulaci贸n b谩sica de la pila
 
 push 10	'Meter entero en la pila
 pop		'Sacar entero de la pila
@@ -15,14 +15,14 @@ dupf		'Duplicar real de la cima
 popf
 popf
 
-pushb 97	'Meter byte/char (sin髇imos)
+pushb 97	'Meter byte/char (sin贸nimos)
 dupb		'Duplicar byte de la cima
 popb
 popb
 
 
 '-----------------------------------------
-' 2. Operaciones Aritm閠icas
+' 2. Operaciones Aritm茅ticas
 
 push 10
 push 20
@@ -49,7 +49,7 @@ div		'Dividir enteros (no decimales)
 
 push 5
 push 2
-mod		'Resto de la divisi髇
+mod		'Resto de la divisi贸n
 
 pop
 pop

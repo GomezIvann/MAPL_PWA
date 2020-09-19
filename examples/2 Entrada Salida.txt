@@ -1,6 +1,6 @@
 ' Instrucciones:
 ' - F7 para ejecutar una
-'   instrucción.
+'   instrucciÃ³n.
 ' - F6 para retroceder.
 
 
@@ -19,17 +19,17 @@ outf		' Escribir real
 pushb 97	' Letra 'a'
 outb
 
-pushb 10	' Carácter '\n'
-outb		' Envía salto de linea
+pushb 10	' Caracter '\n'
+outb		' EnvÃ­a salto de linea
 
-pushb 42	' Carácter '*'
+pushb 42	' Caracter '*'
 outb
 
 pushb 99	' Letra 'c'
 outb
 
-pushb 10	' Carácter '\n'
-outb		' Envía salto de linea
+pushb 10	' Caracter '\n'
+outb		' EnvÃ­a salto de linea
 
 pushf 3.14
 outf		' Escribir real

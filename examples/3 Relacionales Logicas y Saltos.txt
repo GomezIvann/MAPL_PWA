@@ -1,6 +1,6 @@
 ' Instrucciones:
 ' - F7 para ejecutar una
-'   instrucción.
+'   instrucciÃ³n.
 ' - F6 para retroceder.
 
 '-----------------------------------------
@@ -30,7 +30,7 @@ pop
 
 
 '-----------------------------------------
-' 2. Operadores Lógicos
+' 2. Operadores LÃ³gicos
 
 push 2
 push 0
