@@ -1,7 +1,0 @@
-'Lógicas
-
-in
-in
-ne
-out
-

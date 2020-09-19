@@ -3,6 +3,7 @@ import { Add, Sub, Mul, Div } from './instrucciones/Aritmeticas';
 import { Eq, Ge, Gt, Le, Lt, Ne } from './instrucciones/Comparaciones';
 import { In, Out } from './instrucciones/EntradaSalida';
 import { And, Not, Or } from './instrucciones/Logicas';
+import { Push } from './instrucciones/ManipulacionPila';
 import { Language } from './Language';
 import { Program } from './Program';
 
@@ -20,7 +21,12 @@ export class Parser {
             let content = reader.result.toString().trim();
             let lines = content.split(/[\r\n]+/g); // tolerate both Windows and Unix linebreaks
             lines.forEach(line => {
-                switch (line.toUpperCase()) {
+                var firstWord = line.replace(/ .*/,'');
+                switch (firstWord.toUpperCase()) {
+                    case Language.PUSH:
+                        var cte = line.replace(/^\D+/g,'');
+                        program.codigo.push(new Push(parseInt(cte)));
+                        break;
                     case Language.ADD:
                         program.codigo.push(new Add());
                         break;

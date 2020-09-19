@@ -1,4 +1,9 @@
 export enum Language {
+    PUSH = "PUSH",
+    LOAD = "LOAD",
+    STORE = "STORE",
+    POP = "POP",
+    DUP = "DUP",
     ADD = "ADD",
     SUB = "SUB",
     DIV = "DIV",
