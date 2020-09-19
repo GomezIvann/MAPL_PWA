@@ -1,3 +1,4 @@
+import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Parser } from 'src/logica/Parser';
 import { Program } from 'src/logica/Program';
@@ -10,10 +11,11 @@ import { Program } from 'src/logica/Program';
 export class InstruccionesComponent implements OnInit {
   fileToUpload: File;
   program: Program;
+  @ViewChild('fileInput') fileInput: any;
 
-  constructor() {}
+  constructor() { }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   cargar(files: FileList) {
     this.fileToUpload = files.item(0);
@@ -39,7 +41,11 @@ export class InstruccionesComponent implements OnInit {
     this.program = parser.read();
   }
 
+  recargarPrograma() {
+  }
+
   ejecutar() {
-    this.program.run();
+    if (this.program != null)
+      this.program.run();
   }
 }

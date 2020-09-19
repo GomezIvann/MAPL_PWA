@@ -1,8 +1,16 @@
-<p><label for="archivos">Selecciona un archivo:</label></p>
-<p><input id="archivos" (change)="cargar($event.target.files)" type="file" /></p>
-<p><textarea id="codeTextArea" rows="15" cols="100" readonly></textarea></p>
+<p><label for="archivo">Selecciona un archivo:</label></p>
 <p>
-    <button (click)="ejecutar()" mat-raised-button aria-label="Example icon button with a home icon">
-        Ejecutar <mat-icon>play_circle_outline</mat-icon>
+    <input #fileInput id="archivo" onclick="this.value=''" 
+    (change)="cargar($event.target.files)" type="file" 
+    accept=".txt" />
+</p>
+<p><textarea id="codeTextArea" rows="15" cols="100" readonly></textarea></p>
+
+<p>
+    <button id="ejecutar" (click)="ejecutar()" mat-raised-button aria-label="Example icon button with a home icon">
+        <mat-icon>play_circle_outline</mat-icon> Ejecutar
+    </button>
+    <button id="recargar" (click)="recargarPrograma()" mat-raised-button aria-label="Example icon button with a home icon">
+        <mat-icon>refresh</mat-icon> Recargar
     </button>
 </p>

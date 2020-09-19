@@ -6,8 +6,8 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'MAPL';
-  version = 'v0.0.1';
+  title = 'MAPL - PWA';
+  version = '[v0.0.1]';
 
   ngOnInit(): void {
     this.soportaApiFile();
