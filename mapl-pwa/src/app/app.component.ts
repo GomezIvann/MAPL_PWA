@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'MAPL - PWA';
-  version = '[v0.0.1]';
+  version = '[v0.0.2]';
 
   ngOnInit(): void {
     this.soportaApiFile();

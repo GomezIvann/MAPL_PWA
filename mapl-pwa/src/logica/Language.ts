@@ -18,5 +18,8 @@ export enum Language {
     GE = "GE",
     LE = "LE",
     EQ = "EQ",
-    NE = "NE"
+    NE = "NE",
+    NOP = "NOP",
+    WHITE_LINE = "",
+    HALT = "HALT"
 }

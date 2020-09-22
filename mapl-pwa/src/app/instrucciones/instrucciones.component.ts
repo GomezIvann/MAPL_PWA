@@ -1,7 +1,7 @@
 import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Parser } from 'src/logica/Parser';
-import { Program } from 'src/logica/Program';
+import { Linea, Program } from 'src/logica/Program';
 
 @Component({
   selector: 'app-instrucciones',
@@ -11,13 +11,12 @@ import { Program } from 'src/logica/Program';
 export class InstruccionesComponent implements OnInit {
   fileToUpload: File;
   program: Program;
-  @ViewChild('fileInput') fileInput: any;
 
   constructor() { }
 
   ngOnInit(): void { }
 
-  cargar(files: FileList) {
+  async cargar(files: FileList) {
     this.fileToUpload = files.item(0);
     let tipoTexto = /text.*/; // solo archivos de texto
 
@@ -30,19 +29,11 @@ export class InstruccionesComponent implements OnInit {
    * entendible por el interprete
    */
   private cargarPrograma() {
-    let reader = new FileReader();
-    reader.onload = (e) => {
-      const content = reader.result.toString().trim();
-      document.getElementById("codeTextArea").innerHTML = content;
-    }
-    reader.readAsText(this.fileToUpload);
-
     let parser = new Parser(this.fileToUpload);
     this.program = parser.read();
   }
 
-  recargarPrograma() {
-  }
+  recargarPrograma() {}
 
   ejecutar() {
     if (this.program != null)

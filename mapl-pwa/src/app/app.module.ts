@@ -9,12 +9,14 @@ import { ConsolaComponent } from './consola/consola.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import { PilaComponent } from './pila/pila.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConsolaComponent,
-    InstruccionesComponent
+    InstruccionesComponent,
+    PilaComponent
   ],
   imports: [
     BrowserModule,
