@@ -9,15 +9,8 @@ import { Stack } from 'src/logica/Stack';
   styleUrls: ['./pila.component.css']
 })
 export class PilaComponent implements OnInit {
-  @Input() stack: Stack<number>;
+  @Input() pila: Stack<number>;
 
   constructor() { }
-
   ngOnInit(): void { }
-
-  ngOnChanges(changes: SimpleChanges) {
-    for (const propName in changes) {
-      const chng = changes[propName];
-    }
-  }
 }

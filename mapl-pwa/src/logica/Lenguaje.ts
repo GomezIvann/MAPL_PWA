@@ -1,4 +1,4 @@
-export enum Language {
+export enum Lenguaje {
     PUSH = "PUSH",
     LOAD = "LOAD",
     STORE = "STORE",

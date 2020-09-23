@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'MAPL - PWA';
+  titulo = 'MAPL - PWA';
   version = '[v0.0.2]';
 
   ngOnInit(): void {

@@ -1,6 +1,6 @@
 <p><label for="archivo">Selecciona un archivo:</label></p>
 <p>
-    <input #fileInput id="archivo" onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
+    <input id="archivo" onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
         accept=".txt" />
 </p>
 <table id="instrucciones" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
@@ -21,14 +21,16 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 <p>
-    <button id="ejecutar" (click)="ejecutar()" mat-raised-button aria-label="Example icon button with a home icon">
+    <button id="ejecutar" (click)="ejecutar()" mat-raised-button >
         <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
-    <button id="recargar" (click)="recargarPrograma()" mat-raised-button
-        aria-label="Example icon button with a home icon">
+    <button id="recargar" (click)="recargarPrograma()" mat-raised-button>
         <mat-icon>refresh</mat-icon> Recargar
+    </button>
+    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" mat-raised-button>
+        <mat-icon>arrow_right_alt</mat-icon> Ejecutar siguiente instrucción
     </button>
 </p>
 <p>
-    <app-pila [stack]="program.stack"></app-pila>
+    <app-pila [pila]="programa.pila"></app-pila>
 </p>

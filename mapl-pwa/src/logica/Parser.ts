@@ -5,8 +5,8 @@ import { Eq, Ge, Gt, Le, Lt, Ne } from './instrucciones/Comparaciones';
 import { In, Out } from './instrucciones/EntradaSalida';
 import { And, Not, Or } from './instrucciones/Logicas';
 import { Dup, Pop, Push } from './instrucciones/ManipulacionPila';
-import { Language } from './Language';
-import { Linea, Program } from './Program';
+import { Lenguaje } from './Lenguaje';
+import { Linea, Programa } from './Programa';
 
 export class Parser {
     file: File;
@@ -19,146 +19,146 @@ export class Parser {
      * Resolve: Es la función que llamaremos si queremos resolver satisfactoriamente la promesa.
      * Reject: Es la función que llamaremos si queremos rechazar la promesa.
      */
-    read(): Promise<Program> {
-        var program = new Program();
+    read(): Promise<Programa> {
+        var programa = new Programa();
         const reader = new FileReader();
 
         return new Promise((resolve, reject) => {
             reader.onerror = () => {
                 reader.abort();
-                reject(new DOMException("Problem parsing input file."));
+                reject(new DOMException("Problema parseando el archivo de entrada."));
             };
 
             reader.onload = (e) => {
-                let lines = reader.result.toString().split("\n");
-                var endLoop = false;
-                var firstWord = "";
-                var numberLine = "";
+                let lineas = reader.result.toString().split("\n");
+                var finalBucle = false;
+                var primeraPalabra = "";
+                var numeroLinea = "";
                 var i = 0;
 
                 // el metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
                 // para ello basta con retornar true cuando queramos pararla
-                lines.some(line => {
+                lineas.some(line => {
                     // Expresion regular reemplaza todo un string por "" salvo la primera palabra que encuentra
                     // trim() elimina los espacios y terminadores de linea de un string
-                    firstWord = line.replace(/ .*/, "").trim().toUpperCase();
-                    numberLine = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
+                    primeraPalabra = line.replace(/ .*/, "").trim().toUpperCase();
+                    numeroLinea = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
 
-                    switch (firstWord) {
-                        case Language.PUSH:
+                    switch (primeraPalabra) {
+                        case Lenguaje.PUSH:
                             var cte = line.replace(/^\D+/g, "");
-                            program.code.push(new Push(parseInt(cte)));
-                            program.content.push(new Linea(line, numberLine));
+                            programa.codigo.push(new Push(parseInt(cte)));
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.POP:
-                            program.code.push(new Pop());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.POP:
+                            programa.codigo.push(new Pop());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.DUP:
-                            program.code.push(new Dup());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.DUP:
+                            programa.codigo.push(new Dup());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.ADD:
-                            program.code.push(new Add());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.ADD:
+                            programa.codigo.push(new Add());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.SUB:
-                            program.code.push(new Sub());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.SUB:
+                            programa.codigo.push(new Sub());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.DIV:
-                            program.code.push(new Div());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.DIV:
+                            programa.codigo.push(new Div());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.MUL:
-                            program.code.push(new Mul());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.MUL:
+                            programa.codigo.push(new Mul());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.IN:
-                            program.code.push(new In());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.IN:
+                            programa.codigo.push(new In());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.OUT:
-                            program.code.push(new Out());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.OUT:
+                            programa.codigo.push(new Out());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.AND:
-                            program.code.push(new And());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.AND:
+                            programa.codigo.push(new And());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.OR:
-                            program.code.push(new Or());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.OR:
+                            programa.codigo.push(new Or());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.NOT:
-                            program.code.push(new Not());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.NOT:
+                            programa.codigo.push(new Not());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.GT:
-                            program.code.push(new Gt());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.GT:
+                            programa.codigo.push(new Gt());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.LT:
-                            program.code.push(new Lt());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.LT:
+                            programa.codigo.push(new Lt());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.GE:
-                            program.code.push(new Ge());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.GE:
+                            programa.codigo.push(new Ge());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.LE:
-                            program.code.push(new Le());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.LE:
+                            programa.codigo.push(new Le());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.EQ:
-                            program.code.push(new Eq());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.EQ:
+                            programa.codigo.push(new Eq());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.NE:
-                            program.code.push(new Ne());
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.NE:
+                            programa.codigo.push(new Ne());
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.NOP:
-                            program.content.push(new Linea(line, numberLine));
+                        case Lenguaje.NOP:
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
-                        case Language.WHITE_LINE:
+                        case Lenguaje.WHITE_LINE:
                             // al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
                             // asi se conserva la linea vacia y se interpretan todas igual
-                            program.content.push(new Linea(line));
+                            programa.texto.push(new Linea(line));
                             break;
-                        case Language.HALT:
+                        case Lenguaje.HALT:
                             // finaliza la ejecucion del programa (no hace falta seguir leyendo)
-                            endLoop = true;
-                            program.content.push(new Linea(line, numberLine));
+                            finalBucle = true;
+                            programa.texto.push(new Linea(line, numeroLinea));
                             i++;
                             break;
                         default:
                             if (!this.isComment(line))
                                 throw new Error("No instruction or comment found!\n" + line);
-                            program.content.push(new Linea(line));
+                            programa.texto.push(new Linea(line));
                     }
-                    return endLoop;
+                    return finalBucle;
                 });
-                resolve(program);
+                resolve(programa);
             };
             reader.readAsText(this.file);
         });

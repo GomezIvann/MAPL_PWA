@@ -3,25 +3,7 @@ import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Parser } from 'src/logica/Parser';
-import { Linea, Program } from 'src/logica/Program';
-
-
-
-
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: Linea[] = [
-  new Linea("push 24", "0000", ),
-  new Linea("push 55", "0001"),
-  new Linea("add", "0002"),
-  new Linea("out", "0003")
-];
+import { Linea, Programa } from 'src/logica/Programa';
 
 
 @Component({
@@ -31,7 +13,7 @@ const ELEMENT_DATA: Linea[] = [
 })
 export class InstruccionesComponent implements OnInit {
   fileToUpload: File;
-  program: Program;
+  programa: Programa;
 
   // define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[] = ['numeroInstruccion', 'contenido']; 
@@ -40,7 +22,7 @@ export class InstruccionesComponent implements OnInit {
   constructor(private changeDetectorRefs: ChangeDetectorRef) { }
 
   ngOnInit(): void { 
-    this.program = new Program(); //??
+    this.programa = new Programa(); //??
   }
 
   cargar(files: FileList) {
@@ -57,8 +39,8 @@ export class InstruccionesComponent implements OnInit {
   private async cargarPrograma() {
     try {
       let parser = new Parser(this.fileToUpload);
-      this.program = await parser.read(); // espera a que el parser termine de leer el fichero
-      this.dataSource = this.program.content; // para luego cargar el codigo en la tabla
+      this.programa = await parser.read(); // espera a que el parser termine de leer el fichero
+      this.dataSource = this.programa.texto; // para luego cargar el codigo en la tabla
     } catch (e) {
       throw new Error("Impossible to parser the specified file.");
     }
@@ -67,7 +49,12 @@ export class InstruccionesComponent implements OnInit {
   recargarPrograma() {}
 
   ejecutar() {
-    if (this.program != null)
-      this.program.run();
+    if (this.programa != null)
+      this.programa.ejecutar();
+  }
+
+  ejecutarInstruccion() {
+    if (this.programa != null)
+      this.programa.ejecutarSiguienteInstruccion();
   }
 }
