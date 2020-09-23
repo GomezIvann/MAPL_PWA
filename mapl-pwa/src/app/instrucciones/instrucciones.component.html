@@ -1,16 +1,34 @@
 <p><label for="archivo">Selecciona un archivo:</label></p>
 <p>
-    <input #fileInput id="archivo" onclick="this.value=''" 
-    (change)="cargar($event.target.files)" type="file" 
-    accept=".txt" />
+    <input #fileInput id="archivo" onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
+        accept=".txt" />
 </p>
-<p><textarea id="codeTextArea" rows="15" cols="100" readonly></textarea></p>
+<table id="instrucciones" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Columna 1: Contenido de la linea -->
+    <ng-container matColumnDef="contenido">
+        <th mat-header-cell *matHeaderCellDef> Contenido </th>
+        <td mat-cell *matCellDef="let element"> {{element.contenido}} </td>
+    </ng-container>
 
+    <!-- Columna 2: Numero de la instruccion (si lo tiene) -->
+    <ng-container matColumnDef="numeroInstruccion">
+        <th mat-header-cell *matHeaderCellDef> Nº Instrucción </th>
+        <td mat-cell *matCellDef="let element"> {{element.numeroInstruccion}} </td>
+    </ng-container>
+
+    <!-- Definicion de las columnas -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>
 <p>
     <button id="ejecutar" (click)="ejecutar()" mat-raised-button aria-label="Example icon button with a home icon">
         <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
-    <button id="recargar" (click)="recargarPrograma()" mat-raised-button aria-label="Example icon button with a home icon">
+    <button id="recargar" (click)="recargarPrograma()" mat-raised-button
+        aria-label="Example icon button with a home icon">
         <mat-icon>refresh</mat-icon> Recargar
     </button>
+</p>
+<p>
+    <app-pila [stack]="program.stack"></app-pila>
 </p>

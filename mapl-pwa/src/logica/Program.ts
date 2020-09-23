@@ -6,18 +6,18 @@ import { Stack } from './Stack';
  * Representa el codigo (instrucciones) del archivo cargado por el usuario
  */
 export class Program {
-    codigo: Instruccion[];
+    code: Instruccion[];
     content: Linea[];
     stack: Stack<number>;
 
     constructor() {
-        this.codigo = [];
+        this.code = [];
         this.content = [];
         this.stack = new Stack<number>(1000);
     }
 
     run() {
-        this.codigo.forEach(i => i.execute(this.stack));
+        this.code.forEach(i => i.execute(this.stack));
     }
 }
 
@@ -30,12 +30,8 @@ export class Linea {
 
 	constructor(contenido: string, numeroInstruccion = ""){
         this.contenido = contenido;
-        this.numeroInstruccion = numeroInstruccion
-
-        if (numeroInstruccion != "")
-            this.numeroInstruccion += " ";
+        this.numeroInstruccion = numeroInstruccion;
     }
-
     print(): string {
         return this.numeroInstruccion + this.contenido + "\n";
     }
