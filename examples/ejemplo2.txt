@@ -1,7 +1,7 @@
 'Ejemplo 2 de codigo
 'Instrucciones push dup out nop y halt
                       
-push 55 'ojo
+push a 'ojo
 push 27
 dup
 out

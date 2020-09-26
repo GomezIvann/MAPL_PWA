@@ -42,12 +42,8 @@ export class Stack<T> {
     public print(): string {
         var content = "";
         for (let i = 0; i < this.length; ++i)
-            content += `stack[${i}]: ${this.stack[i]} \n`;
+            content += `stack[${i}]: ${this.stack[i].toString()} \n`;
         
         return content;
-    }
-
-    public elements(): T[] {
-        return this.stack;  
     }
 }

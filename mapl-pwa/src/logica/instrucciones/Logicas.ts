@@ -1,28 +1,30 @@
-import { Stack } from '../Stack';
+import { DataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { Stack } from '../util/Stack';
 import { Instruccion } from './Instruccion';
 
 export class And extends Instruccion {
-    execute(stack: Stack<number>) {
-        let value1 = stack.pop();
-        let value2 = stack.pop();
-        let op = value1 && value2;
-        let res = op ? 1 : 0;
-        stack.push(res);
+    execute(stack: Stack<DataType>) {
+        let value1 = parseInt(stack.pop().value);
+        let value2 = parseInt(stack.pop().value);
+        let res = (value1 && value2) ? 1 : 0;
+        let dt = new IntegerDataType(res);
+        stack.push(dt);
     }
 }
 export class Or extends Instruccion {
-    execute(stack: Stack<number>) {
-        let value1 = stack.pop();
-        let value2 = stack.pop();
-        let op = value1 || value2;
-        let res = op ? 1 : 0;
-        stack.push(res);
+    execute(stack: Stack<DataType>) {
+        let value1 = parseInt(stack.pop().value);
+        let value2 = parseInt(stack.pop().value);
+        let res = (value1 || value2) ? 1 : 0;
+        let dt = new IntegerDataType(res);
+        stack.push(dt);
     }
 }
 export class Not extends Instruccion {
-    execute(stack: Stack<number>) {
-        let value = stack.pop();
+    execute(stack: Stack<DataType>) {
+        let value = parseInt(stack.pop().value);
         let res = (!value) ? 1 : 0;
-        stack.push(res);
+        let dt = new IntegerDataType(res);
+        stack.push(dt);
     }
 }

@@ -1,0 +1,8 @@
+pushb 97	'Meter byte/char (sinónimos)
+pushb 98
+pushb 99
+pushb 100
+outb
+outb
+outb
+out

@@ -1,7 +1,7 @@
 import { Input } from '@angular/core';
 import { SimpleChanges } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Stack } from 'src/logica/Stack';
+import { Stack } from 'src/logica/util/Stack';
 
 @Component({
   selector: 'app-pila',

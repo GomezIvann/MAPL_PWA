@@ -1,8 +1,3 @@
-<p><label for="archivo">Selecciona un archivo:</label></p>
-<p>
-    <input id="archivo" onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
-        accept=".txt" />
-</p>
 <table id="instrucciones" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!-- Columna 1: Contenido de la linea -->
     <ng-container matColumnDef="contenido">
@@ -30,7 +25,4 @@
     <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" mat-raised-button>
         <mat-icon>arrow_right_alt</mat-icon> Ejecutar siguiente instrucción
     </button>
-</p>
-<p>
-    <app-pila [pila]="programa.pila"></app-pila>
 </p>
