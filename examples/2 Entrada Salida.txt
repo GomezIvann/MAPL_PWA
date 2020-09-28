@@ -11,36 +11,36 @@
 ' 1) Instrucciones de Salida
 
 push 99
-out		' Escribir entero
+out         ' Escribir entero
 
 pushf 3.14
-outf		' Escribir real
+outf        ' Escribir real
 
-pushb 97	' Letra 'a'
+pushb 97    ' Letra 'a'
 outb
 
-pushb 10	' Caracter '\n'
-outb		' Envía salto de linea
+pushb 10    ' Caracter '\n'
+outb        ' Envía salto de linea
 
-pushb 42	' Caracter '*'
+pushb 42    ' Caracter '*'
 outb
 
-pushb 99	' Letra 'c'
+pushb 99    ' Letra 'c'
 outb
 
-pushb 10	' Caracter '\n'
-outb		' Envía salto de linea
+pushb 10    ' Caracter '\n'
+outb        ' Envía salto de linea
 
 pushf 3.14
-outf		' Escribir real
+outf        ' Escribir real
 
 
 
 ' 2) Instrucciones de entrada
 
-in	' Leer entero u dejarlo en la pila
-inf	' Leer float 
-inb	' Leer byte
+in      ' Leer entero u dejarlo en la pila
+inf     ' Leer float 
+inb     ' Leer byte
 
 outb
 outf

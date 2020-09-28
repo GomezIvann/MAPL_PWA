@@ -1,5 +1,4 @@
 import { Input } from '@angular/core';
-import { SimpleChanges } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Stack } from 'src/logica/util/Stack';
 
@@ -9,7 +8,7 @@ import { Stack } from 'src/logica/util/Stack';
   styleUrls: ['./pila.component.css']
 })
 export class PilaComponent implements OnInit {
-  @Input() pila: Stack<number>;
+  @Input() pila: Stack;
 
   constructor() { }
   ngOnInit(): void { }

@@ -7,16 +7,16 @@
 '-----------------------------------------
 ' 1. Manipulación básica de la pila
 
-push 10	'Meter entero en la pila
-pop		'Sacar entero de la pila
+push 10     'Meter entero en la pila
+pop         'Sacar entero de la pila
 
 pushf 5.4	'Meter valor real
-dupf		'Duplicar real de la cima
+dupf        'Duplicar real de la cima
 popf
 popf
 
-pushb 97	'Meter byte/char (sinónimos)
-dupb		'Duplicar byte de la cima
+pushb 97    'Meter byte/char (sinónimos)
+dupb        'Duplicar byte de la cima
 popb
 popb
 
@@ -26,35 +26,34 @@ popb
 
 push 10
 push 20
-add		'Sumar enteros de la cima
+add     'Sumar enteros de la cima
 pop
 
 pushf 5
 pushf 0.5
-subf		'Restar reales
+subf    'Restar reales
 popf
 
 push 10
 push 20
-mul		'Multiplicar enteros de la cima
+mul     'Multiplicar enteros de la cima
 pop
 
 pushf 5
 pushf 2
-divf		'Dividir reales (decimales)
+divf    'Dividir reales (decimales)
 
 push 5
 push 2
-div		'Dividir enteros (no decimales)
+div     'Dividir enteros (no decimales)
 
 push 5
 push 2
-mod		'Resto de la división
+mod     'Resto de la división
 
 pop
 pop
 popf
-
 
 '-----------------------------------------
 ' 3. Conversiones
@@ -71,11 +70,9 @@ popb
 popf
 
 
-
 '-----------------------------------------
 ' 4. Otras instrucciones
 
-nop	'No-OPeration. No hace nada
+nop     'No-OPeration. No hace nada
 
-halt	'Fin del programa 
-
+halt    'Fin del programa 

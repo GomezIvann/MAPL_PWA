@@ -1,48 +1,76 @@
-export class Stack<T> {
-    private stack: T[];
-    private length: number;
-    private readonly maxSize: number;
+import { DataType } from './DataTypes';
 
-    public constructor(maxSize: number) {
-        this.length = 0;
-        this.maxSize = maxSize;
-        this.stack = new Array<T>(this.maxSize);
+/**
+ * Pila del programa donde se almacenan los datos de las instrucciones
+ */
+export class Stack {
+    private stack: DataType[];
+    private pointer: number;
+    private readonly maxSize: number = 1024;
+    private actualSize: number;
+
+    public constructor() {
+        this.pointer = 0;
+        this.actualSize = 0;
+        this.stack = [];
     }
 
     public isEmpty(): boolean {
-        return this.length === 0;
+        return this.pointer === 0;
     }
 
     public isFull(): boolean {
-        return this.length === this.maxSize;
+        return this.actualSize === this.maxSize;
     }
 
-    public push(newItem: T): void {
-        if (this.isFull()) 
-            throw new Error('Stack overflow');
-        
-        this.stack[this.length++] = newItem;
+    /**
+     * El tamaño actual de la pila aumenta en cada inserción de acuerdo 
+     * al tamañodel dato insertado
+     * 
+     * @param dt 
+     * @param instructionSize 
+     */
+    public push(dt: DataType, instructionSize: number): void {
+        this.actualSize += dt.size;
+
+        if (this.isFull())
+            throw new Error("Overflow de la pila. No se pueden insertar más bytes");
+        else if (dt.size !== instructionSize)
+            throw new Error("Los bytes insertados no se corresponden con el tipo de la instrucción.");
+
+        this.stack[this.pointer++] = dt;
     }
 
-    public pop(): T {
+    /**
+     * El tamaño actual de la pila decrementa en cada extraccion 
+     * de acuerdo al tamaño del dato extraido
+     * 
+     * @param instructionSize tamanio de la instruccion
+     */
+    public pop(instructionSize: number): DataType {
         if (this.isEmpty())
-            throw new Error('Stack underflow');
-        
-        const retval = this.stack[--this.length];
+            throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
+        else if (this.top().size > instructionSize)
+            throw new Error("Los bytes retirados para la instrucción dejan en la pila los últimos bytes de valor sin retirar.");
+        else if (this.top().size < instructionSize)
+            throw new Error("Los bytes retirados para la instrucción son restos de un valor parcialmente retirado.");
+
+        const retval = this.stack[--this.pointer];
+        this.actualSize -= instructionSize;
         return retval;
     }
 
-    public top(): T {
-        if (this.isEmpty()) 
-            throw new Error('Stack is empty');
-        
-        return this.stack[this.length - 1];
+    public top(): DataType {
+        if (this.isEmpty())
+            throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
+
+        return this.stack[this.pointer-1];
     }
 
     public print(): string {
         var content = "";
-        for (let i = 0; i < this.length; ++i)
-            content += `stack[${i}]: ${this.stack[i].toString()} \n`;
+        for (let i = 0; i < this.pointer; ++i)
+            content += `stack[${this.stack[i].size}]: ${this.stack[i].toString()}    `;
         
         return content;
     }

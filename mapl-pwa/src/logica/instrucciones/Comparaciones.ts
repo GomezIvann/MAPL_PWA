@@ -1,112 +1,117 @@
-import { DataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { FloatDataType, IntegerDataType } from '../util/DataTypes';
 import { Stack } from '../util/Stack';
-import { Instruccion } from './Instruccion';
+import { InstruccionInteger, InstruccionFloat } from './Instruccion';
 
-export class Gt extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+export class Gt extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 > value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Gtf extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Gtf extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 > value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Lt extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+
+export class Lt extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 < value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Ltf extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Ltf extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 < value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Ge extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+
+export class Ge extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 >= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Gef extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Gef extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 >= value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Le extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+
+export class Le extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 <= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Lef extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Lef extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 <= value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Eq extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+
+export class Eq extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 === value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Eqf extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Eqf extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 === value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Ne extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseInt(stack.pop().value);
-        let value2 = parseInt(stack.pop().value);
+
+export class Ne extends InstruccionInteger {
+    execute(stack: Stack) {
+        let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 !== value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Nef extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        let value1 = parseFloat(stack.pop().value);
-        let value2 = parseFloat(stack.pop().value);
+export class Nef extends InstruccionFloat {
+    execute(stack: Stack) {
+        let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
+        let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 !== value1) ? 1 : 0;
         let dt = new FloatDataType(res);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }

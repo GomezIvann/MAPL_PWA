@@ -1,71 +1,89 @@
-import { ByteDataType, DataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
 import { Stack } from '../util/Stack';
-import { Instruccion } from './Instruccion';
+import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 
-export class Push extends Instruccion {
+/**
+ *  ----------------------PUSH---------------------------
+ */
+export class Push extends InstruccionInteger {
     cte: string;
 
-    constructor(cte: string){ 
-        super();
+    constructor(numeroLinea: string, cte: string){ 
+        super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack<DataType>) {
+    execute(stack: Stack) {
         // +cadena --> para convertir una cadena que contiene un número en un número
         // Solo funciona si la cadena solo contiene caracteres numéricos, de lo contrario, devuelve NaN
         let dt = new IntegerDataType(+this.cte);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Pushf extends Instruccion {
+export class Pushf extends InstruccionFloat {
     cte: string;
 
-    constructor(cte: string){ 
-        super();
+    constructor(numeroLinea: string, cte: string){ 
+        super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack<DataType>) {
+    execute(stack: Stack) {
         let dt = new FloatDataType(+this.cte);
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Pushb extends Instruccion {
+export class Pushb extends InstruccionByte {
     cte: string;
 
-    constructor(cte: string){ 
-        super();
+    constructor(numeroLinea: string, cte: string){ 
+        super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack<DataType>) {
+    execute(stack: Stack) {
         let dt = new ByteDataType(+this.cte); 
-        stack.push(dt);
+        stack.push(dt, this.getInstructionSize());
     }
 }
-export class Pop extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        if (!Number.isInteger(+stack.top().value))
-            throw new Error("El valor de la instrucción no es un número entero.");
-            
-        stack.pop();
+
+/**
+ *  ----------------------POP---------------------------
+ */
+export class Pop extends InstruccionInteger {
+    execute(stack: Stack) {
+        stack.pop(this.getInstructionSize());
     }
 }
-export class Popf extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        if (!isNaN(+stack.top().value))
-            throw new Error("El valor de la instrucción no es un número real.");
-            
-        stack.pop();
+export class Popf extends InstruccionFloat {
+    execute(stack: Stack) {
+        stack.pop(this.getInstructionSize());
     }
 }
-export class Popb extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        if (!Number.isInteger(+stack.top().value))
-            throw new Error("El valor de la instrucción no es un número entero.");
-            
-        stack.pop();
+export class Popb extends InstruccionByte {
+    execute(stack: Stack) {
+        stack.pop(this.getInstructionSize());
     }
 }
-export class Dup extends Instruccion {
-    execute(stack: Stack<DataType>) {
-        stack.push(stack.top());
+
+/**
+ *  ----------------------DUP---------------------------
+ */
+export class Dup extends InstruccionInteger {
+    execute(stack: Stack) {
+        let dt = stack.pop(this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
+    }
+}
+export class Dupf extends InstruccionFloat {
+    execute(stack: Stack) {
+        let dt = stack.pop(this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
+    }
+}
+export class Dupb extends InstruccionByte {
+    execute(stack: Stack) {
+        let dt = stack.pop(this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getInstructionSize());
     }
 }

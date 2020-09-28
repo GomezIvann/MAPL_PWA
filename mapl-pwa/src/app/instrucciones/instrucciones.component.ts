@@ -1,8 +1,5 @@
 import { ChangeDetectorRef, Input } from '@angular/core';
-import { ViewChild } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { Parser } from 'src/logica/compilador/Parser';
 import { Linea, Programa } from 'src/logica/compilador/Programa';
 
 

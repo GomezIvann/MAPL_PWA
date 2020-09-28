@@ -1,5 +1,3 @@
-import { ɵConsole } from '@angular/core';
-
 export abstract class DataType {
     size: number;
     value: string;
@@ -7,9 +5,6 @@ export abstract class DataType {
     constructor(value: number) {
         this.setValue(value);
     }
-
-    getSize(): number { return this.size; }
-    getValue(): string { return this.value; }
 
     /** 
      * Comprueba si el valor pasado como param es del tipo que debe ser. 
@@ -20,11 +15,10 @@ export abstract class DataType {
         return this.value;
     }
 }
-
 export class IntegerDataType extends DataType {
     constructor(value: number) {
         super(value);
-        this.size = 2;
+        this.size = Sizes.INTEGER;
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))
@@ -33,11 +27,10 @@ export class IntegerDataType extends DataType {
         this.value = value.toString();
     }
 }
-
 export class FloatDataType extends DataType {
     constructor(value: number) {
         super(value);
-        this.size = 4;
+        this.size = Sizes.FLOAT;
     }
     setValue(value: number): void {
         if (isNaN(value))
@@ -46,11 +39,10 @@ export class FloatDataType extends DataType {
         this.value = value.toString();
     }
 }
-
 export class ByteDataType extends DataType {
     constructor(value: number) {
         super(value);
-        this.size = 1;
+        this.size = Sizes.BYTE;
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))
@@ -58,4 +50,13 @@ export class ByteDataType extends DataType {
         
         this.value = String.fromCharCode(value);
     }
+}
+
+/**
+ * Posibles tamaños de los datos
+ */
+export enum Sizes {
+    FLOAT = 4,
+    INTEGER = 2,
+    BYTE = 1
 }

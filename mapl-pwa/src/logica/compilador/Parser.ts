@@ -1,8 +1,9 @@
 import { Add, Sub, Mul, Div, Addf, Subf, Mod, Divf, Mulf } from '../instrucciones/Aritmeticas';
 import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from '../instrucciones/Comparaciones';
-import { In, Inb, Inf, Out } from '../instrucciones/EntradaSalida';
+import { In, Inb, Inf, Out, Outb, Outf } from '../instrucciones/EntradaSalida';
 import { And, Not, Or } from '../instrucciones/Logicas';
-import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf } from '../instrucciones/ManipulacionPila';
+import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
+import { Halt, Nop } from '../instrucciones/Otras';
 import { Lenguaje } from './Lenguaje';
 import { Linea, Programa } from './Programa';
 
@@ -31,7 +32,7 @@ export class Parser {
                 let lineas = reader.result.toString().split("\n");
                 var finalBucle = false;
                 var primeraPalabra = "";
-                var numeroLinea = "";
+                var numeroInstruccion = "";
                 var i = 0;
 
                 // el metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
@@ -41,209 +42,233 @@ export class Parser {
                     // trim() elimina los espacios y terminadores de linea de un string (ubicados ante y despues del texto)
                     // ej. "       hello  world       " --trim()--> "hello  world"
                     primeraPalabra = linea.trim().replace(/ .*/, "").toUpperCase();
-                    numeroLinea = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
+                    numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
 
                     switch (primeraPalabra) {
                         case Lenguaje.PUSH:
                         case Lenguaje.PUSHI:
                             // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Push(cte));
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Push(numeroInstruccion, cte));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.PUSHF:
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Pushf(cte));
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Pushf(numeroInstruccion, cte));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.PUSHB:
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Pushb(cte));
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Pushb(numeroInstruccion, cte));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POP:
                         case Lenguaje.POPI:
-                            programa.codigo.push(new Pop());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Pop(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POPF:
-                            programa.codigo.push(new Popf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Popf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POPB:
-                            programa.codigo.push(new Popb());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Popb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DUP:
                         case Lenguaje.DUPI:
+                            programa.codigo.push(new Dup(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.DUPF:
+                            programa.codigo.push(new Dupf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.DUPB:
-                            programa.codigo.push(new Dup());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Dupb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.ADD:
                         case Lenguaje.ADDI:
-                            programa.codigo.push(new Add());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Add(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.ADDF:
-                            programa.codigo.push(new Addf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Addf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
-                        case Lenguaje.SUB: 
+                        case Lenguaje.SUB:
                         case Lenguaje.SUBI:
-                            programa.codigo.push(new Sub());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Sub(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.SUBF:
-                            programa.codigo.push(new Subf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Subf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DIV:
                         case Lenguaje.DIVI:
-                            programa.codigo.push(new Div());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Div(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DIVF:
-                            programa.codigo.push(new Divf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Divf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MUL:
                         case Lenguaje.MULI:
-                            programa.codigo.push(new Mul());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Mul(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MULF:
-                            programa.codigo.push(new Mulf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Mulf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MOD:
-                            programa.codigo.push(new Mod());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Mod(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
-                        case Lenguaje.IN: 
+                        case Lenguaje.IN:
                         case Lenguaje.INI:
-                            programa.codigo.push(new In());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new In(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.INF:
-                            programa.codigo.push(new Inf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Inf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.INB:
-                            programa.codigo.push(new Inb());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Inb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OUT:
                         case Lenguaje.OUTI:
+                            programa.codigo.push(new Out(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.OUTB:
+                            programa.codigo.push(new Outb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.OUTF:
-                            programa.codigo.push(new Out());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Outf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.AND:
-                            programa.codigo.push(new And());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new And(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OR:
-                            programa.codigo.push(new Or());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Or(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NOT:
-                            programa.codigo.push(new Not());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Not(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GT:
                         case Lenguaje.GTI:
-                            programa.codigo.push(new Gt());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Gt(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GTF:
-                            programa.codigo.push(new Gtf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Gtf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LT:
                         case Lenguaje.LTI:
-                            programa.codigo.push(new Lt());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Lt(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LTF:
-                            programa.codigo.push(new Ltf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Ltf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GE:
                         case Lenguaje.GEI:
-                            programa.codigo.push(new Ge());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Ge(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GEF:
-                            programa.codigo.push(new Gef());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Gef(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LE:
                         case Lenguaje.LEI:
-                            programa.codigo.push(new Le());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Le(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LEF:
-                            programa.codigo.push(new Lef());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Lef(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.EQ:
                         case Lenguaje.EQI:
-                            programa.codigo.push(new Eq());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Eq(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.EQF:
-                            programa.codigo.push(new Eqf());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Eqf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NE:
                         case Lenguaje.NEI:
-                            programa.codigo.push(new Ne());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Ne(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NEF:
-                            programa.codigo.push(new Nef());
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Nef(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NOP:
-                            programa.texto.push(new Linea(linea, numeroLinea));
+                            programa.codigo.push(new Nop(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.HALT:
+                            // finaliza la lectura del programa (no hace falta seguir leyendo)
+                            finalBucle = true;
+                            programa.codigo.push(new Halt(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.WHITE_LINE:
@@ -251,19 +276,17 @@ export class Parser {
                             // asi se conserva la linea vacia y se interpretan todas igual
                             programa.texto.push(new Linea(linea));
                             break;
-                        case Lenguaje.HALT:
-                            // finaliza la ejecucion del programa (no hace falta seguir leyendo)
-                            finalBucle = true;
-                            programa.texto.push(new Linea(linea, numeroLinea));
-                            i++;
-                            break;
                         default:
                             if (!this.isComment(linea))
-                                throw new Error("No instruction or comment found!\n" + linea);
+                                throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n" + linea);
                             programa.texto.push(new Linea(linea));
                     }
                     return finalBucle;
                 });
+                if (!finalBucle){
+                    programa.codigo.push(new Halt(numeroInstruccion));
+                    programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
+                }
                 resolve(programa);
             };
             reader.readAsText(this.file);
