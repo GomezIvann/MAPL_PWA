@@ -1,5 +1,6 @@
 import { Add, Sub, Mul, Div, Addf, Subf, Mod, Divf, Mulf } from '../instrucciones/Aritmeticas';
 import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from '../instrucciones/Comparaciones';
+import { B2i, F2i, I2b, I2f } from '../instrucciones/Conversiones';
 import { In, Inb, Inf, Out, Outb, Outf } from '../instrucciones/EntradaSalida';
 import { And, Not, Or } from '../instrucciones/Logicas';
 import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
@@ -259,6 +260,26 @@ export class Parser {
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
+                        case Lenguaje.B2I:
+                            programa.codigo.push(new B2i(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.I2B:
+                            programa.codigo.push(new I2b(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.I2F:
+                            programa.codigo.push(new I2f(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.F2I:
+                            programa.codigo.push(new F2i(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.NOP:
                             programa.codigo.push(new Nop(numeroInstruccion));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
@@ -283,7 +304,7 @@ export class Parser {
                     }
                     return finalBucle;
                 });
-                if (!finalBucle){
+                if (!finalBucle) {
                     programa.codigo.push(new Halt(numeroInstruccion));
                     programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
                 }

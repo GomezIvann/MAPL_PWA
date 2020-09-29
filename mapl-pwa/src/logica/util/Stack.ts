@@ -25,7 +25,7 @@ export class Stack {
 
     /**
      * El tamaño actual de la pila aumenta en cada inserción de acuerdo 
-     * al tamañodel dato insertado
+     * al tamaño del dato insertado
      * 
      * @param dt 
      * @param instructionSize 

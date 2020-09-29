@@ -38,7 +38,7 @@ outf        ' Escribir real
 
 ' 2) Instrucciones de entrada
 
-in      ' Leer entero u dejarlo en la pila
+in      ' Leer entero y dejarlo en la pila
 inf     ' Leer float 
 inb     ' Leer byte
 

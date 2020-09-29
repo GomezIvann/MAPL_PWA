@@ -22,7 +22,7 @@ export class IntegerDataType extends DataType {
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))
-            throw new Error("El valor de la instrucción no es un número entero.");
+            throw new Error("El valor no es un número entero.");
             
         this.value = value.toString();
     }
@@ -34,7 +34,7 @@ export class FloatDataType extends DataType {
     }
     setValue(value: number): void {
         if (isNaN(value))
-            throw new Error("El valor de la instrucción no es un número real.");
+            throw new Error("El valor no es un número real.");
             
         this.value = value.toString();
     }

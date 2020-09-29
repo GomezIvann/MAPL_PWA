@@ -55,6 +55,10 @@ export enum Lenguaje {
     NE = "NE",
     NEI = "NEI",
     NEF = "NEF",
+    B2I = "B2I",
+    I2B = "I2B",
+    I2F = "I2F",
+    F2I = "F2I",
     NOP = "NOP",
     WHITE_LINE = "",
     HALT = "HALT"

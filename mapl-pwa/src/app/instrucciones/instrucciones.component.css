@@ -6,6 +6,13 @@
     margin-right: 7px; 
 }
 
+.example-container {
+    height: 400px;
+    width: 550px;
+    max-width: 100%;
+    overflow: auto;
+}
+
 table {
-    width: 41.5%;
+    width: 550px;
 }

@@ -9,40 +9,44 @@ export class Programa {
     texto: Linea[]; // texto del programa
     pila: Stack; // pila del programa
 
-    actual: number; // numero de instruccion ejecutándose
+    private iActual: number; // siguiente instruccion a ejecutar
 
     constructor() {
         this.codigo = [];
         this.texto = [];
         this.pila = new Stack();
-        this.actual = 0;
+        this.iActual = 0;
     }
     ejecutar() {
-        this.codigo.forEach(i => {
+        for (let i = this.iActual; i < this.codigo.length; i++) {
             try {
-                i.execute(this.pila);
+                this.codigo[i].execute(this.pila);
             }
             catch (err) {
-                this.hasErrors(i, err);
+                this.hasErrors(this.codigo[i].numero, err);
             }
-        });
-        alert("Fin de la ejecución.")
+        }
+        this.finDeEjecucion();
     }
     ejecutarSiguienteInstruccion() {
-        if (this.actual < this.codigo.length) {
+        if (this.iActual < this.codigo.length) {
             try {
-                this.codigo[this.actual].execute(this.pila);
-                this.actual++;
+                this.codigo[this.iActual].execute(this.pila);
+                this.iActual++;
             }
             catch (err) {
-                this.hasErrors(this.codigo[this.actual], err);
+                this.hasErrors(this.codigo[this.iActual].numero, err);
             }
         }
         else
-            alert("Fin de la ejecución.");
+            this.finDeEjecucion();
     }
-    private hasErrors(instruccion: Instruccion, err) {
-        throw new Error("Línea " + instruccion.numero + ": " + err.message);
+    private finDeEjecucion() {
+        this.iActual = 0;
+        alert("Fin de la ejecución.");
+    }
+    private hasErrors(numeroInstruccion: string, err) {
+        throw new Error("Línea " + numeroInstruccion + ": " + err.message);
     }
 }
 
