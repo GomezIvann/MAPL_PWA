@@ -11,13 +11,15 @@ import { PilaComponent } from './pila/pila.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
+import { IncidenciasComponent } from './incidencias/incidencias.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConsolaComponent,
     InstruccionesComponent,
-    PilaComponent
+    PilaComponent,
+    IncidenciasComponent
   ],
   imports: [
     BrowserModule,

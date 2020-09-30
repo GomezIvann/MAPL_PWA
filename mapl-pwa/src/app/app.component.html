@@ -1,10 +1,10 @@
 <h1>{{titulo}}</h1>
 <h3>{{version}}</h3>
-<p><label for="archivo">Selecciona un archivo:</label></p>
-<p>
-    <input id="archivo" onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
+<label for="archivo">Selecciona un archivo:</label>
+<p id="archivo">
+    <input onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
         accept=".txt" />
 </p>
-<app-instrucciones [programa]="programa" [dataSource]="dataSource"></app-instrucciones>
-<app-pila [pila]="programa.pila"></app-pila>
-<app-consola></app-consola>
+<app-instrucciones id="instrucciones" [programa]="programa" [dataSource]="dataSource"></app-instrucciones>
+<app-pila id="pila" [pila]="programa.pila"></app-pila>
+<app-consola id="consola"></app-consola>

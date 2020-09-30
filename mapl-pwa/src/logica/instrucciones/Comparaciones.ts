@@ -1,14 +1,18 @@
-import { FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { FloatDataType, IntegerDataType, Sizes } from '../util/DataTypes';
 import { Stack } from '../util/Stack';
 import { InstruccionInteger, InstruccionFloat } from './Instruccion';
 
+/**
+ * Independientemente del tipo de datos que se comparen (integer o float)
+ * en la pila siempre dejan un entero
+ */
 export class Gt extends InstruccionInteger {
     execute(stack: Stack) {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 > value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Gtf extends InstruccionFloat {
@@ -16,8 +20,8 @@ export class Gtf extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 > value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 
@@ -27,7 +31,7 @@ export class Lt extends InstruccionInteger {
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 < value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Ltf extends InstruccionFloat {
@@ -35,8 +39,8 @@ export class Ltf extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 < value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 
@@ -46,7 +50,7 @@ export class Ge extends InstruccionInteger {
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 >= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Gef extends InstruccionFloat {
@@ -54,8 +58,8 @@ export class Gef extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 >= value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 
@@ -65,7 +69,7 @@ export class Le extends InstruccionInteger {
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 <= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Lef extends InstruccionFloat {
@@ -73,8 +77,8 @@ export class Lef extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 <= value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 
@@ -84,7 +88,7 @@ export class Eq extends InstruccionInteger {
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 === value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Eqf extends InstruccionFloat {
@@ -92,8 +96,8 @@ export class Eqf extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 === value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 
@@ -103,7 +107,7 @@ export class Ne extends InstruccionInteger {
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let res = (value2 !== value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, Sizes.INTEGER);
     }
 }
 export class Nef extends InstruccionFloat {
@@ -111,7 +115,7 @@ export class Nef extends InstruccionFloat {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let res = (value2 !== value1) ? 1 : 0;
-        let dt = new FloatDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        let dt = new IntegerDataType(res);
+        stack.push(dt, Sizes.INTEGER);
     }
 }

@@ -1,0 +1,13 @@
+push 2
+
+inicio:
+dup         'Duplicar valor de la cima
+jz fin      'Jump Zero (salta si es 0)
+push 1
+sub
+jmp inicio  'Jump (salta siempre) 
+
+fin:
+jnz inicio  'Jump No Zero (salta si no es 0)
+
+halt

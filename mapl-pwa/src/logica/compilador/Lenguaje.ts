@@ -59,7 +59,10 @@ export enum Lenguaje {
     I2B = "I2B",
     I2F = "I2F",
     F2I = "F2I",
+    JMP = "JMP",
+    JZ = "JZ",
+    JNZ = "JNZ",
     NOP = "NOP",
-    WHITE_LINE = "",
-    HALT = "HALT"
+    HALT = "HALT",
+    WHITE_LINE = ""
 }

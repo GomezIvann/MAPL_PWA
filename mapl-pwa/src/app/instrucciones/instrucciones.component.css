@@ -6,13 +6,14 @@
     margin-right: 7px; 
 }
 
-.example-container {
-    height: 400px;
-    width: 550px;
+/* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
+.table-container {
+    height: 430px;
+    width: 625px;
     max-width: 100%;
     overflow: auto;
 }
 
 table {
-    width: 550px;
+    width: 625px;
 }

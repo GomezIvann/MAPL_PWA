@@ -1,3 +1,4 @@
+import { getLocaleNumberSymbol } from '@angular/common';
 import { Add, Sub, Mul, Div, Addf, Subf, Mod, Divf, Mulf } from '../instrucciones/Aritmeticas';
 import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from '../instrucciones/Comparaciones';
 import { B2i, F2i, I2b, I2f } from '../instrucciones/Conversiones';
@@ -5,6 +6,8 @@ import { In, Inb, Inf, Out, Outb, Outf } from '../instrucciones/EntradaSalida';
 import { And, Not, Or } from '../instrucciones/Logicas';
 import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
 import { Halt, Nop } from '../instrucciones/Otras';
+import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
+import { Label } from './Label';
 import { Lenguaje } from './Lenguaje';
 import { Linea, Programa } from './Programa';
 
@@ -36,20 +39,32 @@ export class Parser {
                 var numeroInstruccion = "";
                 var i = 0;
 
-                // el metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
-                // para ello basta con retornar true cuando queramos pararla
+                /**
+                 * El metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
+                 * para ello basta con retornar true cuando queramos pararla
+                 */ 
                 lineas.some(linea => {
-                    // Expresion regular reemplaza todo un string por "" salvo la primera palabra que encuentra
-                    // trim() elimina los espacios y terminadores de linea de un string (ubicados ante y despues del texto)
-                    // ej. "       hello  world       " --trim()--> "hello  world"
+                    /**
+                     * Expresion regular reemplaza todo un string por "" salvo la primera palabra que encuentra
+                     * trim() elimina los espacios y terminadores de linea de un string (ubicados ante y despues del texto)
+                     * ej. "       hello  world       " --trim()--> "hello  world"
+                     */
                     primeraPalabra = linea.trim().replace(/ .*/, "").toUpperCase();
                     numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
 
+                    /** 
+                     * Cuando dos cases se comportan igual, como es el caso de las instrucciones XXX y XXX(I)
+                     * los cases se colocan de seguido y ambas ejecutan el mismo codigo
+                     *      case XXX:
+                     *      case XXX(I):
+                     *          code;
+                     * esto es exclusivo de Javascript
+                     */
                     switch (primeraPalabra) {
                         case Lenguaje.PUSH:
                         case Lenguaje.PUSHI:
                             // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
-                            var cte = linea.trim().split(/\s+/)[1];
+                            var cte = linea.trim().split(/\s+/)[1];  // segunda palabra de la linea
                             programa.codigo.push(new Push(numeroInstruccion, cte));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
@@ -280,27 +295,51 @@ export class Parser {
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
+                        case Lenguaje.JMP:
+                            var label = linea.trim().split(/\s+/)[1] + ":"; // segunda palabra de la linea
+                            programa.codigo.push(new Jmp(numeroInstruccion, label, programa));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.JZ:
+                            var label = linea.trim().split(/\s+/)[1] + ":";
+                            programa.codigo.push(new Jz(numeroInstruccion, label, programa));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.JNZ:
+                            var label = linea.trim().split(/\s+/)[1] + ":";
+                            programa.codigo.push(new Jnz(numeroInstruccion, label, programa));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.NOP:
                             programa.codigo.push(new Nop(numeroInstruccion));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.HALT:
-                            // finaliza la lectura del programa (no hace falta seguir leyendo)
-                            finalBucle = true;
                             programa.codigo.push(new Halt(numeroInstruccion));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
+                            // Finaliza la lectura del programa (no hace falta seguir leyendo)
+                            finalBucle = true;
                             i++;
                             break;
                         case Lenguaje.WHITE_LINE:
-                            // al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
+                            // Al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
                             // asi se conserva la linea vacia y se interpretan todas igual
                             programa.texto.push(new Linea(linea));
                             break;
                         default:
-                            if (!this.isComment(linea))
-                                throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n" + linea);
-                            programa.texto.push(new Linea(linea));
+                            if (!this.isComment(linea.trim())) {
+                                // Labels
+                                if (this.isLabel(linea.trim()))
+                                    programa.labels.push(new Label(linea.trim(), i));
+                                else
+                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n" + linea);
+                            }
+                            else
+                                programa.texto.push(new Linea(linea));
                     }
                     return finalBucle;
                 });
@@ -314,7 +353,11 @@ export class Parser {
         });
     }
 
-    private isComment(line: string): boolean {
-        return /^\'/.test(line);
+    private isLabel(linea: string): boolean {
+        return linea.endsWith(":");
+    }
+
+    private isComment(linea: string): boolean {
+        return /^\'/.test(linea);
     }
 }

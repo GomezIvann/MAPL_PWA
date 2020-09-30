@@ -16,7 +16,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.soportaApiFile();
-    this.programa = new Programa(); //??
+    this.programa = new Programa();
   }
 
   cargar(files: FileList) {
@@ -52,7 +52,6 @@ export class AppComponent {
       pTexto = "- Este navegador no soporta API File."
         + " El programa no puede funcionar correctamente.";
 
-    console.log(pTexto);
     return soporta;
   }
 }
