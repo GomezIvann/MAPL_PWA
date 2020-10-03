@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app w
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `ng build --prod` to build the project. The build artifacts will be stored in the `dist/` directory. The `--prod` flag is for a production build.
 
 Then, run `http-server -p 8080 -c-1 dist/<project_name>` to be able to display the web app in a server, so you can download it, as a
 commun pwa.
