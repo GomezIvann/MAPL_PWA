@@ -1,2 +1,6 @@
-push 97
+pushb 97
+push 1
+pushf 3.15
+outf
+out
 outb

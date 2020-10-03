@@ -1,5 +1,5 @@
 <div class="table-container mat-elevation-z8">
-    <table id="instrucciones" mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table id="tbInstrucciones" mat-table [dataSource]="programa.texto">
         <!-- Columna 1: Contenido de la linea -->
         <ng-container matColumnDef="contenido">
             <th mat-header-cell *matHeaderCellDef> Contenido </th>
@@ -8,7 +8,7 @@
 
         <!-- Columna 2: Numero de la instruccion (si lo tiene) -->
         <ng-container matColumnDef="numeroInstruccion">
-            <th mat-header-cell *matHeaderCellDef> Nº Instrucción </th>
+            <th mat-header-cell *matHeaderCellDef> No. Instrucción </th>
             <td mat-cell *matCellDef="let element"> {{element.numeroInstruccion}} </td>
         </ng-container>
 
@@ -17,7 +17,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
-<p id="butonera">
+<div id="butonera">
     <button id="ejecutar" (click)="ejecutar()" mat-raised-button >
         <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
@@ -27,4 +27,4 @@
     <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" mat-raised-button>
         <mat-icon>arrow_right_alt</mat-icon> Ejecutar siguiente instrucción
     </button>
-</p>
+</div>

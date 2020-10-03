@@ -1,4 +1,4 @@
-import { IntegerDataType } from '../util/DataTypes';
+import { IntegerDataType } from './DataTypes';
 import { Stack } from '../util/Stack';
 import { Instruccion, InstruccionInteger } from './Instruccion';
 

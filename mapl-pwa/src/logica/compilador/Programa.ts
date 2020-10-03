@@ -20,14 +20,20 @@ export class Programa {
         this.iActual = 0;
     }
 
+    /** 
+     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt)
+     */
     ejecutar() {
         var err: boolean;
         while (this.iActual < this.codigo.length){
             this.ejecutarSiguienteInstruccion();
         }
-        
         this.finDeEjecucion();
     }
+
+    /**
+     * Ejecuta la instruccion actual, determinada por iActual.
+     */
     ejecutarSiguienteInstruccion()  {
         if (this.iActual < this.codigo.length) {
             try {

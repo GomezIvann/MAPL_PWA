@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ɵɵqueryRefresh } from '@angular/core';
 import { Parser } from 'src/logica/compilador/Parser';
 import { Linea, Programa } from 'src/logica/compilador/Programa';
 
@@ -12,7 +12,6 @@ export class AppComponent {
   version = '[v0.0.3]';
   fileToUpload: File;
   programa: Programa;
-  dataSource: Linea[];
 
   ngOnInit(): void {
     this.soportaApiFile();
@@ -34,7 +33,6 @@ export class AppComponent {
     try {
       let parser = new Parser(this.fileToUpload);
       this.programa = await parser.read(); // espera a que el parser termine de leer el fichero
-      this.dataSource = this.programa.texto; // para luego cargar el codigo en la tabla
     } catch (e) {
       throw new Error("Impossible to parser the specified file.");
     }

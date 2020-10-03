@@ -7,6 +7,7 @@ import { And, Not, Or } from '../instrucciones/Logicas';
 import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
 import { Halt, Nop } from '../instrucciones/Otras';
 import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
+import { Consola } from '../util/Consola';
 import { Label } from './Label';
 import { Lenguaje } from './Lenguaje';
 import { Linea, Programa } from './Programa';
@@ -36,7 +37,7 @@ export class Parser {
                 let lineas = reader.result.toString().split("\n");
                 var finalBucle = false;
                 var primeraPalabra = "";
-                var numeroInstruccion = "";
+                var numeroInstruccion = "0000";
                 var i = 0;
 
                 /**
@@ -50,7 +51,6 @@ export class Parser {
                      * ej. "       hello  world       " --trim()--> "hello  world"
                      */
                     primeraPalabra = linea.trim().replace(/ .*/, "").toUpperCase();
-                    numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
 
                     /** 
                      * Cuando dos cases se comportan igual, como es el caso de las instrucciones XXX y XXX(I)
@@ -341,6 +341,7 @@ export class Parser {
                             else
                                 programa.texto.push(new Linea(linea));
                     }
+                    numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
                     return finalBucle;
                 });
                 if (!finalBucle) {
@@ -350,6 +351,7 @@ export class Parser {
                 resolve(programa);
             };
             reader.readAsText(this.file);
+            Consola.getInstance().addOutput(this.file.name); // Mostramos el valor por consola
         });
     }
 

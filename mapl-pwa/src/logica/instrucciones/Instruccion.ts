@@ -1,6 +1,6 @@
 import { Label } from '../compilador/Label';
 import { Programa } from '../compilador/Programa';
-import { Sizes } from '../util/DataTypes';
+import { Sizes } from './DataTypes';
 import { Stack } from '../util/Stack';
 
 export abstract class Instruccion {

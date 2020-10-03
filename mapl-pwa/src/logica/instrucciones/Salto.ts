@@ -1,4 +1,4 @@
-import { Sizes } from '../util/DataTypes';
+import { Sizes } from './DataTypes';
 import { Stack } from '../util/Stack';
 import { InstruccionLabel } from './Instruccion';
 

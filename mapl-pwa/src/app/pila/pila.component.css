@@ -1,0 +1,10 @@
+/* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
+.table-container {
+    height: 430px;
+    width: 675px;
+    max-width: 100%;
+    overflow: auto;
+}
+table {
+    width: 675px;
+}

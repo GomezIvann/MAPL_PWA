@@ -1,4 +1,4 @@
-import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { ByteDataType, FloatDataType, IntegerDataType } from './DataTypes';
 import { Stack } from '../util/Stack';
 import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 

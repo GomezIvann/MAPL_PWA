@@ -1,19 +1,20 @@
 #ejecutar {
     margin-right: 7px;
 }
-
 #recargar {
     margin-right: 7px; 
+}
+#butonera {
+    margin-top: 15px;
 }
 
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .table-container {
     height: 430px;
-    width: 625px;
+    width: 675px;
     max-width: 100%;
     overflow: auto;
 }
-
 table {
-    width: 625px;
+    width: 675px;
 }

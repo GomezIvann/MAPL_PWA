@@ -5,6 +5,8 @@
     <input onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
         accept=".txt" />
 </p>
-<app-instrucciones id="instrucciones" [programa]="programa" [dataSource]="dataSource"></app-instrucciones>
+<app-instrucciones id="instrucciones" [programa]="programa"></app-instrucciones>
 <app-pila id="pila" [pila]="programa.pila"></app-pila>
-<app-consola id="consola"></app-consola>
+<p>
+    <app-consola id="consola"></app-consola>
+</p>

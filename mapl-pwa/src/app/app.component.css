@@ -1,12 +1,13 @@
 * {
     margin-left: 20px;
 }
-
 #archivo, #pila, #consola {
     margin-left: 0px;
 }
-
 #instrucciones {
     float: left;
     margin-right: 50px;
+}
+#consola {
+    margin-left: 1000px;
 }

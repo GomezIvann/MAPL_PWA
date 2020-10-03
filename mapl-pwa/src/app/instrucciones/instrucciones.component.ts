@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Input } from '@angular/core';
+import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Linea, Programa } from 'src/logica/compilador/Programa';
+import { Programa } from 'src/logica/compilador/Programa';
 
 
 @Component({
@@ -9,16 +9,15 @@ import { Linea, Programa } from 'src/logica/compilador/Programa';
   styleUrls: ['./instrucciones.component.css']
 })
 export class InstruccionesComponent implements OnInit {
-  @Input() programa: Programa; // lo recibe del componente padre app.component
+  @Input() programa: Programa; // Lo recibe del componente padre app.component
 
-  // define las columnas mostradas y establece su orden de aparicion
+  // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[];
-  @Input() dataSource: Linea[];
 
-  constructor(private changeDetectorRefs: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void { 
-    this.displayedColumns = ['numeroInstruccion', 'contenido'];
+    this.displayedColumns = ["numeroInstruccion", "contenido"];
   }
 
   recargarPrograma() {}

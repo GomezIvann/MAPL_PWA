@@ -1,30 +1,37 @@
-import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { ByteDataType, FloatDataType, IntegerDataType } from './DataTypes';
 import { Stack } from '../util/Stack';
 import { Instruccion, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
+import { Consola } from '../util/Consola';
 
 /**
  *  ----------------------IN---------------------------
  */
 export class In extends InstruccionInteger {
     execute(stack: Stack) {
-        var selection;
+        var insertedValue;
         do {
-            selection = +prompt("[in] Escriba un número entero:");
+            insertedValue = +prompt("[in] Escriba un número entero:");
         }
-        while (!Number.isSafeInteger(selection));
-        let dt = new IntegerDataType(selection);
+        while (!Number.isSafeInteger(insertedValue));
+        let dt = new IntegerDataType(insertedValue);
         stack.push(dt, this.getInstructionSize());
+
+        // Mostramos el entero por consola
+        Consola.getInstance().addOutput("Escriba un entero: " + dt.value);
     }
 }
 export class Inf extends InstruccionFloat {
     execute(stack: Stack) {
-        var selection;
+        var insertedValue;
         do {
-            selection = +prompt("[in] Escriba un número real:");
+            insertedValue = +prompt("[in] Escriba un número real:");
         }
-        while (isNaN(selection));
-        let dt = new FloatDataType(selection);
+        while (isNaN(insertedValue));
+        let dt = new FloatDataType(insertedValue);
         stack.push(dt, this.getInstructionSize());
+
+        // Mostramos el real por consola
+        Consola.getInstance().addOutput("Escriba un real: " + dt.value);
     }
 }
 export class Inb extends InstruccionByte {
@@ -36,11 +43,14 @@ export class Inb extends InstruccionByte {
     }
     execute(stack: Stack) {
         if (this.cadena.vacia()){
-            let selection = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):").trim();
-            selection += "\n"; // Insertamos un salto de linea como delimitador
-            this.cadena.setValue(selection.split("").reverse());
+            let insertedValue = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):").trim();
+            insertedValue += "\n"; // Insertamos un salto de linea como delimitador
+            this.cadena.setValue(insertedValue.split("").reverse()); // para comenzar insertando por atras
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
             stack.push(dt, this.getInstructionSize());
+
+            // Mostramos la cadena completa por consola
+            Consola.getInstance().addOutput("Escriba una cadena: " + insertedValue.trim());
         }
         else {
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
@@ -90,18 +100,18 @@ export class CadenaInb {
 export class Out extends InstruccionInteger {
     execute(stack: Stack) {
         let value = stack.pop(this.getInstructionSize()).value;
-        document.getElementById("consola").innerHTML += "> " + value + "\n";
+        Consola.getInstance().addOutput(value);
     }
 }
 export class Outf extends InstruccionFloat {
     execute(stack: Stack) {
         let value = stack.pop(this.getInstructionSize()).value;
-        document.getElementById("consola").innerHTML += "> " + value + "\n";
+        Consola.getInstance().addOutput(value);
     }
 }
 export class Outb extends InstruccionByte {
     execute(stack: Stack) {
         let value = stack.pop(this.getInstructionSize()).value;
-        document.getElementById("consola").innerHTML += "> " + value + "\n";
+        Consola.getInstance().addOutput(value);
     }
 }
