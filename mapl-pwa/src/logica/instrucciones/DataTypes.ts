@@ -1,9 +1,13 @@
 export abstract class DataType {
-    size: number;
-    value: string;
+    size: number;   // Tamaño del dato.
+    value: string;  // Valor del dato.
+
+    // Posicion que ocupa en la pila (de ser el ultimo valor insertado, coincidiría con el valor de SP).
+    position: number;
 
     constructor(value: number) {
         this.setValue(value);
+        this.position = 0;
     }
 
     /** 
@@ -11,9 +15,6 @@ export abstract class DataType {
      * ej: 5.4 no es integer, es float return false
      */
     abstract setValue(value: number): void;
-    toString() {
-        return this.value;
-    }
 }
 export class IntegerDataType extends DataType {
     constructor(value: number) {

@@ -6,7 +6,7 @@ export class B2i extends InstruccionByte {
     execute(stack: Stack) {
         let dtByte = stack.pop(this.getInstructionSize());
         let dtInteger = new IntegerDataType(dtByte.value.charCodeAt(0));
-        stack.push(dtInteger, dtInteger.size); // no se hace necesaria la comprobacion de tipos ya que es un valor interno
+        stack.push(dtInteger, dtInteger.size); // no se hace necesaria la comprobacion de tipos ya que es un valor interno (se supone correcto)
     }
 }
 export class I2f extends InstruccionInteger {

@@ -1,4 +1,4 @@
-import { ByteDataType, FloatDataType, IntegerDataType } from './DataTypes';
+import { ByteDataType, DataType, FloatDataType, IntegerDataType } from './DataTypes';
 import { Stack } from '../util/Stack';
 import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 
@@ -65,25 +65,34 @@ export class Popb extends InstruccionByte {
 
 /**
  *  ----------------------DUP---------------------------
+ * En javascript los objetos se pasan por referencia, es decir:
+ *      let dt = stack.pop(this.getInstructionSize());
+ *      let copy = dt;
+ * si modificamos un valor de copy (ej. copy.size = 200) tambien se modificaría en dt.
+ * Para que dup funcione correctamente y no tengamos guardadas dos referencias al mismo objeto
+ * se hace necesario clonar el primero de ellos, de lo cual se encarga Object.assign({}, dt);
  */
 export class Dup extends InstruccionInteger {
     execute(stack: Stack) {
         let dt = stack.pop(this.getInstructionSize());
+        let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());
-        stack.push(dt, this.getInstructionSize());
+        stack.push(copy, this.getInstructionSize());
     }
 }
 export class Dupf extends InstruccionFloat {
     execute(stack: Stack) {
         let dt = stack.pop(this.getInstructionSize());
+        let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());
-        stack.push(dt, this.getInstructionSize());
+        stack.push(copy, this.getInstructionSize());
     }
 }
 export class Dupb extends InstruccionByte {
     execute(stack: Stack) {
         let dt = stack.pop(this.getInstructionSize());
+        let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());
-        stack.push(dt, this.getInstructionSize());
+        stack.push(copy, this.getInstructionSize());
     }
 }

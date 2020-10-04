@@ -6,7 +6,7 @@ export class Logger {
     private _messages: string[];
 
     /**
-     * Constructor privado para evitar new CadenaInb
+     * Constructor privado para evitar new Logger
      */
     private constructor() { }
 

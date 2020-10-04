@@ -24,8 +24,7 @@ export class Programa {
      * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt)
      */
     ejecutar() {
-        var err: boolean;
-        while (this.iActual < this.codigo.length){
+        while (this.iActual < this.codigo.length) {
             this.ejecutarSiguienteInstruccion();
         }
         this.finDeEjecucion();
@@ -47,9 +46,15 @@ export class Programa {
         else
             this.finDeEjecucion();
     }
+
+    /**
+     * Codigo a ejecutar cuando la ejecucion termina sin errores.
+     */
     private finDeEjecucion(): void {
         this.iActual = 0;
-        alert("Fin de la ejecución.");
+        if (!this.pila.isEmpty()) {
+            throw new Error("El programa finaliza dejando valores en la pila.");
+        }
     }
 
     /**

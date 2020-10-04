@@ -7,10 +7,10 @@ import { And, Not, Or } from '../instrucciones/Logicas';
 import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
 import { Halt, Nop } from '../instrucciones/Otras';
 import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
-import { Consola } from '../util/Consola';
-import { Label } from './Label';
-import { Lenguaje } from './Lenguaje';
-import { Linea, Programa } from './Programa';
+import { Consola } from '../compilador/Consola';
+import { Label } from '../compilador/Label';
+import { Lenguaje } from '../compilador/Lenguaje';
+import { Linea, Programa } from '../compilador/Programa';
 
 export class Parser {
     file: File;

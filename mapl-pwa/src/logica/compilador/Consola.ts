@@ -1,19 +1,19 @@
 /**
- * SINGLETON: Logger con las incidencias de la ejecución del programa
+ * SINGLETON: Consola con las salidas de la ejecución del programa
  */
 export class Consola {
     private static instance: Consola;
     private _outputs: string[];
 
     /**
-     * Constructor privado para evitar new CadenaInb
+     * Constructor privado para evitar new Consola
      */
     private constructor() { }
 
     /**
      * Metodo estatico que controla el acceso a la instancia del Singleton.
      *
-     * Esta implementaciOn le permite subclasificar la clase Singleton mientras mantiene
+     * Esta implementacion permite subclasificar la clase Singleton mientras mantiene
      * solo una instancia de cada subclase alrededor.
      */
     public static getInstance(): Consola {
@@ -23,12 +23,24 @@ export class Consola {
         }
         return Consola.instance;
     }
+
+    /**
+     * Añade una salida a la consola
+     * @param message salida
+     */
     addOutput(message: string) {
         this._outputs.push("> " + message);
     }
+    /**
+     * Devuelve todas las salidas de la ejecución del programa
+     * @param message salida
+     */
     outputs(): string {
         return this._outputs.join("\n");
     }
+    /**
+     * Limpia la consola
+     */
     clean() {
         this._outputs = [];
     }

@@ -23,12 +23,10 @@ export class InstruccionesComponent implements OnInit {
   recargarPrograma() {}
 
   ejecutar() {
-    if (this.programa.codigo.length > 0)
-      this.programa.ejecutar();
+    this.programa.ejecutar();
   }
 
   ejecutarInstruccion() {
-    if (this.programa.codigo.length > 0)
-      this.programa.ejecutarSiguienteInstruccion();
+    this.programa.ejecutarSiguienteInstruccion();
   }
 }

@@ -1,8 +1,5 @@
-#ejecutar {
+#ejecutar, #recargar {
     margin-right: 7px;
-}
-#recargar {
-    margin-right: 7px; 
 }
 #butonera {
     margin-top: 15px;
@@ -17,4 +14,7 @@
 }
 table {
     width: 675px;
+}
+.selected {
+    background-color: lightyellow;
 }

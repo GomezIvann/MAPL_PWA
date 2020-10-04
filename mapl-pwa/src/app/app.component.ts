@@ -1,6 +1,6 @@
-import { Component, ɵɵqueryRefresh } from '@angular/core';
-import { Parser } from 'src/logica/compilador/Parser';
-import { Linea, Programa } from 'src/logica/compilador/Programa';
+import { Component } from '@angular/core';
+import { Parser } from 'src/logica/util/Parser';
+import { Programa } from 'src/logica/compilador/Programa';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +9,7 @@ import { Linea, Programa } from 'src/logica/compilador/Programa';
 })
 export class AppComponent {
   titulo = 'MAPL - PWA';
-  version = '[v0.0.3]';
+  version = '[v0.0.4]';
   fileToUpload: File;
   programa: Programa;
 
