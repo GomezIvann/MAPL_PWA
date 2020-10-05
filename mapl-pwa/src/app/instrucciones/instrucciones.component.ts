@@ -23,7 +23,7 @@ export class InstruccionesComponent implements OnInit {
   recargarPrograma() {}
 
   ejecutar() {
-    this.programa.ejecutar();
+    this.programa.ejecuccionCompleta();
   }
 
   ejecutarInstruccion() {

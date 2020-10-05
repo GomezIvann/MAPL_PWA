@@ -42,9 +42,9 @@ export class Inb extends InstruccionByte {
         this.cadena = CadenaInb.getInstance();
     }
     execute(stack: Stack) {
-        if (this.cadena.vacia()){
-            let insertedValue = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):").trim();
-            insertedValue += "\n"; // Insertamos un salto de linea como delimitador
+        if (this.cadena.isVacia()){
+            let insertedValue = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):");
+            insertedValue = insertedValue.trim() + "\n"; // Insertamos un salto de linea como delimitador
             this.cadena.setValue(insertedValue.split("").reverse()); // para comenzar insertando por atras
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
             stack.push(dt, this.getInstructionSize());
@@ -89,8 +89,11 @@ export class CadenaInb {
     getChar(): string {
         return this._value.pop();
     }
-    vacia(): boolean {
+    isVacia(): boolean {
         return this._value.length === 0;
+    }
+    clean() {
+        this._value = [];
     }
 }
 

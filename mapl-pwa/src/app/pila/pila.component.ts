@@ -10,8 +10,8 @@ import { Stack } from 'src/logica/util/Stack';
   styleUrls: ['./pila.component.css']
 })
 export class PilaComponent implements OnInit {
-   // Lo recibe del componente padre app.component
-  @Input() private _pila: Stack;
+  // Lo recibe del componente padre app.component
+  private _pila: Stack;
 
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[] = ["size", "value"];

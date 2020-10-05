@@ -5,7 +5,7 @@ import { InstruccionLabel } from './Instruccion';
 export class Jmp extends InstruccionLabel {
     execute(stack: Stack) {
         let label = this.programa.getLabelByNombre(this.labelNombre);
-        this.programa.iActual = label.primeraInstruccion;
+        this.programa.jumpTo(label.primeraInstruccion);
     }
 }
 export class Jz extends InstruccionLabel {
@@ -13,7 +13,7 @@ export class Jz extends InstruccionLabel {
         let value = parseInt(stack.pop(Sizes.INTEGER).value);
         if (value === 0) {
             let label = this.programa.getLabelByNombre(this.labelNombre);
-            this.programa.iActual = label.primeraInstruccion;
+            this.programa.jumpTo(label.primeraInstruccion);
         }
     }
 }
@@ -22,7 +22,7 @@ export class Jnz extends InstruccionLabel {
         let value = parseInt(stack.pop(Sizes.INTEGER).value);
         if (value !== 0) {
             let label = this.programa.getLabelByNombre(this.labelNombre);
-            this.programa.iActual = label.primeraInstruccion;
+            this.programa.jumpTo(label.primeraInstruccion);
         }
     }
 }

@@ -1,7 +1,7 @@
 * {
     margin-left: 20px;
 }
-#archivo, #pila, #consola {
+#archivo, #pila {
     margin-left: 0px;
 }
 #instrucciones {

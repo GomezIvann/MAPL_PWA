@@ -1,3 +1,4 @@
-push 10     'Meter entero en la pila
-dup
-pop         'Sacar entero de la pila
+inb
+inb
+outb
+outb

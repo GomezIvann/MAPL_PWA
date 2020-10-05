@@ -1,4 +1,3 @@
-import { getLocaleNumberSymbol } from '@angular/common';
 import { Add, Sub, Mul, Div, Addf, Subf, Mod, Divf, Mulf } from '../instrucciones/Aritmeticas';
 import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from '../instrucciones/Comparaciones';
 import { B2i, F2i, I2b, I2f } from '../instrucciones/Conversiones';
@@ -319,7 +318,7 @@ export class Parser {
                             i++;
                             break;
                         case Lenguaje.HALT:
-                            programa.codigo.push(new Halt(numeroInstruccion));
+                            programa.codigo.push(new Halt(numeroInstruccion, programa));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             // Finaliza la lectura del programa (no hace falta seguir leyendo)
                             finalBucle = true;
@@ -345,7 +344,7 @@ export class Parser {
                     return finalBucle;
                 });
                 if (!finalBucle) {
-                    programa.codigo.push(new Halt(numeroInstruccion));
+                    programa.codigo.push(new Halt(numeroInstruccion, programa));
                     programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
                 }
                 resolve(programa);
