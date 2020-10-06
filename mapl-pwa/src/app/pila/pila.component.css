@@ -1,10 +1,29 @@
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .table-container {
     height: 430px;
-    width: 675px;
+    width: 650px;
     max-width: 100%;
     overflow: auto;
 }
+
+/* Tamaño de letra de celdas */
+.mat-cell, .mat-header-cell {
+    font-size: 13px;
+}
+
+/* Numero de instruccion ocupa el 20% del ancho de la tabla, el contenido de esta ocupa el 80% del ancho de la tabla */
+.mat-column-size {
+    width: 20%;
+}
+.mat-column-value {
+    width: 80%;
+}
+
+/* Altura de la filas */
+.mat-row, .mat-header-row {
+    height: 45px;
+}
+
 table {
-    width: 675px;
+    width: 650px;
 }

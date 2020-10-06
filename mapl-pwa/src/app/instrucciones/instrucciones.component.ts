@@ -10,11 +10,10 @@ import { Programa } from 'src/logica/compilador/Programa';
 })
 export class InstruccionesComponent implements OnInit {
   @Input() programa: Programa; // Lo recibe del componente padre app.component
+  displayedColumns: string[]; // Define las columnas mostradas y establece su orden de aparicion
+  private readonly ROW_HEIGHT: number = 45;
 
-  // Define las columnas mostradas y establece su orden de aparicion
-  displayedColumns: string[];
-
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void { 
     this.displayedColumns = ["numeroInstruccion", "contenido"];
@@ -26,7 +25,24 @@ export class InstruccionesComponent implements OnInit {
     this.programa.ejecuccionCompleta();
   }
 
-  ejecutarInstruccion() {
+  ejecutarInstruccion(el: HTMLElement) {
     this.programa.ejecutarSiguienteInstruccion();
+    this.scrollToActualInstruction(el);
+  }
+
+  /**
+   * Desplaza el scroll para enfocar a la instrucciona actual ejecutandose
+   * El calculo se realiza de la siguiente forma:
+   *      scroll (px a desplazar dentro del div) = h * t
+   *      siendo:
+   *          h = numero fila (objeto Linea) actual ejecutandose. 
+   *          t = altura de cada fila definido en el css
+   * @param container <div> contenedor de la tabla
+   */
+  scrollToActualInstruction(container: HTMLElement) {
+    container.scrollTo({
+      top: this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT,
+      behavior: 'smooth', // animacion
+    });
   }
 }

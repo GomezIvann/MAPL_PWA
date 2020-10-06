@@ -87,6 +87,13 @@ export class Programa {
     }
 
     /**
+     * Devuelve la Linea correspondiente a la instruccion actual ejecutandose
+     */
+    getLineaByInstruccionActual(): number {
+        return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.iActual].numero);
+    }
+
+    /**
      * Salta la ejecución del programa al numero de instruccion pasado como parametro.
      * @param nInstruccion
      */

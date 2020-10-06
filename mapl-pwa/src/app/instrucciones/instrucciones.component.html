@@ -1,4 +1,4 @@
-<div class="table-container mat-elevation-z8">
+<div #tbContainer class="table-container mat-elevation-z8">
     <table id="tbInstrucciones" mat-table [dataSource]="programa.texto">
         <!-- Columna 1: Numero de la instruccion (si lo tiene) -->
         <ng-container matColumnDef="numeroInstruccion">
@@ -9,7 +9,7 @@
         <!-- Columna 2: Contenido de la linea -->
         <ng-container matColumnDef="contenido">
             <th mat-header-cell *matHeaderCellDef> Contenido </th>
-            <td mat-cell *matCellDef="let element; let i = index"> {{element.contenido}} </td>
+            <td mat-cell *matCellDef="let element"> {{element.contenido}} </td>
         </ng-container>
 
         <!-- Definicion de las columnas -->
@@ -26,7 +26,7 @@
     <button id="recargar" (click)="recargarPrograma()" mat-raised-button>
         <mat-icon>refresh</mat-icon> Recargar
     </button>
-    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" mat-raised-button>
+    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" mat-raised-button>
         <mat-icon>arrow_right_alt</mat-icon> Ejecutar siguiente instrucción
     </button>
 </div>
