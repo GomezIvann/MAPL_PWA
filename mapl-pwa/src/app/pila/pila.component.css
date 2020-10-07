@@ -6,6 +6,10 @@
     overflow: auto;
 }
 
+table {
+    width: 100%;
+}
+
 /* Tamaño de letra de celdas */
 .mat-cell, .mat-header-cell {
     font-size: 13px;
@@ -22,8 +26,4 @@
 /* Altura de la filas */
 .mat-row, .mat-header-row {
     height: 45px;
-}
-
-table {
-    width: 650px;
 }

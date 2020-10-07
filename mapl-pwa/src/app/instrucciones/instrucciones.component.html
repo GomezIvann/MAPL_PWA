@@ -16,7 +16,8 @@
         <!-- Si el numero de instruccion de la Linea coincide con el de la instruccion ejecutandose se muestra de color amarillo -->
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.iActual].numero }"></tr>
+            [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.iActual].numero }"
+            (click)="ejecutarHasta(row)"></tr>
     </table>
 </div>
 <div id="butonera">

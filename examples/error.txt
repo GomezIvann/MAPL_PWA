@@ -1,4 +1,0 @@
-inb
-inb
-outb
-outb

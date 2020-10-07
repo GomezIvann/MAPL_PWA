@@ -51,10 +51,24 @@ export class Programa {
         }
     }
 
-    private isCodigo(): boolean {
-        return this.codigo.length != 0;
+    /**
+     * Ejecutar el codigo del programa hasta la instruccion actual seleccionada
+     * por el usuario
+     * 
+     * @param linea linea limite de ejecucion (no incluida)
+     */
+    ejecutarHasta(linea: Linea){
+        let indice = this.getInstruccionByLinea(linea);
+        while (this.iActual < indice)
+            this.ejecucion();
     }
 
+    /**
+     * Logica comun de los metodos ejecutar:
+     *      1. Ejecutar instruccion actual
+     *      2. Apuntar a la siguiente
+     *      si salta un error, pone la linea donde se produjo y lo lanza de nuevo
+     */
     private ejecucion() {
         try {
             this.codigo[this.iActual].execute(this.pila);
@@ -63,6 +77,13 @@ export class Programa {
         catch (err) {
             throw new Error("Línea " + this.codigo[this.iActual].numero + ". " + err);
         }
+    }
+
+    /**
+     * True si hay codigo para ejecutar
+     */
+    private isCodigo(): boolean {
+        return this.codigo.length != 0;
     }
 
     /**
@@ -87,10 +108,17 @@ export class Programa {
     }
 
     /**
-     * Devuelve la Linea correspondiente a la instruccion actual ejecutandose
+     * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose
      */
     getLineaByInstruccionActual(): number {
         return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.iActual].numero);
+    }
+
+    /**
+     * Devuelve el indice de la Instruccion correspondiente a la linea pasada como parametro
+     */
+    private getInstruccionByLinea(linea: Linea): number {
+        return this.codigo.findIndex(instruccion => instruccion.numero === linea.numeroInstruccion);
     }
 
     /**

@@ -1,8 +1,5 @@
-* {
-    margin-left: 20px;
-}
-#archivo, #pila {
-    margin-left: 0px;
+.main-container {
+    margin: 20px;
 }
 #instrucciones {
     float: left;
@@ -13,5 +10,5 @@
 }
 #footer {
     float: right;
-    margin-right: 20px;
+    margin-bottom: 20px;
 }

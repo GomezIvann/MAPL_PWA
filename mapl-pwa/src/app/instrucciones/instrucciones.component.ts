@@ -1,6 +1,6 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Programa } from 'src/logica/compilador/Programa';
+import { Linea, Programa } from 'src/logica/compilador/Programa';
 
 
 @Component({
@@ -28,6 +28,10 @@ export class InstruccionesComponent implements OnInit {
   ejecutarInstruccion(el: HTMLElement) {
     this.programa.ejecutarSiguienteInstruccion();
     this.scrollToActualInstruction(el);
+  }
+
+  ejecutarHasta(row: Linea) {
+    this.programa.ejecutarHasta(row);
   }
 
   /**

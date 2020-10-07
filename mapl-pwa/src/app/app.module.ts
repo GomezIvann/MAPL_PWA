@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { IncidenciasComponent } from './incidencias/incidencias.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,7 +29,7 @@ import { IncidenciasComponent } from './incidencias/incidencias.component';
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
-    MatTableModule
+    MatTableModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

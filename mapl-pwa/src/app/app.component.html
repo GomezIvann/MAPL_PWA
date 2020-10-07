@@ -1,16 +1,18 @@
-<h1>{{titulo}}</h1>
-<label for="archivo">Selecciona un archivo:</label>
-<p id="archivo">
-    <input onclick="this.value=''" (change)="cargar($event.target.files)" type="file"
-        accept=".txt" />
-</p>
-<app-instrucciones id="instrucciones" [programa]="programa"></app-instrucciones>
-<app-pila id="pila" [pila]="programa.pila"></app-pila>
-<p>
-    <app-consola id="consola"></app-consola>
-</p>
-<footer id="footer">
+<div class="main-container">
+    <h1>{{titulo}}</h1>
     <p>
-        {{version}}
+        <button mat-raised-button (click)="fileInput.click()">
+            <mat-icon>cloud_upload</mat-icon> Subir programa
+        </button>
+        <input hidden onclick="this.value=''" (change)="cargar($event.target.files)" 
+            #fileInput type="file" accept=".txt">
     </p>
-</footer>
+    <app-instrucciones id="instrucciones" [programa]="programa"></app-instrucciones>
+    <app-pila id="pila" [pila]="programa.pila"></app-pila>
+    <p>
+        <app-consola id="consola"></app-consola>
+    </p>
+    <footer id="footer">
+        {{version}}
+    </footer>
+</div>
