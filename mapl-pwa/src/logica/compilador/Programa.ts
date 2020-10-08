@@ -15,7 +15,7 @@ export class Programa {
     /**
      * Propiedades relativas a la Ejecucion
      */
-    private iActual: number; // siguiente instruccion a ejecutar
+    private ip: number; // IP (segmento de código). Dirección de la instrucción actual.
     private finalizado: boolean;
 
     constructor() {
@@ -23,7 +23,7 @@ export class Programa {
         this.labels = [];
         this.texto = [];
         this.pila = new Stack();
-        this.iActual = 0;
+        this.ip = 0;
         this.finalizado = false;
     }
 
@@ -38,7 +38,7 @@ export class Programa {
     }
 
     /**
-     * Ejecuta la instruccion actual, determinada por iActual.
+     * Ejecuta la instruccion actual, determinada por el segmento de codigo (IP).
      * Condiciones para la ejecucion:
      *      - No haber finalizado.
      *      - Haber codigo disponible para ejecutar.
@@ -59,7 +59,7 @@ export class Programa {
      */
     ejecutarHasta(linea: Linea){
         let indice = this.getInstruccionByLinea(linea);
-        while (this.iActual < indice)
+        while (this.ip < indice)
             this.ejecucion();
     }
 
@@ -71,11 +71,11 @@ export class Programa {
      */
     private ejecucion() {
         try {
-            this.codigo[this.iActual].execute(this.pila);
-            this.iActual++;
+            this.codigo[this.ip].execute(this.pila);
+            this.ip++;
         }
         catch (err) {
-            throw new Error("Línea " + this.codigo[this.iActual].numero + ". " + err);
+            throw new Error("Línea " + this.codigo[this.ip].numero + ". " + err);
         }
     }
 
@@ -93,7 +93,7 @@ export class Programa {
         if (!this.pila.isEmpty())
             throw new Error("El programa finaliza dejando valores en la pila.");
 
-        this.iActual = -1; // -1 porque despues se ejecuta iActual++ (similar al problema de las instrucciones de salto)   
+        this.ip = -1; // -1 porque despues se ejecuta ip++ (similar al problema de las instrucciones de salto)   
         this.finalizado = true;
         CadenaInb.getInstance().clean(); // Limpiamos la cadena común de las instrucciones Inb
         alert("Fin de la ejecución del programa.");
@@ -111,7 +111,7 @@ export class Programa {
      * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose
      */
     getLineaByInstruccionActual(): number {
-        return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.iActual].numero);
+        return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.ip].numero);
     }
 
     /**
@@ -126,7 +126,7 @@ export class Programa {
      * @param nInstruccion
      */
     jumpTo(nInstruccion: number) {
-        this.iActual = nInstruccion;
+        this.ip = nInstruccion;
     }
 }
 
