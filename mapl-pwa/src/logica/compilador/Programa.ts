@@ -1,16 +1,18 @@
 import { CadenaInb } from '../instrucciones/EntradaSalida';
 import { Instruccion } from '../instrucciones/Instruccion';
+import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { Label } from './Label';
 
 /**
- * Representa el codigo (instrucciones) del archivo cargado por el usuario
+ * Representa el codigo (instrucciones) del archivo cargado por el usuario.
  */
 export class Programa {
     codigo: Instruccion[]; // conjunto de instrucciones que forman el programa
     labels: Label[]; // etiquetas del programa
     texto: Linea[]; // texto del programa
     pila: Stack; // pila del programa
+    memoria: Memory; // memoria del programa
 
     /**
      * Propiedades relativas a la Ejecucion
@@ -23,12 +25,13 @@ export class Programa {
         this.labels = [];
         this.texto = [];
         this.pila = new Stack();
+        this.memoria = new Memory();
         this.ip = 0;
         this.finalizado = false;
     }
 
     /** 
-     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt)
+     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
      */
     ejecuccionCompleta() {
         while (!this.finalizado && this.isCodigo())
@@ -71,7 +74,7 @@ export class Programa {
      */
     private ejecucion() {
         try {
-            this.codigo[this.ip].execute(this.pila);
+            this.codigo[this.ip].execute(this.pila, this.memoria);
             this.ip++;
         }
         catch (err) {

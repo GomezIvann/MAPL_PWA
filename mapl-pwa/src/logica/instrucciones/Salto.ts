@@ -1,16 +1,17 @@
-import { Sizes } from './DataTypes';
+import { PrimitiveSizes } from '../util/DataTypes';
+import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionLabel } from './Instruccion';
 
 export class Jmp extends InstruccionLabel {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let label = this.programa.getLabelByNombre(this.labelNombre);
         this.programa.jumpTo(label.primeraInstruccion);
     }
 }
 export class Jz extends InstruccionLabel {
-    execute(stack: Stack) {
-        let value = parseInt(stack.pop(Sizes.INTEGER).value);
+    execute(stack: Stack, memory: Memory): void {
+        let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
         if (value === 0) {
             let label = this.programa.getLabelByNombre(this.labelNombre);
             this.programa.jumpTo(label.primeraInstruccion);
@@ -18,8 +19,8 @@ export class Jz extends InstruccionLabel {
     }
 }
 export class Jnz extends InstruccionLabel {
-    execute(stack: Stack) {
-        let value = parseInt(stack.pop(Sizes.INTEGER).value);
+    execute(stack: Stack, memory: Memory): void {
+        let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
         if (value !== 0) {
             let label = this.programa.getLabelByNombre(this.labelNombre);
             this.programa.jumpTo(label.primeraInstruccion);

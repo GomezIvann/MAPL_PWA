@@ -1,9 +1,10 @@
-import { FloatDataType, IntegerDataType } from './DataTypes';
+import { FloatDataType, IntegerDataType } from '../util/DataTypes';
+import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionFloat, InstruccionInteger } from './Instruccion';
 
 export class Add extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let dt = new IntegerDataType(value2 + value1);
@@ -11,7 +12,7 @@ export class Add extends InstruccionInteger {
     }
 }
 export class Addf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let dt = new FloatDataType(value2 + value1);
@@ -19,7 +20,7 @@ export class Addf extends InstruccionFloat {
     }
 }
 export class Sub extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let dt = new IntegerDataType(value2 - value1);
@@ -27,7 +28,7 @@ export class Sub extends InstruccionInteger {
     }
 }
 export class Subf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let dt = new FloatDataType(value2 - value1);
@@ -35,7 +36,7 @@ export class Subf extends InstruccionFloat {
     }
 }
 export class Mul extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let dt = new IntegerDataType(value2 * value1);
@@ -43,7 +44,7 @@ export class Mul extends InstruccionInteger {
     }
 }
 export class Mulf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let dt = new FloatDataType(value2 - value1);
@@ -51,7 +52,7 @@ export class Mulf extends InstruccionFloat {
     }
 }
 export class Div extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let dt = new IntegerDataType(Math.trunc(value2 / value1));
@@ -59,7 +60,7 @@ export class Div extends InstruccionInteger {
     }
 }
 export class Divf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let value2 = parseFloat(stack.pop(this.getInstructionSize()).value);
         let dt = new FloatDataType(value2 / value1);
@@ -67,7 +68,7 @@ export class Divf extends InstruccionFloat {
     }
 }
 export class Mod extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
         let value2 = parseInt(stack.pop(this.getInstructionSize()).value);
         let dt = new IntegerDataType(value2 % value1);

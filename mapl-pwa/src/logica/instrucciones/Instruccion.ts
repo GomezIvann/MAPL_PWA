@@ -1,5 +1,6 @@
 import { Programa } from '../compilador/Programa';
-import { Sizes } from './DataTypes';
+import { PrimitiveSizes } from '../util/DataTypes';
+import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 
 export abstract class Instruccion {
@@ -8,22 +9,29 @@ export abstract class Instruccion {
 		this.numero = numeroInstruccion;
 	}
 
-	abstract execute(stack: Stack);
-    getInstructionSize(): number {return 0;}
+	abstract execute(stack: Stack, memory: Memory): void;
+    getInstructionSize(): number {
+		return 0;
+	}
 }
 export abstract class InstruccionFloat extends Instruccion {
 	getInstructionSize(): number {
-		return Sizes.FLOAT;
+		return PrimitiveSizes.FLOAT;
 	}
 }
 export abstract class InstruccionInteger extends Instruccion {
 	getInstructionSize(): number {
-		return Sizes.INTEGER;
+		return PrimitiveSizes.INTEGER;
+	}
+}
+export abstract class InstruccionAddress extends Instruccion {
+	getInstructionSize(): number {
+		return PrimitiveSizes.ADDRESS;
 	}
 }
 export abstract class InstruccionByte extends Instruccion {
 	getInstructionSize(): number {
-		return Sizes.BYTE;
+		return PrimitiveSizes.BYTE;
 	}
 }
 export abstract class InstruccionLabel extends Instruccion {

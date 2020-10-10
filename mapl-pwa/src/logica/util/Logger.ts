@@ -8,7 +8,9 @@ export class Logger {
     /**
      * Constructor privado para evitar new Logger
      */
-    private constructor() { }
+    private constructor() {
+        this._messages = [];
+    }
 
     /**
      * Metodo estatico que controla el acceso a la instancia del Singleton.
@@ -17,10 +19,9 @@ export class Logger {
      * solo una instancia de cada subclase alrededor.
      */
     public static getInstance(): Logger {
-        if (!Logger.instance){
+        if (!Logger.instance)
             Logger.instance = new Logger();
-            Logger.instance._messages = [];
-        }
+        
         return Logger.instance;
     }
     addMessage(message: string) {
