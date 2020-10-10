@@ -1,7 +1,7 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataType } from 'src/logica/instrucciones/DataTypes';
+import { PrimitiveDataType } from 'src/logica/util/DataTypes';
 import { Stack } from 'src/logica/util/Stack';
 
 @Component({
@@ -15,7 +15,7 @@ export class PilaComponent implements OnInit {
 
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[] = ["size", "value"];
-  dataSource = new MatTableDataSource<DataType>();
+  dataSource = new MatTableDataSource<PrimitiveDataType>();
 
   constructor() {}
 

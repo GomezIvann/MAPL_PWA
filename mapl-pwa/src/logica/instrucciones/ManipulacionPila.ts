@@ -1,9 +1,12 @@
-import { ByteDataType, DataType, FloatDataType, IntegerDataType } from './DataTypes';
+import { AddressDataType, ByteDataType, PrimitiveDataType, FloatDataType, IntegerDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
+import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
-import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
+import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 
 /**
- *  ----------------------PUSH---------------------------
+ * -----------------------------------------------------
+ * ----------------------PUSH---------------------------
+ * -----------------------------------------------------
  */
 export class Push extends InstruccionInteger {
     cte: string;
@@ -12,7 +15,7 @@ export class Push extends InstruccionInteger {
         super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         // +cadena --> para convertir una cadena que contiene un número en un número
         // Solo funciona si la cadena solo contiene caracteres numéricos, de lo contrario, devuelve NaN
         let dt = new IntegerDataType(+this.cte);
@@ -26,7 +29,7 @@ export class Pushf extends InstruccionFloat {
         super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let dt = new FloatDataType(+this.cte);
         stack.push(dt, this.getInstructionSize());
     }
@@ -38,33 +41,102 @@ export class Pushb extends InstruccionByte {
         super(numeroLinea);
         this.cte = cte;
     }
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let dt = new ByteDataType(+this.cte); 
+        stack.push(dt, this.getInstructionSize());
+    }
+}
+export class Pusha extends InstruccionAddress {
+    cte: string;
+
+    constructor(numeroLinea: string, cte: string){ 
+        super(numeroLinea);
+        this.cte = cte;
+    }
+    execute(stack: Stack, memory: Memory): void {
+        let dt = new AddressDataType(+this.cte); 
         stack.push(dt, this.getInstructionSize());
     }
 }
 
 /**
- *  ----------------------POP---------------------------
+ * ----------------------------------------------------
+ * ----------------------LOAD--------------------------
+ * ----------------------------------------------------
+ */
+export class Load extends InstruccionInteger {
+    execute(stack: Stack, memory: Memory): void {
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        memory.load(this.getInstructionSize(), address);
+    }
+}
+export class Loadf extends InstruccionFloat {
+    execute(stack: Stack, memory: Memory): void {
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        memory.load(this.getInstructionSize(), address);
+    }
+}
+export class Loadb extends InstruccionByte {
+    execute(stack: Stack, memory: Memory): void {
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        memory.load(this.getInstructionSize(), address);
+    }
+}
+/**
+ * ----------------------------------------------------
+ * ----------------------STORE-------------------------
+ * ----------------------------------------------------
+ */
+export class Store extends InstruccionInteger {
+    execute(stack: Stack, memory: Memory): void {
+        let value = stack.pop(this.getInstructionSize());
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        memory.store(address, vt);
+    }
+}
+export class Storef extends InstruccionFloat {
+    execute(stack: Stack, memory: Memory): void {
+        let value = stack.pop(this.getInstructionSize());
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        memory.store(address, vt);
+    }
+}
+export class Storeb extends InstruccionByte {
+    execute(stack: Stack, memory: Memory): void {
+        let value = stack.pop(this.getInstructionSize());
+        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        memory.store(address, vt);
+    }
+}
+
+/**
+ * ----------------------------------------------------
+ * ----------------------POP---------------------------
+ * ----------------------------------------------------
  */
 export class Pop extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         stack.pop(this.getInstructionSize());
     }
 }
 export class Popf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         stack.pop(this.getInstructionSize());
     }
 }
 export class Popb extends InstruccionByte {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         stack.pop(this.getInstructionSize());
     }
 }
 
 /**
- *  ----------------------DUP---------------------------
+ * ----------------------------------------------------
+ * ----------------------DUP---------------------------
+ * ----------------------------------------------------
  * En javascript los objetos se pasan por referencia, es decir:
  *      let dt = stack.pop(this.getInstructionSize());
  *      let copy = dt;
@@ -73,7 +145,7 @@ export class Popb extends InstruccionByte {
  * se hace necesario clonar el primero de ellos, de lo cual se encarga Object.assign({}, dt);
  */
 export class Dup extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
         let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());
@@ -81,7 +153,7 @@ export class Dup extends InstruccionInteger {
     }
 }
 export class Dupf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
         let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());
@@ -89,7 +161,7 @@ export class Dupf extends InstruccionFloat {
     }
 }
 export class Dupb extends InstruccionByte {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
         let copy = Object.assign({}, dt);
         stack.push(dt, this.getInstructionSize());

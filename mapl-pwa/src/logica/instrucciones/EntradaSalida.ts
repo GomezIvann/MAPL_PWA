@@ -1,13 +1,14 @@
-import { ByteDataType, FloatDataType, IntegerDataType } from './DataTypes';
+import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
 import { Stack } from '../util/Stack';
 import { Instruccion, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 import { Consola } from '../compilador/Consola';
+import { Memory } from '../util/Memoria';
 
 /**
  *  ----------------------IN---------------------------
  */
 export class In extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         var insertedValue;
         do {
             insertedValue = +prompt("[in] Escriba un número entero:");
@@ -21,7 +22,7 @@ export class In extends InstruccionInteger {
     }
 }
 export class Inf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         var insertedValue;
         do {
             insertedValue = +prompt("[in] Escriba un número real:");
@@ -41,7 +42,7 @@ export class Inb extends InstruccionByte {
         super(numeroLinea);
         this.cadena = CadenaInb.getInstance();
     }
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         if (this.cadena.isVacia()){
             let insertedValue = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):");
             insertedValue = insertedValue.trim() + "\n"; // Insertamos un salto de linea como delimitador
@@ -60,6 +61,11 @@ export class Inb extends InstruccionByte {
 }
 /**
  * SINGLETON: Cadena comun para las instrucciones Inb (una unica instancia)
+ * Se hace necesario un singleton debido a que la cadena se debe reiniciar al final de la ejecucion
+ * completa del programa. Si pasasemos esta variable por referencia, como todo en TypeScript, funcionaria tambien, 
+ * pero solo una iteracion, ya que en la siguiente seguirian usando las instrucciones Inb esa instancia, que podria 
+ * contener un valor de la anterior ejecucion, y que para reiniciar seria mucho mas costoso que usando un singleton,
+ * ya que habria que buscar todas las instrucciones Inb y pasarles una nueva referencia a un nuevo objeto CadenaInb
  */
 export class CadenaInb {
     private static instance: CadenaInb;
@@ -98,22 +104,24 @@ export class CadenaInb {
 }
 
 /**
- *  ----------------------OUT---------------------------
+ * ---------------------------------------------------
+ * ----------------------OUT--------------------------
+ * ---------------------------------------------------
  */
 export class Out extends InstruccionInteger {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize()).value;
         Consola.getInstance().addOutput(value);
     }
 }
 export class Outf extends InstruccionFloat {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize()).value;
         Consola.getInstance().addOutput(value);
     }
 }
 export class Outb extends InstruccionByte {
-    execute(stack: Stack) {
+    execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize()).value;
         Consola.getInstance().addOutput(value);
     }
