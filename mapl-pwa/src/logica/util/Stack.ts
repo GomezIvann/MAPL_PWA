@@ -22,7 +22,7 @@ export class Stack extends AbstractDataSegmentZone {
      * la pila esta vacia
      */
     isEmpty(): boolean {
-        return this.sp == this.dataSegment.maxSize; 
+        return this.sp === this.dataSegment.maxSize; 
     }
 
     /**
@@ -37,7 +37,7 @@ export class Stack extends AbstractDataSegmentZone {
             throw new Error("Los bytes insertados no se corresponden con el tipo de la instrucción.");
 
         this.dataSegment.add(dt, this.sp);
-        this.sp += dt.size; // Incrementamos el puntero de la pila.
+        this.sp--;
     }
 
     /**
@@ -55,7 +55,9 @@ export class Stack extends AbstractDataSegmentZone {
         else if (this.top().size < instructionSize)
             throw new Error("Los bytes retirados para la instrucción son restos de un valor parcialmente retirado.");
 
-        return this.dataSegment.remove(this.sp) as PrimitiveDataType;
+        this.sp++;
+        let removedValue = this.dataSegment.remove(this.sp) as PrimitiveDataType;
+        return removedValue;
     }
 
     /**
@@ -67,6 +69,6 @@ export class Stack extends AbstractDataSegmentZone {
         if (this.isEmpty())
             throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
 
-        return this.dataSegment.get(this.sp) as PrimitiveDataType;
+        return this.dataSegment.get(this.sp+1) as PrimitiveDataType;
     }
 }

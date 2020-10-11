@@ -1,6 +1,7 @@
 import { CadenaInb } from '../instrucciones/EntradaSalida';
 import { Instruccion } from '../instrucciones/Instruccion';
 import { Memory } from '../util/Memoria';
+import { DataSegment } from '../util/SegmentoDatos';
 import { Stack } from '../util/Stack';
 import { Label } from './Label';
 
@@ -98,7 +99,8 @@ export class Programa {
 
         this.ip = -1; // -1 porque despues se ejecuta ip++ (similar al problema de las instrucciones de salto)   
         this.finalizado = true;
-        CadenaInb.getInstance().clean(); // Limpiamos la cadena común de las instrucciones Inb
+        CadenaInb.getInstance().clean();    // Limpiamos la cadena común de las instrucciones Inb
+        DataSegment.getInstance().clean();  // Limpiamos el segmento de datos
         alert("Fin de la ejecución del programa.");
     }
 

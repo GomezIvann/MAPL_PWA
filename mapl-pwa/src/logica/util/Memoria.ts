@@ -13,21 +13,29 @@ export class Memory extends AbstractDataSegmentZone {
     }
 
     /**
-     * ..
+     * ...
      * 
      * @param instructionSize tamaño de la instruccion
      * @returns DataType que expulsa
      */
     load(instructionSize: number, address: number): VariableDataType {
-        let returnedValue = this.dataSegment.get(address);
+        let value = this.dataSegment.get(address);
 
-        if (returnedValue === undefined)
-            throw new Error("Se ha intentado acceder a una dirección de memoria donde no había ningún valor.");
-        else if (returnedValue.size > instructionSize)
-            throw new Error("La variable retirada para la instrucción deja en la memoria los últimos bytes de esta sin retirar.");
-        else if (returnedValue.size < instructionSize)
-            throw new Error("La variable retirada para la instrucción son restos de un otra parcialmente retirada.");
+        if (value === undefined)
+            throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir" + address 
+                + "). Se introducirá basura en la pila.");
+        else if (!(value instanceof VariableDataType))
+            throw new Error("Se lee una zona de memoria que no contiene una variable (dir" + address + ").");
 
-        return this.dataSegment.get(address) as VariableDataType;
+        // La posicion a la que accedemos contiene una variable. Pasamos a comprobar los tipos
+        let variable = this.dataSegment.get(address) as VariableDataType;
+        if (variable.size > instructionSize)
+            throw new Error("La lectura transfiere menos bytes de los que tiene '" + variable.name + "'. La variable tiene "
+                + variable.size + " y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
+        else if (variable.size < instructionSize)
+            throw new Error("La lectura transfiere más bytes de los que tiene '" + variable.name + "'. La variable tiene "
+                + variable.size + " y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
+
+        return variable;
     }
 }

@@ -1,9 +1,13 @@
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
-.table-container {
+.memoria-table-container, .pila-table-container {
     height: 430px;
-    width: 650px;
+    width: 350px;
     max-width: 100%;
     overflow: auto;
+    float: left;
+}
+.pila-table-container {
+    margin-left: 50px;
 }
 table {
     width: 100%;
@@ -15,11 +19,11 @@ table {
 }
 
 /* Numero de instruccion ocupa el 20% del ancho de la tabla, el contenido de esta ocupa el 80% del ancho de la tabla */
-.mat-column-size {
-    width: 20%;
+.mat-column-position {
+    width: 30%;
 }
 .mat-column-value {
-    width: 80%;
+    width: 70%;
 }
 
 /* Altura de la filas */

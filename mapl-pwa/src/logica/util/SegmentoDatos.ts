@@ -1,3 +1,4 @@
+import { Observable, Subject } from 'rxjs';
 import { DataType, PrimitiveDataType } from './DataTypes';
 
 /**
@@ -16,11 +17,13 @@ export class DataSegment {
     private static instance: DataSegment;
 
     private _data: DataType[];
-    readonly maxSize: number = 1024;
-    private actualSize: number;
+    private data$: Subject<DataType[]>;
+    readonly maxSize: number = 1023;
+    private _actualSize: number;
 
     private constructor() {
         this._data = [];
+        this.data$ = new Subject<DataType[]>();
     }
 
     public static getInstance(): DataSegment {
@@ -30,17 +33,28 @@ export class DataSegment {
         return DataSegment.instance;
     }
 
+    /**
+     * LOGICA
+     */
+
+    /**
+     * Inserta un valor en la memoria
+     * @param value
+     * @param address 
+     */
     add(value: DataType, address: number) {
-        this.actualSize += value.size;
+        this._actualSize += value.size;
         if (this.isFull())
             throw new Error("Overflow del segmento de datos. No se pueden insertar más bytes.");
         
         this._data[address] = value;
+        this.data$.next(this._data);
     }
     remove(address: number): DataType {
-        this.actualSize -= this._data[address].size;
+        this._actualSize -= this._data[address].size;
         let returned = this._data[address];
         delete this._data[address]; // igual que this._data[address] = undefined
+        this.data$.next(this._data);
         return returned;
     }
     get(address: number): DataType {
@@ -52,7 +66,15 @@ export class DataSegment {
      * igual o superior al tamaño maximo establecido
      */
     isFull(): boolean {
-        return this.actualSize >= this.maxSize;
+        return this._actualSize >= this.maxSize;
+    }
+    clean() {
+        this._data = [];
+        this.data$.next(this._data);
+        this._actualSize = 0;
+    }
+    values(): Observable<DataType[]> {
+        return this.data$.asObservable();
     }
 }
 

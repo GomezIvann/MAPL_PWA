@@ -12,7 +12,7 @@
 
 pusha 0     'Dirección
 push 9999	'Valor
-store		'Mover 2 bytes a memoria
+store       'Mover 2 bytes a memoria
 
 pusha 2     'Dirección		
 pushf 1111
@@ -40,5 +40,3 @@ popf
 pop
 
 halt
-
-
