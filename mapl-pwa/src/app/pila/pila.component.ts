@@ -1,7 +1,8 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { PrimitiveDataType } from 'src/logica/util/DataTypes';
+import { DataType, PrimitiveDataType } from 'src/logica/util/DataTypes';
+import { DataSegment } from 'src/logica/util/SegmentoDatos';
 import { Stack } from 'src/logica/util/Stack';
 
 @Component({
@@ -14,8 +15,8 @@ export class PilaComponent implements OnInit {
   private _pila: Stack;
 
   // Define las columnas mostradas y establece su orden de aparicion
-  displayedColumns: string[] = ["size", "value"];
-  dataSource = new MatTableDataSource<PrimitiveDataType>();
+  displayedColumns: string[] = ["position", "value"];
+  dataSource = new MatTableDataSource<DataType>();
 
   constructor() {}
 
@@ -40,8 +41,14 @@ export class PilaComponent implements OnInit {
    * Modifica los datos de la tabla.
    */
   refresh() {
-    this.pila.values().subscribe((res) => {
+    DataSegment.getInstance().values().subscribe((res) => {
       this.dataSource.data = res;
+      this.scrollToBottomPila();
     });
+  }
+
+  scrollToBottomPila() {
+    var objDiv = document.getElementById("div");
+    objDiv.scrollTop = objDiv.scrollHeight;
   }
 }

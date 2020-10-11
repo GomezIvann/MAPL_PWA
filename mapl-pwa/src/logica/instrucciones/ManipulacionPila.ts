@@ -66,20 +66,23 @@ export class Pusha extends InstruccionAddress {
  */
 export class Load extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        memory.load(this.getInstructionSize(), address);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let variable = memory.load(this.getInstructionSize(), address);
+        stack.push(variable.value, this.getInstructionSize());
     }
 }
 export class Loadf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        memory.load(this.getInstructionSize(), address);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let variable = memory.load(this.getInstructionSize(), address);
+        stack.push(variable.value, this.getInstructionSize());
     }
 }
 export class Loadb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        memory.load(this.getInstructionSize(), address);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let variable = memory.load(this.getInstructionSize(), address);
+        stack.push(variable.value, this.getInstructionSize());
     }
 }
 /**
@@ -90,24 +93,24 @@ export class Loadb extends InstruccionByte {
 export class Store extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize());
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
     }
 }
 export class Storef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize());
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
     }
 }
 export class Storeb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getInstructionSize());
-        let address = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        let vt: VariableDataType = new VariableDataType("var"+address, value);
+        let address = parseInt(stack.pop(PrimitiveSizes.ADDRESS).value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
     }
 }

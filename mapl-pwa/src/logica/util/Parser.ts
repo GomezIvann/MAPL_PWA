@@ -3,7 +3,7 @@ import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from '../instruc
 import { B2i, F2i, I2b, I2f } from '../instrucciones/Conversiones';
 import { In, Inb, Inf, Out, Outb, Outf } from '../instrucciones/EntradaSalida';
 import { And, Not, Or } from '../instrucciones/Logicas';
-import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf } from '../instrucciones/ManipulacionPila';
+import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf, Load, Loadb, Loadf, Store, Storef, Storeb, Pusha } from '../instrucciones/ManipulacionPila';
 import { Halt, Nop } from '../instrucciones/Otras';
 import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
 import { Consola } from '../compilador/Consola';
@@ -42,7 +42,7 @@ export class Parser {
                 /**
                  * El metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
                  * para ello basta con retornar true cuando queramos pararla
-                 */ 
+                 */
                 lineas.some(linea => {
                     /**
                      * Expresion regular reemplaza todo un string por "" salvo la primera palabra que encuentra
@@ -80,6 +80,12 @@ export class Parser {
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
+                        case Lenguaje.PUSHA:
+                            var cte = linea.trim().split(/\s+/)[1];
+                            programa.codigo.push(new Pusha(numeroInstruccion, cte));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
                         case Lenguaje.POP:
                         case Lenguaje.POPI:
                             programa.codigo.push(new Pop(numeroInstruccion));
@@ -93,6 +99,38 @@ export class Parser {
                             break;
                         case Lenguaje.POPB:
                             programa.codigo.push(new Popb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.LOAD:
+                        case Lenguaje.LOADI:
+                            programa.codigo.push(new Load(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.LOADB:
+                            programa.codigo.push(new Loadb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.LOADF:
+                            programa.codigo.push(new Loadf(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.STORE:
+                        case Lenguaje.STOREI:
+                            programa.codigo.push(new Store(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.STOREB:
+                            programa.codigo.push(new Storeb(numeroInstruccion));
+                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            i++;
+                            break;
+                        case Lenguaje.STOREF:
+                            programa.codigo.push(new Storef(numeroInstruccion));
                             programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;

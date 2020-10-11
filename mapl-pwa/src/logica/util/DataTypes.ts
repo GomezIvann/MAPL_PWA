@@ -12,6 +12,9 @@ export class VariableDataType extends DataType {
         this.value = data;
         this.size = data.size;
     }
+    toString() {
+        return this.name + " ("+this.value.value+")";
+    }
 }
 
 export abstract class PrimitiveDataType extends DataType {
@@ -27,6 +30,10 @@ export abstract class PrimitiveDataType extends DataType {
      * ej: 5.4 no es integer, es float return false
      */
     abstract setValue(value: number): void;
+
+    toString() {
+        return this.value;
+    }
 }
 export class IntegerDataType extends PrimitiveDataType {
     constructor(value: number) {
