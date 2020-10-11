@@ -7,6 +7,8 @@ Reescribiendo la máquina didáctica MAPL como una PWA.
    - loadb loadi loadf
    - storeb storei storef
    - popb popi popf
+   - storeb storei storef
+   - popb popi popf
    - dupb dupi dupf
 2. Aritméticas:
    - addi addf
