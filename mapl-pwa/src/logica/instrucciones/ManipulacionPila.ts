@@ -1,4 +1,4 @@
-import { AddressDataType, ByteDataType, PrimitiveDataType, FloatDataType, IntegerDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
+import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
@@ -58,7 +58,6 @@ export class Pusha extends InstruccionAddress {
         stack.push(dt, this.getInstructionSize());
     }
 }
-
 /**
  * ----------------------------------------------------
  * ----------------------LOAD--------------------------
@@ -114,7 +113,6 @@ export class Storeb extends InstruccionByte {
         memory.store(address, vt);
     }
 }
-
 /**
  * ----------------------------------------------------
  * ----------------------POP---------------------------
@@ -135,22 +133,28 @@ export class Popb extends InstruccionByte {
         stack.pop(this.getInstructionSize());
     }
 }
-
 /**
  * ----------------------------------------------------
  * ----------------------DUP---------------------------
  * ----------------------------------------------------
- * En javascript los objetos se pasan por referencia, es decir:
+ * En Javascript los objetos se pasan por referencia, es decir:
  *      let dt = stack.pop(this.getInstructionSize());
  *      let copy = dt;
  * si modificamos un valor de copy (ej. copy.size = 200) tambien se modificaría en dt.
  * Para que dup funcione correctamente y no tengamos guardadas dos referencias al mismo objeto
- * se hace necesario clonar el primero de ellos, de lo cual se encarga Object.assign({}, dt);
+ * se hace necesario clonar el primero de ellos, de lo cual se encarga el siguiente metodo:
+ *       Object.assign(Object.create(Object.getPrototypeOf(dt)), dt)
+ * Así es como funciona:
+ *      1. Object.create () crea un nuevo objeto y Object.getPrototypeOf() obtiene la cadena de prototipos de la instancia original 
+ *         y los agrega al objeto recién creado.
+ *      2. Object.assign () hace lo que hemos visto anteriormente, que es copiar (superficialmente) las variables de instancia 
+ *         en el objeto recién creado.
+ * Actualmente es la unica forma de clonar un objeto manteniendo la clase original.
  */
 export class Dup extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
-        let copy = Object.assign({}, dt);
+        let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
         stack.push(dt, this.getInstructionSize());
         stack.push(copy, this.getInstructionSize());
     }
@@ -158,7 +162,7 @@ export class Dup extends InstruccionInteger {
 export class Dupf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
-        let copy = Object.assign({}, dt);
+        let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
         stack.push(dt, this.getInstructionSize());
         stack.push(copy, this.getInstructionSize());
     }
@@ -166,7 +170,7 @@ export class Dupf extends InstruccionFloat {
 export class Dupb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
-        let copy = Object.assign({}, dt);
+        let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
         stack.push(dt, this.getInstructionSize());
         stack.push(copy, this.getInstructionSize());
     }

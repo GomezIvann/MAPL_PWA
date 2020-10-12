@@ -3,7 +3,7 @@ import { AbstractDataSegmentZone, DataSegment } from './SegmentoDatos';
 
 /**
  * Pila del programa donde se almacenan los datos necesarios para la ejecucion del programa.
- * SOLO TRABAJA CON TIPOS PRIMITIVOS (PrimitiveDataTypes)
+ * SOLO TRABAJA CON TIPOS PRIMITIVOS (PrimitiveDataType).
  */
 export class Stack extends AbstractDataSegmentZone {
 

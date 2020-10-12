@@ -3,6 +3,11 @@ import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionFloat, InstruccionInteger } from './Instruccion';
 
+/**
+ * -----------------------------------------------------
+ * ----------------------ADD----------------------------
+ * -----------------------------------------------------
+ */
 export class Add extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -19,6 +24,11 @@ export class Addf extends InstruccionFloat {
         stack.push(dt, this.getInstructionSize());
     }
 }
+/**
+ * -----------------------------------------------------
+ * ----------------------SUB----------------------------
+ * -----------------------------------------------------
+ */
 export class Sub extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -35,6 +45,11 @@ export class Subf extends InstruccionFloat {
         stack.push(dt, this.getInstructionSize());
     }
 }
+/**
+ * -----------------------------------------------------
+ * ----------------------MUL----------------------------
+ * -----------------------------------------------------
+ */
 export class Mul extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -51,6 +66,11 @@ export class Mulf extends InstruccionFloat {
         stack.push(dt, this.getInstructionSize());
     }
 }
+/**
+ * -----------------------------------------------------
+ * ----------------------DIV----------------------------
+ * -----------------------------------------------------
+ */
 export class Div extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -67,6 +87,11 @@ export class Divf extends InstruccionFloat {
         stack.push(dt, this.getInstructionSize());
     }
 }
+/**
+ * -----------------------------------------------------
+ * ----------------------MOD----------------------------
+ * -----------------------------------------------------
+ */
 export class Mod extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);

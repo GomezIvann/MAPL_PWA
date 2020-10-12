@@ -11,10 +11,10 @@ import { Stack } from 'src/logica/util/Stack';
   styleUrls: ['./pila.component.css']
 })
 export class PilaComponent implements OnInit {
-  // Lo recibe del componente padre app.component
+  // Lo recibe del componente padre app.component.
   private _pila: Stack;
 
-  // Define las columnas mostradas y establece su orden de aparicion
+  // Define las columnas mostradas y establece su orden de aparicion.
   displayedColumns: string[] = ["position", "value"];
   dataSource = new MatTableDataSource<DataType>();
 
@@ -26,7 +26,6 @@ export class PilaComponent implements OnInit {
    */
   @Input() set pila(value: Stack) {
     this._pila = value;
-    this.dataSource.data = []; // vaciamos la tabla hasta la ejecucion del programa
     this.refresh();
   }
 
@@ -41,14 +40,17 @@ export class PilaComponent implements OnInit {
    * Modifica los datos de la tabla.
    */
   refresh() {
-    DataSegment.getInstance().values().subscribe((res) => {
+    DataSegment.getInstance().data().subscribe((res) => {
       this.dataSource.data = res;
-      this.scrollToBottomPila();
+      this.scrollToFondoPila();
     });
   }
 
-  scrollToBottomPila() {
-    var objDiv = document.getElementById("div");
-    objDiv.scrollTop = objDiv.scrollHeight;
+  /**
+   * Mueve el scroll del contenedor asociada a la pila al fondo del segmento de datos.
+   */
+  scrollToFondoPila() {
+    let div = document.getElementById("div-pila");
+    div.scrollTop = div.scrollHeight;
   }
 }
