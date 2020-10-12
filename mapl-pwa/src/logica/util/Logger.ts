@@ -1,5 +1,5 @@
 /**
- * SINGLETON: Logger con las incidencias de la ejecución del programa
+ * SINGLETON: Logger con las incidencias de la ejecución del programa.
  */
 export class Logger {
     private static instance: Logger;
@@ -24,6 +24,11 @@ export class Logger {
         
         return Logger.instance;
     }
+
+    /**
+     * Añade una indicencia al registro.
+     * @param message error
+     */
     addMessage(message: string) {
         this._messages.push(message);
     }

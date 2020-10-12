@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { DataType, PrimitiveDataType } from './DataTypes';
+import { DataType } from './DataTypes';
 
 /**
  * Zona comun de memoria para los valores y variables de la pila y memoria, respectivamente, en la ejecucion de un
@@ -15,15 +15,21 @@ export class DataSegment {
      * Instancia unica de DataSegment
      */
     private static instance: DataSegment;
-
     private _data: DataType[];
+    /**
+     * Objeto encargado de generar y emitir los eventos de actualizacion
+     * del almacen de datos (esto es, la variable stack).
+     * El sujeto se actualiza en todos los sitios donde se actualice el segmento de datos (add, remove y clean)
+     */
     private data$: Subject<DataType[]>;
-    readonly maxSize: number = 1023;
+
+    readonly maxSize: number = 1024;
     private _actualSize: number;
 
     private constructor() {
-        this._data = [];
+        this._data = new Array<DataType>(this.maxSize);
         this.data$ = new Subject<DataType[]>();
+        this.data$.next(this._data);
     }
 
     public static getInstance(): DataSegment {
@@ -33,9 +39,6 @@ export class DataSegment {
         return DataSegment.instance;
     }
 
-    /**
-     * LOGICA
-     */
 
     /**
      * Inserta un valor en la memoria
@@ -50,6 +53,10 @@ export class DataSegment {
         this._data[address] = value;
         this.data$.next(this._data);
     }
+    /**
+     * Elimina el elemento correspondiente a la direccion pasada como parametro
+     * @param address
+     */
     remove(address: number): DataType {
         this._actualSize -= this._data[address].size;
         let returned = this._data[address];
@@ -60,7 +67,11 @@ export class DataSegment {
     get(address: number): DataType {
         return this._data[address];
     }
-
+    clean() {
+        this._data = new Array<DataType>(this.maxSize);
+        this.data$.next(this._data);
+        this._actualSize = 0;
+    }
     /**
      * No se pueden insertar mas datos cuando la suma de los tamaños de los datos ya insertados es 
      * igual o superior al tamaño maximo establecido
@@ -68,12 +79,13 @@ export class DataSegment {
     isFull(): boolean {
         return this._actualSize >= this.maxSize;
     }
-    clean() {
-        this._data = [];
-        this.data$.next(this._data);
-        this._actualSize = 0;
-    }
-    values(): Observable<DataType[]> {
+    /**
+     * Devuelve un observable con los valores del segmento de datos para el componente visual que lo muestra.
+     * De esta forma, el receptor de este metodo estara pendiente de los cambios que se hagan sobre la pila
+     * dinamicamente, por medio de una suscripcion.
+     * Un observable es un objeto que permite observar los eventos emitidos por el subject.
+     */
+    data(): Observable<DataType[]> {
         return this.data$.asObservable();
     }
 }

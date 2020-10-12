@@ -1,25 +1,26 @@
-import { CadenaInb } from '../instrucciones/EntradaSalida';
 import { Instruccion } from '../instrucciones/Instruccion';
+import { CadenaInb } from '../util/CadenaInb';
 import { Memory } from '../util/Memoria';
 import { DataSegment } from '../util/SegmentoDatos';
 import { Stack } from '../util/Stack';
 import { Label } from './Label';
+import { Linea } from './Linea';
 
 /**
- * Representa el codigo (instrucciones) del archivo cargado por el usuario.
+ * Representa el programa asociado al archivo cargado por el usuario.
  */
 export class Programa {
-    codigo: Instruccion[]; // conjunto de instrucciones que forman el programa
-    labels: Label[]; // etiquetas del programa
-    texto: Linea[]; // texto del programa
-    pila: Stack; // pila del programa
-    memoria: Memory; // memoria del programa
+    codigo: Instruccion[];  // Conjunto de instrucciones que forman el programa.
+    labels: Label[];        // Etiquetas del programa.
+    texto: Linea[];         // Texto del programa.
+    pila: Stack;            // Pila del programa.
+    memoria: Memory;        // Memoria del programa.
 
     /**
-     * Propiedades relativas a la Ejecucion
+     * Propiedades relativas a la ejecucion.
      */
-    private ip: number; // IP (segmento de código). Dirección de la instrucción actual.
-    private finalizado: boolean;
+    private ip: number;             // IP (segmento de código). Dirección de la instrucción actual.
+    private finalizado: boolean;    // true -> ejecucion del programa ha finalizado.
 
     constructor() {
         this.codigo = [];
@@ -27,51 +28,19 @@ export class Programa {
         this.texto = [];
         this.pila = new Stack();
         this.memoria = new Memory();
+        CadenaInb.getInstance().clean();    // Limpiamos la cadena comun de las instrucciones Inb.
+        DataSegment.getInstance().clean();  // Limpiamos el segmento de datos.
         this.ip = 0;
         this.finalizado = false;
     }
 
-    /** 
-     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
-     */
-    ejecuccionCompleta() {
-        while (!this.finalizado && this.isCodigo())
-            this.ejecucion();
-
-        this.finalizado = false;
-    }
-
-    /**
-     * Ejecuta la instruccion actual, determinada por el segmento de codigo (IP).
-     * Condiciones para la ejecucion:
-     *      - No haber finalizado.
-     *      - Haber codigo disponible para ejecutar.
-     */
-    ejecutarSiguienteInstruccion() {
-        if (!this.finalizado && this.isCodigo()){
-            this.ejecucion();
-            if (this.finalizado)
-                this.finalizado = false;
-        }
-    }
-
-    /**
-     * Ejecutar el codigo del programa hasta la instruccion actual seleccionada
-     * por el usuario
-     * 
-     * @param linea linea limite de ejecucion (no incluida)
-     */
-    ejecutarHasta(linea: Linea){
-        let indice = this.getInstruccionByLinea(linea);
-        while (this.ip < indice)
-            this.ejecucion();
-    }
 
     /**
      * Logica comun de los metodos ejecutar:
-     *      1. Ejecutar instruccion actual
-     *      2. Apuntar a la siguiente
-     *      si salta un error, pone la linea donde se produjo y lo lanza de nuevo
+     *      1. Ejecutar instruccion actual.
+     *      2. Apuntar a la siguiente instruccion.
+     *      Si salta un error en la ejecucion de la instruccion, 
+     *      indica la linea donde se produjo y lo lanza de nuevo.
      */
     private ejecucion() {
         try {
@@ -83,11 +52,47 @@ export class Programa {
         }
     }
 
-    /**
-     * True si hay codigo para ejecutar
+    /** 
+     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
+     * Condiciones para la ejecucion:
+     *      - No haber finalizado.
+     *      - Haber codigo disponible para ejecutar.
      */
-    private isCodigo(): boolean {
-        return this.codigo.length != 0;
+    ejecuccionCompleta(): void  {
+        while (!this.finalizado && this.isCodigo())
+            this.ejecucion();
+    }
+
+    /**
+     * Ejecuta la instruccion actual, determinada por el segmento de codigo (IP).
+     * Condiciones para la ejecucion:
+     *      - No haber finalizado.
+     *      - Haber codigo disponible para ejecutar.
+     */
+    ejecutarSiguienteInstruccion(): void  {
+        if (!this.finalizado && this.isCodigo())
+            this.ejecucion();
+    }
+
+    /**
+     * Ejecutar el codigo del programa hasta la instruccion actual seleccionada
+     * por el usuario.
+     * Condiciones para la ejecucion:
+     *      - La linea pulsada es posterior a la instruccion actual (IP).
+     * 
+     * @param linea linea limite de ejecucion (no incluida).
+     */
+    ejecutarHasta(linea: Linea): void {
+        let indice = this.getInstruccionByLinea(linea);
+        while (this.ip < indice)
+            this.ejecucion();
+    }
+
+    /**
+     * Devuelve el indice de la Instruccion correspondiente a la linea pasada como parametro.
+     */
+    private getInstruccionByLinea(linea: Linea): number {
+        return this.codigo.findIndex(instruccion => instruccion.numero === linea.numeroInstruccion);
     }
 
     /**
@@ -96,16 +101,29 @@ export class Programa {
     finDeEjecucion(): void {
         if (!this.pila.isEmpty())
             throw new Error("El programa finaliza dejando valores en la pila.");
-
-        this.ip = -1; // -1 porque despues se ejecuta ip++ (similar al problema de las instrucciones de salto)   
+ 
         this.finalizado = true;
-        CadenaInb.getInstance().clean();    // Limpiamos la cadena común de las instrucciones Inb
-        DataSegment.getInstance().clean();  // Limpiamos el segmento de datos
+        this.ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
         alert("Fin de la ejecución del programa.");
     }
 
     /**
-     * Busca una etiqueta por el nombre
+     * Reinicia el programa para que pueda ser ejecutado de nuevo.
+     * Reiniciar el programa implica:
+     *      1. Vaciar el segmento de datos.
+     *      2. Vaciar la cadena comun de las instrucciones Inb.
+     *      3. Apuntar a la primera instruccion.
+     *      4. Desmarcar el programa como finalizado.
+     */
+    recargar(): void {
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
+        this.ip = 0;
+        this.finalizado = false;
+    }
+
+    /**
+     * Busca una etiqueta por el nombre.
      * @param nombre 
      */
     getLabelByNombre(nombre: string): Label {
@@ -113,40 +131,26 @@ export class Programa {
     }
 
     /**
-     * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose
+     * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose.
      */
     getLineaByInstruccionActual(): number {
         return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.ip].numero);
     }
 
     /**
-     * Devuelve el indice de la Instruccion correspondiente a la linea pasada como parametro
+     * Salta la ejecución del programa al numero de instruccion pasado como parametro.
+     * Metodo usado por las instrucciones de salto.
+     * 
+     * @param nInstruccion
      */
-    private getInstruccionByLinea(linea: Linea): number {
-        return this.codigo.findIndex(instruccion => instruccion.numero === linea.numeroInstruccion);
+    jumpTo(nInstruccion: number): void {
+        this.ip = nInstruccion;
     }
 
     /**
-     * Salta la ejecución del programa al numero de instruccion pasado como parametro.
-     * @param nInstruccion
+     * True si hay codigo para ejecutar.
      */
-    jumpTo(nInstruccion: number) {
-        this.ip = nInstruccion;
-    }
-}
-
-/**
- * Representa cada linea del fichero leido.
- */
-export class Linea {
-    contenido: string;
-    numeroInstruccion: string;
-
-    constructor(contenido: string, numeroInstruccion = "") {
-        this.contenido = contenido;
-        this.numeroInstruccion = numeroInstruccion;
-    }
-    print(): string {
-        return this.numeroInstruccion + this.contenido + "\n";
+    private isCodigo(): boolean {
+        return this.codigo.length != 0;
     }
 }

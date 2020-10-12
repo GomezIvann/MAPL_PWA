@@ -1,11 +1,16 @@
-import { FloatDataType, IntegerDataType, PrimitiveSizes } from '../util/DataTypes';
+import { IntegerDataType, PrimitiveSizes } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionInteger, InstruccionFloat } from './Instruccion';
 
 /**
- * Independientemente del tipo de datos que se comparen (integer o float)
- * en la pila siempre dejan un entero
+ * Independientemente del tipo de datos que se comparen (integer o float) o la instruccion usada,
+ * en la pila siempre dejan un entero.
+ */
+/**
+ * -----------------------------------------------------
+ * ----------------GT (Greater than)--------------------
+ * -----------------------------------------------------
  */
 export class Gt extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
@@ -25,7 +30,11 @@ export class Gtf extends InstruccionFloat {
         stack.push(dt, PrimitiveSizes.INTEGER);
     }
 }
-
+/**
+ * -----------------------------------------------------
+ * -----------------LT (Less than)----------------------
+ * -----------------------------------------------------
+ */
 export class Lt extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -44,7 +53,11 @@ export class Ltf extends InstruccionFloat {
         stack.push(dt, PrimitiveSizes.INTEGER);
     }
 }
-
+/**
+ * -----------------------------------------------------
+ * -----------------GE (Great or Equal)-----------------
+ * -----------------------------------------------------
+ */
 export class Ge extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -63,7 +76,11 @@ export class Gef extends InstruccionFloat {
         stack.push(dt, PrimitiveSizes.INTEGER);
     }
 }
-
+/**
+ * -----------------------------------------------------
+ * ----------------LE (Less or Equal)-------------------
+ * -----------------------------------------------------
+ */
 export class Le extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -82,7 +99,11 @@ export class Lef extends InstruccionFloat {
         stack.push(dt, PrimitiveSizes.INTEGER);
     }
 }
-
+/**
+ * -----------------------------------------------------
+ * ---------------------EQ (Equal)----------------------
+ * -----------------------------------------------------
+ */
 export class Eq extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);
@@ -101,7 +122,11 @@ export class Eqf extends InstruccionFloat {
         stack.push(dt, PrimitiveSizes.INTEGER);
     }
 }
-
+/**
+ * -----------------------------------------------------
+ * -------------------NE (Not equal)--------------------
+ * -----------------------------------------------------
+ */
 export class Ne extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value1 = parseInt(stack.pop(this.getInstructionSize()).value);

@@ -7,8 +7,7 @@
 export class Label {
     nombre: string;
     /**
-     * Numero que determina cual es la siguiente 
-     * instruccion tras el Label
+     * Numero que determina cual es la siguiente instruccion tras el Label
      */ 
     primeraInstruccion: number;
 

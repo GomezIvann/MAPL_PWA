@@ -9,18 +9,24 @@ import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
 import { Consola } from '../compilador/Consola';
 import { Label } from '../compilador/Label';
 import { Lenguaje } from '../compilador/Lenguaje';
-import { Linea, Programa } from '../compilador/Programa';
+import { Programa } from '../compilador/Programa';
+import { Linea } from '../compilador/Linea';
 
+/**
+ * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
+ */
 export class Parser {
-    file: File;
+    file: File; // Fichero de entrada
 
     constructor(file: File) {
         this.file = file;
     }
 
     /**
-     * Resolve: Es la función que llamaremos si queremos resolver satisfactoriamente la promesa.
-     * Reject: Es la función que llamaremos si queremos rechazar la promesa.
+     * Metodo que lee el programa pasado como parametro en el constructor.
+     * 
+     * Resolve: Es la funcion que llamaremos si queremos resolver satisfactoriamente la promesa.
+     * Reject: Es la funcion que llamaremos si queremos rechazar la promesa.
      */
     read(): Promise<Programa> {
         var programa = new Programa();
@@ -29,19 +35,19 @@ export class Parser {
         return new Promise((resolve, reject) => {
             reader.onerror = () => {
                 reader.abort();
-                reject(new DOMException("Problema parseando el archivo de entrada."));
+                reject(new DOMException("Ha habido un problema parseando el archivo de entrada."));
             };
 
             reader.onload = (e) => {
-                let lineas = reader.result.toString().split("\n");
-                var finalBucle = false;
-                var primeraPalabra = "";
-                var numeroInstruccion = "0000";
-                var i = 0;
+                let lineas = reader.result.toString().split("\n"); // Fichero divido en lineas
+                var finalBucle = false; // Determinara si hay una instruccion halt o no.
+                var primeraPalabra = ""; // Primera palabra de la linea
+                var numeroInstruccion = "0000"; // Cadena para el numero de instruccion
+                var i = 0; // Contador para el numero de instruccion
 
                 /**
-                 * El metodo some se comporta igual que forEach, salvo que este se puede parar su ejecucion
-                 * para ello basta con retornar true cuando queramos pararla
+                 * El metodo some se comporta igual que forEach, con la diferencia de que en este se
+                 * puede parar su ejecucion con simplemente retornar true de acuerdo a la condicion que queramos
                  */
                 lineas.some(linea => {
                     /**
@@ -53,11 +59,11 @@ export class Parser {
 
                     /** 
                      * Cuando dos cases se comportan igual, como es el caso de las instrucciones XXX y XXX(I)
-                     * los cases se colocan de seguido y ambas ejecutan el mismo codigo
+                     * los cases se colocan de seguido y ambas ejecutan el mismo codigo:
                      *      case XXX:
                      *      case XXX(I):
                      *          code;
-                     * esto es exclusivo de Javascript
+                     * esto es exclusivo de Javascript.
                      */
                     switch (primeraPalabra) {
                         case Lenguaje.PUSH:
@@ -381,6 +387,10 @@ export class Parser {
                     numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
                     return finalBucle;
                 });
+                
+                /**
+                 * Si no se ha leido una instruccion HALT explicitamente se añade manualmente.
+                 */
                 if (!finalBucle) {
                     programa.codigo.push(new Halt(numeroInstruccion, programa));
                     programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
@@ -388,14 +398,22 @@ export class Parser {
                 resolve(programa);
             };
             reader.readAsText(this.file);
-            Consola.getInstance().addOutput(this.file.name); // Mostramos el valor por consola
+            Consola.getInstance().addOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
     }
 
+    /**
+     * True si la linea es una etiqueta.
+     * @param linea 
+     */
     private isLabel(linea: string): boolean {
         return linea.endsWith(":");
     }
 
+    /**
+     * True si la linea es un comentario.
+     * @param linea 
+     */
     private isComment(linea: string): boolean {
         return /^\'/.test(linea);
     }
