@@ -29,7 +29,7 @@ import { IncidenciasComponent } from './incidencias/incidencias.component';
     BrowserAnimationsModule,
     MatIconModule,
     MatButtonModule,
-    MatTableModule,
+    MatTableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

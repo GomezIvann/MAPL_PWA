@@ -18,15 +18,22 @@ table {
     font-size: 13px;
 }
 
-/* Numero de instruccion ocupa el 20% del ancho de la tabla, el contenido de esta ocupa el 80% del ancho de la tabla */
-.mat-column-position {
-    width: 30%;
+/* La direccion ocupa el 30% del ancho de la tabla, el contenido de esta ocupa el 70% del ancho de la tabla */
+.mat-column-address {
+    width: 25%;
+    text-align: right;
+    border-right: 1px solid #e0e0e0;
+    padding-right: 8px;
 }
 .mat-column-value {
-    width: 70%;
+    width: 75%;
+    padding-left: 8px; /* margen celda */
 }
 
 /* Altura de la filas */
 .mat-row, .mat-header-row {
     height: 45px;
+}
+.mat-header-cell {
+    text-align: left;
 }

@@ -15,7 +15,7 @@ export class PilaComponent implements OnInit {
   private _pila: Stack;
 
   // Define las columnas mostradas y establece su orden de aparicion.
-  displayedColumns: string[] = ["position", "value"];
+  displayedColumns: string[] = ["address", "value"];
   dataSource = new MatTableDataSource<DataType>();
 
   constructor() {}
@@ -52,5 +52,19 @@ export class PilaComponent implements OnInit {
   scrollToFondoPila() {
     let div = document.getElementById("div-pila");
     div.scrollTop = div.scrollHeight;
+  }
+
+  /**
+   * Controla el rowspan de cada fila de datos del segmento de datos, de acuerdo al size de cada dato,
+   * es decir, si el size es 2 (Integer), el rowspan = 2.
+   * En caso contrario (que el data segment este vacio), rowspan = 1.
+   * 
+   * @param dt
+   */
+  getRowSpan(dt: DataType): number {
+    if (dt !== undefined)
+        return dt.size;
+
+    return 1;
   }
 }

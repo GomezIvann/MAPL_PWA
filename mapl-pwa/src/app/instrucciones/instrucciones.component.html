@@ -14,12 +14,13 @@
 
         <!-- Definicion de las columnas -->
         <!-- Si el numero de instruccion de la Linea coincide con el de la instruccion actual ejecutandose (IP) se muestra de color amarillo -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero }"
             (click)="ejecutarHasta(row)"></tr>
     </table>
 </div>
+
 <div id="butonera">
     <button id="ejecutar" (click)="ejecutar(tbContainer)" mat-raised-button >
         <mat-icon>play_circle_outline</mat-icon> Ejecutar

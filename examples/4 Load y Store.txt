@@ -18,9 +18,9 @@ pusha 2     'Dirección
 pushf 1111
 storef      'Mover 4 bytes a memoria
 
-pusha 6     'Dirección
-pushb 97    'Valor
-storeb      'Mover 1 byte a memoria
+pusha 6     'Dirección		
+pushf 1111
+storef      'Mover 4 bytes a memoria
 
 ' 2) Mover de la memoria a la pila
 ' (obtener valor de una variable)
@@ -32,10 +32,10 @@ pusha 2     'Dirección
 loadf       'Cargar 4 bytes
 
 pusha 6     'Dirección
-loadb       'Cargar 1 byte
+loadf       'Cargar 1 byte
 
 
-popb
+popf
 popf
 pop
 
