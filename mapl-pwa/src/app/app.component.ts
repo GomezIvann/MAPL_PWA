@@ -9,7 +9,7 @@ import { Programa } from 'src/logica/compilador/Programa';
 })
 export class AppComponent {
   titulo = 'MAPL - PWA';
-  version = '[v0.0.5]';
+  version = '[v0.1.0]';
   fileToUpload: File;
   programa: Programa;
 

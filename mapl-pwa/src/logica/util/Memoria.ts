@@ -24,11 +24,16 @@ export class Memory extends AbstractDataSegmentZone {
         if (value === undefined)
             throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir" + address 
                 + "). Se introducirá basura en la pila.");
-        else if (!(value instanceof VariableDataType))
+        else if (value[0] === undefined && value[1])
+            throw new Error("Se ha realizado una lectura parcial en memoria libre (dir" + address +").");
+        else if (!(value[0] instanceof VariableDataType))
             throw new Error("Se lee una zona de memoria que no contiene una variable (dir" + address + ").");
 
-        // La posicion a la que accedemos contiene una variable. Pasamos a comprobar los tipos
-        let variable = this.dataSegment.get(address) as VariableDataType;
+        /**
+         * Llegados a este punto, la posicion a la que accedemos contiene una variable. 
+         * Pasamos a realizar la comprobacion de tipos.
+         */
+        let variable = this.dataSegment.get(address)[0] as VariableDataType;
         if (variable.size > instructionSize)
             throw new Error("La lectura transfiere menos bytes de los que tiene '" + variable.name + "'. La variable tiene "
                 + variable.size + " y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");

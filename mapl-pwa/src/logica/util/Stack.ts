@@ -6,7 +6,6 @@ import { AbstractDataSegmentZone, DataSegment } from './SegmentoDatos';
  * SOLO TRABAJA CON TIPOS PRIMITIVOS (PrimitiveDataType).
  */
 export class Stack extends AbstractDataSegmentZone {
-
     /**
      * SP (segmento de datos). Puntero a la cima de la pila.
      */
@@ -48,9 +47,7 @@ export class Stack extends AbstractDataSegmentZone {
      * @returns DataType que expulsa
      */
     pop(instructionSize: number): PrimitiveDataType {
-        if (this.isEmpty())
-            throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
-        else if (this.top().size > instructionSize)
+        if (this.top().size > instructionSize)
             throw new Error("Los bytes retirados para la instrucción dejan en la pila los últimos bytes de valor sin retirar.");
         else if (this.top().size < instructionSize)
             throw new Error("Los bytes retirados para la instrucción son restos de un valor parcialmente retirado.");
@@ -64,6 +61,6 @@ export class Stack extends AbstractDataSegmentZone {
         if (this.isEmpty())
             throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
 
-        return this.dataSegment.get(this.sp) as PrimitiveDataType;
+        return this.dataSegment.get(this.sp)[0] as PrimitiveDataType;
     }
 }

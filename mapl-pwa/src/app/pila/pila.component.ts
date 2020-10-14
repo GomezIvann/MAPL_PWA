@@ -1,9 +1,10 @@
 import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataType, PrimitiveDataType } from 'src/logica/util/DataTypes';
+import { DataType } from 'src/logica/util/DataTypes';
 import { DataSegment } from 'src/logica/util/SegmentoDatos';
 import { Stack } from 'src/logica/util/Stack';
+
 
 @Component({
   selector: 'app-pila',
@@ -16,9 +17,10 @@ export class PilaComponent implements OnInit {
 
   // Define las columnas mostradas y establece su orden de aparicion.
   displayedColumns: string[] = ["address", "value"];
-  dataSource = new MatTableDataSource<DataType>();
+  dataSource = new MatTableDataSource<[DataType, boolean]>();
 
-  constructor() {}
+  constructor() {
+  }
 
   /**
    * Cada vez que el valor de la pila cambie (inyectado por app.component), esto es,
@@ -61,10 +63,14 @@ export class PilaComponent implements OnInit {
    * 
    * @param dt
    */
-  getRowSpan(dt: DataType): number {
-    if (dt !== undefined)
-        return dt.size;
+  getRowSpan(index: number): number {
+    let tuple = DataSegment.getInstance().get(index);
 
-    return 1;
+    if (tuple === undefined)
+      return 1;
+    else if (tuple[0] !== undefined)
+      return tuple[0].size;
+    else if (tuple[1])
+      return 0;
   }
 }
