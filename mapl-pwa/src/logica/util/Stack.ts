@@ -9,11 +9,11 @@ export class Stack extends AbstractDataSegmentZone {
     /**
      * SP (segmento de datos). Puntero a la cima de la pila.
      */
-    private sp: number;
+    private _sp: number;
 
     public constructor() {
         super();
-        this.sp = this.dataSegment.maxSize;
+        this._sp = this.dataSegment.SIZE;
     }
 
     /**
@@ -21,22 +21,23 @@ export class Stack extends AbstractDataSegmentZone {
      * la pila esta vacia
      */
     isEmpty(): boolean {
-        return this.sp === this.dataSegment.maxSize;
+        console.log(this._sp);
+        return this._sp === this.dataSegment.SIZE;
     }
 
     /**
      * El puntero a la cima de la pila (SP) aumenta en cada inserción de acuerdo 
      * al tamaño del dato insertado.
      * 
-     * @param dt 
+     * @param dt PrimitiveDataType
      * @param instructionSize 
      */
     push(dt: PrimitiveDataType, instructionSize: number): void {
         if (dt.size !== instructionSize)
             throw new Error("Los bytes insertados no se corresponden con el tipo de la instrucción.");
 
-        this.sp -= dt.size;
-        this.dataSegment.add(dt, this.sp);
+        this._sp -= dt.size;
+        this.dataSegment.add(dt, this._sp);
     }
 
     /**
@@ -44,7 +45,7 @@ export class Stack extends AbstractDataSegmentZone {
      * de acuerdo al tamaño del dato extraido.
      * 
      * @param instructionSize tamaño de la instruccion
-     * @returns DataType que expulsa
+     * @returns PrimitiveDataType
      */
     pop(instructionSize: number): PrimitiveDataType {
         if (this.top().size > instructionSize)
@@ -52,15 +53,25 @@ export class Stack extends AbstractDataSegmentZone {
         else if (this.top().size < instructionSize)
             throw new Error("Los bytes retirados para la instrucción son restos de un valor parcialmente retirado.");
 
-        let removedValue = this.dataSegment.remove(this.sp) as PrimitiveDataType;
-        this.sp += removedValue.size;
+        let removedValue = this.dataSegment.remove(this._sp) as PrimitiveDataType;
+        this._sp += removedValue.size;
         return removedValue;
     }
-
+    /**
+     * Devuelve el dato ubicado la cima de la pila, sin sacarlo de esta.
+     * 
+     * @returns PrimitiveDataType
+     */
     top(): PrimitiveDataType {
         if (this.isEmpty())
             throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
 
-        return this.dataSegment.get(this.sp)[0] as PrimitiveDataType;
+        return this.dataSegment.get(this._sp)[0] as PrimitiveDataType;
+    }
+    /**
+     * Reinicia el puntero de la pila (para recargar() en Programa).
+     */
+    restaurar() {
+        this._sp = this.dataSegment.SIZE;
     }
 }

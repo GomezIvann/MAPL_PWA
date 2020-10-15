@@ -15,7 +15,13 @@ export class InstruccionesComponent implements OnInit {
   
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[] = ["numeroInstruccion", "contenido"];
-  private readonly ROW_HEIGHT: number = 45;
+
+  /**
+   * Altura de la fila px.
+   * No es exactamente 45px como en el css ya que al usar la propiedad 'sticky: true' el desplazamiento
+   * varia un poco (aprox. 0.2px).
+   */ 
+  private readonly ROW_HEIGHT: number = 44.8;
 
   constructor() {}
 
@@ -59,10 +65,10 @@ export class InstruccionesComponent implements OnInit {
   /**
    * Desplaza el scroll para enfocar a la instrucciona actual ejecutandose
    * El calculo se realiza de la siguiente forma:
-   *      scroll (px a desplazar dentro del div) = h * t
+   *      scroll (px a desplazar dentro del div) = n * h
    *      siendo:
-   *          h = numero fila (objeto Linea) actual ejecutandose. 
-   *          t = altura de cada fila definido en el css
+   *          n = numero fila (objeto Linea) actual ejecutandose
+   *          h = altura de cada fila definido en el css = ROW_HEIGHT (en px)
    * @param container <div> contenedor de la tabla
    */
   scrollToActualInstruction(container: HTMLElement) {

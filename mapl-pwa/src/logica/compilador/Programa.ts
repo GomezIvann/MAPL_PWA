@@ -112,12 +112,14 @@ export class Programa {
      * Reiniciar el programa implica:
      *      1. Vaciar el segmento de datos.
      *      2. Vaciar la cadena comun de las instrucciones Inb.
-     *      3. Apuntar a la primera instruccion.
-     *      4. Desmarcar el programa como finalizado.
+     *      3. Reubicar el puntero de la pila al fondo del segmento de datos.
+     *      4. Apuntar a la primera instruccion.
+     *      5. Desmarcar el programa como finalizado.
      */
     recargar(): void {
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
+        this.pila.restaurar();
         this.ip = 0;
         this.finalizado = false;
     }

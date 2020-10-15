@@ -37,11 +37,11 @@ export class DataSegment {
      */
     private data$: Subject<[DataType, boolean][]>;
 
-    readonly maxSize: number = 1024;
+    readonly SIZE: number = 1024;
     private _actualSize: number;
 
     private constructor() {
-        this._data = new Array<[DataType, boolean]>(this.maxSize);
+        this._data = new Array<[DataType, boolean]>(this.SIZE);
         this.data$ = new Subject<[DataType, boolean][]>();
         this.data$.next(this._data);
     }
@@ -88,7 +88,7 @@ export class DataSegment {
         return this._data[address];
     }
     clean() {
-        this._data = new Array<[DataType, boolean]>(this.maxSize);
+        this._data = new Array<[DataType, boolean]>(this.SIZE);
         this.data$.next(this._data);
         this._actualSize = 0;
     }
@@ -97,7 +97,7 @@ export class DataSegment {
      * igual o superior al tamaño maximo establecido
      */
     isFull(): boolean {
-        return this._actualSize >= this.maxSize;
+        return this._actualSize >= this.SIZE;
     }
     /**
      * Devuelve un observable con los valores del segmento de datos para el componente visual que lo muestra.
