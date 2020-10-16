@@ -11,7 +11,7 @@ export class Stack extends AbstractDataSegmentZone {
      */
     private _sp: number;
 
-    public constructor() {
+    constructor() {
         super();
         this._sp = this.dataSegment.SIZE;
     }
@@ -21,7 +21,6 @@ export class Stack extends AbstractDataSegmentZone {
      * la pila esta vacia
      */
     isEmpty(): boolean {
-        console.log(this._sp);
         return this._sp === this.dataSegment.SIZE;
     }
 
@@ -71,7 +70,10 @@ export class Stack extends AbstractDataSegmentZone {
     /**
      * Reinicia el puntero de la pila (para recargar() en Programa).
      */
-    restaurar() {
+    restaurar(): void {
         this._sp = this.dataSegment.SIZE;
+    }
+    getSP(): number {
+        return this._sp;
     }
 }

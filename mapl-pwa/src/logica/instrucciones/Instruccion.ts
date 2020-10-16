@@ -1,3 +1,4 @@
+import { Label } from '../compilador/Label';
 import { Programa } from '../compilador/Programa';
 import { PrimitiveSizes } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
@@ -18,9 +19,11 @@ export abstract class Instruccion {
 	}
 
 	abstract execute(stack: Stack, memory: Memory): void;
-    getInstructionSize(): number { return 0; } // Implementacion generica para Otras instrucciones (Halt y nop)
+	/**
+	 * Implementacion generica para Otras y Salto (Halt, nop, jz, jnz, jmp, call, ret y enter).
+	 */
+    getInstructionSize(): number { return 0; }
 }
-
 
 /**
  * Implementacion generica para instrucciones que trabajan con datos
@@ -77,9 +80,9 @@ export abstract class InstruccionLabel extends Instruccion {
 	 *
 	 *			fin:
 	 *				jnz inicio
-	 * 
 	 */
-	protected labelNombre: string;
+	labelNombre: string;
+	label: Label;
 
 	constructor(numeroInstruccion: string, labelNombre: string, programa: Programa){
 		super(numeroInstruccion);

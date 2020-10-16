@@ -1,4 +1,4 @@
-import { Instruccion } from '../instrucciones/Instruccion';
+import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { CadenaInb } from '../util/CadenaInb';
 import { Memory } from '../util/Memoria';
 import { DataSegment } from '../util/SegmentoDatos';
@@ -154,5 +154,25 @@ export class Programa {
      */
     private isCodigo(): boolean {
         return this.codigo.length != 0;
+    }
+
+    /**
+     * Asocia a las instrucciones que usan etiquetas el objeto asociado al nombre leido por el parser.
+     * Este metodo se llama al finalizar la lectura del fichero en el parser.
+     * Controla los errores de etiquetas inexistentes referenciadas en instrucciones ya que,
+     * llegados a este punto, la etiqueta deberia de existir.
+     */
+    labelForInstruction(): void {
+        this.codigo.forEach(i => {
+            if (i instanceof InstruccionLabel) {
+                let iLabel = i as InstruccionLabel;
+                let label = this.labels.find(label => label.nombre === iLabel.labelNombre);
+
+                if (label === undefined)
+                    throw new Error("La etiqueta '"+ iLabel.labelNombre +"' no se ha encontrado en el fichero.");
+
+                iLabel.label = this.labels.find(label => label.nombre === iLabel.labelNombre);
+            }
+        });
     }
 }

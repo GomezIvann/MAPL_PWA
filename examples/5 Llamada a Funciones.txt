@@ -1,0 +1,15 @@
+call main
+halt
+
+main:
+pushb 42
+outb
+call america
+pushb 42
+outb
+ret
+
+america:
+push 1492
+out
+ret

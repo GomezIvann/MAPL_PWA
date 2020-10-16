@@ -10,8 +10,7 @@ import { InstruccionLabel } from './Instruccion';
  */
 export class Jmp extends InstruccionLabel {
     execute(stack: Stack, memory: Memory): void {
-        let label = this.programa.getLabelByNombre(this.labelNombre);
-        this.programa.jumpTo(label.primeraInstruccion);
+        this.programa.jumpTo(this.label.primeraInstruccion);
     }
 }
 /**
@@ -22,10 +21,8 @@ export class Jmp extends InstruccionLabel {
 export class Jz extends InstruccionLabel {
     execute(stack: Stack, memory: Memory): void {
         let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        if (value === 0) {
-            let label = this.programa.getLabelByNombre(this.labelNombre);
-            this.programa.jumpTo(label.primeraInstruccion);
-        }
+        if (value === 0)
+            this.programa.jumpTo(this.label.primeraInstruccion);
     }
 }
 /**
@@ -36,9 +33,7 @@ export class Jz extends InstruccionLabel {
 export class Jnz extends InstruccionLabel {
     execute(stack: Stack, memory: Memory): void {
         let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
-        if (value !== 0) {
-            let label = this.programa.getLabelByNombre(this.labelNombre);
-            this.programa.jumpTo(label.primeraInstruccion);
-        }
+        if (value !== 0)
+            this.programa.jumpTo(this.label.primeraInstruccion);
     }
 }

@@ -17,9 +17,11 @@ import { Linea } from '../compilador/Linea';
  */
 export class Parser {
     file: File; // Fichero de entrada
+    programa: Programa;
 
     constructor(file: File) {
         this.file = file;
+        this.programa = new Programa();
     }
 
     /**
@@ -29,7 +31,6 @@ export class Parser {
      * Reject: Es la funcion que llamaremos si queremos rechazar la promesa.
      */
     read(): Promise<Programa> {
-        var programa = new Programa();
         const reader = new FileReader();
 
         return new Promise((resolve, reject) => {
@@ -70,319 +71,319 @@ export class Parser {
                         case Lenguaje.PUSHI:
                             // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
                             var cte = linea.trim().split(/\s+/)[1];  // segunda palabra de la linea
-                            programa.codigo.push(new Push(numeroInstruccion, cte));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Push(numeroInstruccion, cte));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.PUSHF:
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Pushf(numeroInstruccion, cte));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Pushf(numeroInstruccion, cte));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.PUSHB:
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Pushb(numeroInstruccion, cte));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Pushb(numeroInstruccion, cte));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.PUSHA:
                             var cte = linea.trim().split(/\s+/)[1];
-                            programa.codigo.push(new Pusha(numeroInstruccion, cte));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Pusha(numeroInstruccion, cte));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POP:
                         case Lenguaje.POPI:
-                            programa.codigo.push(new Pop(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Pop(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POPF:
-                            programa.codigo.push(new Popf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Popf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.POPB:
-                            programa.codigo.push(new Popb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Popb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LOAD:
                         case Lenguaje.LOADI:
-                            programa.codigo.push(new Load(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Load(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LOADB:
-                            programa.codigo.push(new Loadb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Loadb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LOADF:
-                            programa.codigo.push(new Loadf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Loadf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.STORE:
                         case Lenguaje.STOREI:
-                            programa.codigo.push(new Store(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Store(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.STOREB:
-                            programa.codigo.push(new Storeb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Storeb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.STOREF:
-                            programa.codigo.push(new Storef(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Storef(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DUP:
                         case Lenguaje.DUPI:
-                            programa.codigo.push(new Dup(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Dup(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DUPF:
-                            programa.codigo.push(new Dupf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Dupf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DUPB:
-                            programa.codigo.push(new Dupb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Dupb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.ADD:
                         case Lenguaje.ADDI:
-                            programa.codigo.push(new Add(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Add(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.ADDF:
-                            programa.codigo.push(new Addf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Addf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.SUB:
                         case Lenguaje.SUBI:
-                            programa.codigo.push(new Sub(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Sub(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.SUBF:
-                            programa.codigo.push(new Subf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Subf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DIV:
                         case Lenguaje.DIVI:
-                            programa.codigo.push(new Div(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Div(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.DIVF:
-                            programa.codigo.push(new Divf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Divf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MUL:
                         case Lenguaje.MULI:
-                            programa.codigo.push(new Mul(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Mul(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MULF:
-                            programa.codigo.push(new Mulf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Mulf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.MOD:
-                            programa.codigo.push(new Mod(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Mod(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.IN:
                         case Lenguaje.INI:
-                            programa.codigo.push(new In(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new In(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.INF:
-                            programa.codigo.push(new Inf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Inf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.INB:
-                            programa.codigo.push(new Inb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Inb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OUT:
                         case Lenguaje.OUTI:
-                            programa.codigo.push(new Out(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Out(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OUTB:
-                            programa.codigo.push(new Outb(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Outb(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OUTF:
-                            programa.codigo.push(new Outf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Outf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.AND:
-                            programa.codigo.push(new And(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new And(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.OR:
-                            programa.codigo.push(new Or(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Or(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NOT:
-                            programa.codigo.push(new Not(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Not(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GT:
                         case Lenguaje.GTI:
-                            programa.codigo.push(new Gt(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Gt(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GTF:
-                            programa.codigo.push(new Gtf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Gtf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LT:
                         case Lenguaje.LTI:
-                            programa.codigo.push(new Lt(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Lt(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LTF:
-                            programa.codigo.push(new Ltf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Ltf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GE:
                         case Lenguaje.GEI:
-                            programa.codigo.push(new Ge(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Ge(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.GEF:
-                            programa.codigo.push(new Gef(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Gef(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LE:
                         case Lenguaje.LEI:
-                            programa.codigo.push(new Le(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Le(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.LEF:
-                            programa.codigo.push(new Lef(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Lef(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.EQ:
                         case Lenguaje.EQI:
-                            programa.codigo.push(new Eq(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Eq(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.EQF:
-                            programa.codigo.push(new Eqf(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Eqf(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NE:
                         case Lenguaje.NEI:
-                            programa.codigo.push(new Ne(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Ne(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NEF:
-                            programa.codigo.push(new Nef(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Nef(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.B2I:
-                            programa.codigo.push(new B2i(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new B2i(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.I2B:
-                            programa.codigo.push(new I2b(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new I2b(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.I2F:
-                            programa.codigo.push(new I2f(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new I2f(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.F2I:
-                            programa.codigo.push(new F2i(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new F2i(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.JMP:
                             var label = linea.trim().split(/\s+/)[1] + ":"; // segunda palabra de la linea
-                            programa.codigo.push(new Jmp(numeroInstruccion, label, programa));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Jmp(numeroInstruccion, label, this.programa));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.JZ:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            programa.codigo.push(new Jz(numeroInstruccion, label, programa));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Jz(numeroInstruccion, label, this.programa));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.JNZ:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            programa.codigo.push(new Jnz(numeroInstruccion, label, programa));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Jnz(numeroInstruccion, label, this.programa));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.NOP:
-                            programa.codigo.push(new Nop(numeroInstruccion));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
+                            this.programa.codigo.push(new Nop(numeroInstruccion));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
                             i++;
                             break;
                         case Lenguaje.HALT:
-                            programa.codigo.push(new Halt(numeroInstruccion, programa));
-                            programa.texto.push(new Linea(linea, numeroInstruccion));
-                            // Finaliza la lectura del programa (no hace falta seguir leyendo)
+                            this.programa.codigo.push(new Halt(numeroInstruccion, this.programa));
+                            this.programa.texto.push(new Linea(linea, numeroInstruccion));
+                            // Finaliza la lectura del this.programa (no hace falta seguir leyendo).
                             finalBucle = true;
                             i++;
                             break;
                         case Lenguaje.WHITE_LINE:
                             // Al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
-                            // asi se conserva la linea vacia y se interpretan todas igual
-                            programa.texto.push(new Linea(linea));
+                            // asi se conserva la linea vacia y se interpretan todas igual.
+                            this.programa.texto.push(new Linea(linea));
                             break;
                         default:
-                            if (!this.isComment(linea.trim())) {
-                                // Labels
-                                if (this.isLabel(linea.trim()))
-                                    programa.labels.push(new Label(linea.trim(), i));
+                            if (this.isComment(linea.trim()))
+                                this.programa.texto.push(new Linea(linea));
+                            else {
+                                let label = linea.trim();
+                                if (this.isValidLabel(label)) // Labels
+                                    this.programa.labels.push(new Label(label, i));
                                 else
-                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n" + linea);
+                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea+"'.");
                             }
-                            else
-                                programa.texto.push(new Linea(linea));
                     }
                     numeroInstruccion = ("000" + i).slice(-4); // [0000, 0001, ..., 0010, ..., 0199, 9999]
                     return finalBucle;
@@ -392,10 +393,12 @@ export class Parser {
                  * Si no se ha leido una instruccion HALT explicitamente se añade manualmente.
                  */
                 if (!finalBucle) {
-                    programa.codigo.push(new Halt(numeroInstruccion, programa));
-                    programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
+                    this.programa.codigo.push(new Halt(numeroInstruccion, this.programa));
+                    this.programa.texto.push(new Linea(Lenguaje.HALT.toLowerCase(), numeroInstruccion));
                 }
-                resolve(programa);
+                
+                this.programa.labelForInstruction();
+                resolve(this.programa);
             };
             reader.readAsText(this.file);
             Consola.getInstance().addOutput(this.file.name); // Mostramos el nombre del fichero por consola.
@@ -403,10 +406,14 @@ export class Parser {
     }
 
     /**
-     * True si la linea es una etiqueta.
+     * True si la linea es una etiqueta y no existe ninguna con ese nombre ya en el programa.
      * @param linea 
      */
-    private isLabel(linea: string): boolean {
+    private isValidLabel(linea: string): boolean {
+        let label = this.programa.getLabelByNombre(linea);
+        if (label !== undefined)
+            throw new Error("Etiqueta repetida: '"+ linea+"'.");
+
         return linea.endsWith(":");
     }
 
