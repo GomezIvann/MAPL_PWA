@@ -5,9 +5,13 @@ export class Linea {
     contenido: string;
     numeroInstruccion: string; // Si no esta asociada a una instruccion es ""
 
-    constructor(contenido: string, numeroInstruccion = "") {
+    constructor(contenido: string, contadorInstrucciones: number = undefined) {
         this.contenido = contenido;
-        this.numeroInstruccion = numeroInstruccion;
+
+        if (contadorInstrucciones !== undefined)
+            this.numeroInstruccion = ("000" + contadorInstrucciones).slice(-4);
+        else
+            this.numeroInstruccion = "";
     }
     print(): string {
         return this.numeroInstruccion + this.contenido + "\n";

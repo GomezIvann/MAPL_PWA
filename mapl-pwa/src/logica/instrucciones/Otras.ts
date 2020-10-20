@@ -12,7 +12,7 @@ import { Instruccion } from './Instruccion';
 export class Halt extends Instruccion {
     programa: Programa;
 
-    constructor(numeroInstruccion: string, programa: Programa){
+    constructor(numeroInstruccion: number, programa: Programa){
         super(numeroInstruccion);
         this.programa = programa;
     }

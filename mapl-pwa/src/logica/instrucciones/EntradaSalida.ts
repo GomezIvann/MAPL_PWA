@@ -41,7 +41,7 @@ export class Inf extends InstruccionFloat {
 export class Inb extends InstruccionByte {
     cadena: CadenaInb;
     
-    constructor(numeroLinea: string){
+    constructor(numeroLinea: number){
         super(numeroLinea);
         this.cadena = CadenaInb.getInstance();
     }

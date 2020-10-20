@@ -38,6 +38,10 @@ Reescribiendo la máquina didáctica MAPL como una PWA.
    - jmp label
    - jz label (jump if zero)
    - jnz label (jump if no zero)
-8. Otras:
+8. Funciones
+   - call label
+   - ret cte, cte, cte
+   - enter cte / enter –cte
+9. Otras:
    - halt
    - nop

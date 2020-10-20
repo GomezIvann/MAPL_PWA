@@ -5,8 +5,10 @@
  */
 export abstract class DataType {
     size: number; // Tamaño del dato.
+    constructor(size: number){
+        this.size = size;
+    }
 }
-
 /**
  * Variables almacenadas en memoria por el programa (store & load).
  * Su tamaño (size) viene determinado por el del tipo de dato que almacena dentro.
@@ -16,10 +18,9 @@ export class VariableDataType extends DataType {
     name: string; // Nombre de la variable.
 
     constructor(name: string, data: PrimitiveDataType) {
-        super();
+        super(data.size);
         this.name = name;
         this.value = data;
-        this.size = data.size;
     }
     toString() { return this.name + " ("+this.value.value+")"; }
 }
@@ -35,8 +36,8 @@ export class VariableDataType extends DataType {
 export abstract class PrimitiveDataType extends DataType {
     value: string;
 
-    constructor(value: number) {
-        super();
+    constructor(value: number, size: number) {
+        super(size);
         this.setValue(value);
     }
 
@@ -58,8 +59,7 @@ export enum PrimitiveSizes {
 }
 export class IntegerDataType extends PrimitiveDataType {
     constructor(value: number) {
-        super(value);
-        this.size = PrimitiveSizes.INTEGER;
+        super(value, PrimitiveSizes.INTEGER);
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))
@@ -70,8 +70,7 @@ export class IntegerDataType extends PrimitiveDataType {
 }
 export class FloatDataType extends PrimitiveDataType {
     constructor(value: number) {
-        super(value);
-        this.size = PrimitiveSizes.FLOAT;
+        super(value, PrimitiveSizes.FLOAT);
     }
     setValue(value: number): void {
         if (isNaN(value))
@@ -82,8 +81,7 @@ export class FloatDataType extends PrimitiveDataType {
 }
 export class ByteDataType extends PrimitiveDataType {
     constructor(value: number) {
-        super(value);
-        this.size = PrimitiveSizes.BYTE;
+        super(value, PrimitiveSizes.BYTE);
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))
@@ -94,8 +92,7 @@ export class ByteDataType extends PrimitiveDataType {
 }
 export class AddressDataType extends PrimitiveDataType {
     constructor(value: number) {
-        super(value);
-        this.size = PrimitiveSizes.ADDRESS;
+        super(value, PrimitiveSizes.ADDRESS);
     }
     setValue(value: number): void {
         if (!Number.isInteger(value))

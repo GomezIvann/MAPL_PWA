@@ -14,8 +14,8 @@ import { Stack } from '../util/Stack';
 export abstract class Instruccion {
 	numero: string; // Numero de instruccion (mismo que en la clase Linea, 0001, 0002, ..., 000N).
 
-	constructor(numeroInstruccion: string){
-		this.numero = numeroInstruccion;
+	constructor(contadorInstrucciones: number){
+		this.numero = ("000" + contadorInstrucciones).slice(-4);
 	}
 
 	abstract execute(stack: Stack, memory: Memory): void;
@@ -84,7 +84,7 @@ export abstract class InstruccionLabel extends Instruccion {
 	labelNombre: string;
 	label: Label;
 
-	constructor(numeroInstruccion: string, labelNombre: string, programa: Programa){
+	constructor(numeroInstruccion: number, labelNombre: string, programa: Programa){
 		super(numeroInstruccion);
 		this.labelNombre = labelNombre;
 		this.programa = programa;

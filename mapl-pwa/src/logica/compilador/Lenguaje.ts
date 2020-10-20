@@ -69,6 +69,9 @@ export enum Lenguaje {
     JMP = "JMP",
     JZ = "JZ",
     JNZ = "JNZ",
+    CALL = "CALL",
+    ENTER = "ENTER",
+    RET = "RET",
     NOP = "NOP",
     HALT = "HALT",
     WHITE_LINE = ""

@@ -1,4 +1,5 @@
-import { PrimitiveDataType } from './DataTypes';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { IntegerDataType, PrimitiveDataType } from './DataTypes';
 import { AbstractDataSegmentZone, DataSegment } from './SegmentoDatos';
 
 /**
@@ -10,10 +11,15 @@ export class Stack extends AbstractDataSegmentZone {
      * SP (segmento de datos). Puntero a la cima de la pila.
      */
     private _sp: number;
+    /**
+     * BP (segmento de datos). Direccion del stack frame (direccion de retorno y antiguo BP) de la funcion actual.
+     */
+    private _bp: number;
 
     constructor() {
         super();
         this._sp = this.dataSegment.SIZE;
+        this._bp = this.dataSegment.SIZE;
     }
 
     /**
@@ -28,15 +34,15 @@ export class Stack extends AbstractDataSegmentZone {
      * El puntero a la cima de la pila (SP) aumenta en cada inserción de acuerdo 
      * al tamaño del dato insertado.
      * 
-     * @param dt PrimitiveDataType
+     * @param pdt PrimitiveDataType
      * @param instructionSize 
      */
-    push(dt: PrimitiveDataType, instructionSize: number): void {
-        if (dt.size !== instructionSize)
+    push(pdt: PrimitiveDataType, instructionSize: number): void {
+        if (pdt.size !== instructionSize)
             throw new Error("Los bytes insertados no se corresponden con el tipo de la instrucción.");
 
-        this._sp -= dt.size;
-        this.dataSegment.add(dt, this._sp);
+        this._sp -= pdt.size;
+        this.dataSegment.add(pdt, this._sp);
     }
 
     /**
@@ -75,5 +81,32 @@ export class Stack extends AbstractDataSegmentZone {
     }
     getSP(): number {
         return this._sp;
+    }
+    getBP(): number {
+        return this._bp;
+    }
+    pushBP(sf: StackFrame): void {
+        this.push(sf.returnDir, sf.returnDir.size);
+        this.push(sf.lastBP, sf.lastBP.size);
+        this._bp = this._sp;
+    }
+    popBP(instructionSize: number): number {
+        this._sp = this._bp;
+        this._bp = parseInt(this.pop(instructionSize).value);
+        let returnDir = parseInt(this.pop(instructionSize).value);
+        return returnDir;
+    }
+}
+
+/**
+ * Stack frame: dirección de retorno y antiguo BP de una funcion.
+ */
+export class StackFrame {
+    returnDir: IntegerDataType;
+    lastBP: IntegerDataType;
+    
+    constructor(returnDir: IntegerDataType, lastBP: IntegerDataType) {
+        this.returnDir = returnDir;
+        this.lastBP = lastBP;
     }
 }

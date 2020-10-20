@@ -58,7 +58,7 @@ popf
 '-----------------------------------------
 ' 3. Conversiones
 
-pushb 30
+pushb 33
 b2i     'Convertir byte a int (b=byte/i=int)
 i2f     'Convertir int a float
 

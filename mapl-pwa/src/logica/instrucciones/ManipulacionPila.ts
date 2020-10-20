@@ -11,7 +11,7 @@ import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteg
 export class Push extends InstruccionInteger {
     cte: string;
 
-    constructor(numeroLinea: string, cte: string){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
         this.cte = cte;
     }
@@ -25,7 +25,7 @@ export class Push extends InstruccionInteger {
 export class Pushf extends InstruccionFloat {
     cte: string;
 
-    constructor(numeroLinea: string, cte: string){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
         this.cte = cte;
     }
@@ -37,7 +37,7 @@ export class Pushf extends InstruccionFloat {
 export class Pushb extends InstruccionByte {
     cte: string;
 
-    constructor(numeroLinea: string, cte: string){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
         this.cte = cte;
     }
@@ -49,7 +49,7 @@ export class Pushb extends InstruccionByte {
 export class Pusha extends InstruccionAddress {
     cte: string;
 
-    constructor(numeroLinea: string, cte: string){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
         this.cte = cte;
     }
