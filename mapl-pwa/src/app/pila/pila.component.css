@@ -38,13 +38,19 @@ table {
     text-align: left;
 }
 
-.arrow {
+/* Punteros de la pila SP y BP */
+.arrowSP, .arrowBP {
+    padding: 3px;
+    display: inline-block;
+}
+.arrowSP {
     border: solid lightcoral;
     border-width: 0 3px 3px 0;
-    display: inline-block;
-    padding: 3px;
 }
-  
+.arrowBP {
+    border: solid lightgreen;
+    border-width: 0 3px 3px 0;
+}
 .right {
     transform: rotate(-45deg);
     -webkit-transform: rotate(-45deg);

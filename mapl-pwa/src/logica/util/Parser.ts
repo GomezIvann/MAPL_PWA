@@ -21,15 +21,26 @@ export class Parser {
     file: File;                             // Fichero de entrada
     programa: Programa;                     // Programa obtenido de la lectura del fichero
 
-    private _finFuncion: boolean;           // True si finaliza la lectura de una funcion
-    private _finInit: boolean;              // True si finaliza la lectura de la funcion principal 'init'
-    private contadorInstrucciones: number;  // Contador para el numero de instruccion
+    /**
+     * Todas estas variables son para deteccion de errores de programa que puedan ayudar al usuario a formarlo correctamente, dando un mensaje de error
+     * lo mas personalizado posible.
+     *      _finFuncion: True si finaliza la lectura de una funcion CORRECTAMENTE (HALT, y fuera de la funcion 'init').
+     *      _finInit: True si finaliza la lectura de la funcion principal 'init' CORRECTAMENTE (HALT y bien formado).
+     *      _programaSinFunciones: True si la lectura del programa finaliza sin haber leido una funcion que no sea 'init'. Sirve para
+     *                             añadir un HALT a 'init' cuando no hay funciones de por medio.
+     */
+    private _finFuncion: boolean;
+    private _finInit: boolean;
+    private _programaSinFunciones: boolean;
+    
+    private contadorInstrucciones: number;  // Contador para el numero de instruccion. Aumenta en una unidad siempre que se lea una.
 
     constructor(file: File) {
         this.file = file;
         this.programa = new Programa();
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
-        this._finInit = false;   // Si sabemos seguro que habrá una función Init
+        this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
+        this._programaSinFunciones = true;
         this.contadorInstrucciones = 0;
     }
 
@@ -266,6 +277,7 @@ export class Parser {
 
                             this.addInstruccion(new Ret(this.contadorInstrucciones, this.programa), linea);
                             this._finFuncion = true; // Fin de la funcion actual leida
+                            this._programaSinFunciones = false; // Hay mas funciones en el programa a parte de 'init'
                             break;
                         case Lenguaje.NOP:
                             this.addInstruccion(new Nop(this.contadorInstrucciones), linea);
@@ -284,22 +296,41 @@ export class Parser {
                                 this.programa.texto.push(new Linea(linea));
                             else {
                                 let label = linea.trim();
-                                if (this.isValidLabel(label)) { // Labels
+                                if (this.isValidLabel(label)) { // Es una etiqueta (o de funcion o de salto)
                                     this.programa.labels.push(new Label(label, this.contadorInstrucciones));
                                     this.programa.texto.push(new Linea(linea));
-
-                                    // Significa que es un label de funcion y no de salto ('init' ya finalizo con halt), comienza una nueva funcion.
-                                    if (this._finInit)
+                                    
+                                    // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
+                                    // funcion. Fin de funcion pasa a ser false, estamos dentro de una funcion
+                                    if (this._finInit) {
+                                        // NO se puede declarar una funcion dentro de otra.
+                                        if (!this._finFuncion)
+                                            throw new Error("No se puede declarar una función dentro de otra.\n'" + linea.trim() + "'.");
+                                        
                                         this._finFuncion = false;
+                                    }
                                 }
                                 else
-                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea + "'.");
+                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea.trim() + "'.");
                             }
                     }
                 });
 
+                /** 
+                 * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
+                 * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion.
+                 */
+                if (!this._finInit && this._programaSinFunciones) {
+                    this.addInstruccion(new Halt(this.contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
+                    this._finInit = true; // Fin de la funcion principal 'init'
+                }
+                /**
+                 * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede 
+                 * añadir automaticamente al haber funciones de por medio) o algunas de las funciones
+                 * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
+                 */
                 if (!this._finInit || !this._finFuncion)
-                    throw new Error("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o de un RET en la función principal 'init' o"
+                    throw new Error("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
                         + " en otra función, respectivamente.");
 
                 this.programa.labelForInstruction();
@@ -317,7 +348,7 @@ export class Parser {
      */
     private addInstruccion(i: Instruccion, linea: string) {
         if (this._finInit && this._finFuncion)
-            throw new Error("No puede haber una instruccion que no forme parte de una función.");
+            throw new Error("No puede haber una instruccion que no forme parte de una función.\n'" + linea.trim() + "'.");
 
         this.programa.codigo.push(i);
         this.programa.texto.push(new Linea(linea, this.contadorInstrucciones));
