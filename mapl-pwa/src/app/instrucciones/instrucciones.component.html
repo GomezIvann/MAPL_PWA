@@ -17,7 +17,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero }"
-            (click)="ejecutarHasta(row)"></tr>
+            (dblclick)="ejecutarHasta(row)"></tr>
     </table>
 </div>
 

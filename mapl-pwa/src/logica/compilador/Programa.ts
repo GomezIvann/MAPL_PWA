@@ -10,17 +10,17 @@ import { Linea } from './Linea';
  * Representa el programa asociado al archivo cargado por el usuario.
  */
 export class Programa {
-    codigo: Instruccion[];  // Conjunto de instrucciones que forman el programa.
-    labels: Label[];        // Etiquetas del programa.
-    texto: Linea[];         // Texto del programa.
-    pila: Stack;            // Pila del programa.
-    memoria: Memory;        // Memoria del programa.
+    codigo: Instruccion[];  // Conjunto de instrucciones que forman el programa
+    labels: Label[];        // Etiquetas del programa
+    texto: Linea[];         // Texto del programa
+    pila: Stack;            // Pila del programa
+    memoria: Memory;        // Memoria del programa
 
     /**
      * Propiedades relativas a la ejecucion.
      */
-    private ip: number;             // IP (segmento de código). Dirección de la instrucción actual.
-    private finalizado: boolean;    // true -> ejecucion del programa ha finalizado.
+    private ip: number;             // IP (segmento de código). Dirección de la instrucción actual
+    private finalizado: boolean;    // true -> ejecucion del programa ha finalizado
 
     constructor() {
         this.codigo = [];

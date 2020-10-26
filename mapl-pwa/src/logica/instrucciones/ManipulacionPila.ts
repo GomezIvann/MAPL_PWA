@@ -1,7 +1,8 @@
-import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
+import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
+
 
 /**
  * -----------------------------------------------------
@@ -9,53 +10,47 @@ import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteg
  * -----------------------------------------------------
  */
 export class Push extends InstruccionInteger {
-    cte: string;
+    dt: IntegerDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: number){ 
         super(numeroLinea);
-        this.cte = cte;
+        this.dt = new IntegerDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        // +cadena --> para convertir una cadena que contiene un número en un número
-        // Solo funciona si la cadena solo contiene caracteres numéricos, de lo contrario, devuelve NaN
-        let dt = new IntegerDataType(+this.cte);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(this.dt, this.getInstructionSize());
     }
 }
 export class Pushf extends InstruccionFloat {
-    cte: string;
+    dt: FloatDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: number){ 
         super(numeroLinea);
-        this.cte = cte;
+        this.dt = new FloatDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        let dt = new FloatDataType(+this.cte);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(this.dt, this.getInstructionSize());
     }
 }
 export class Pushb extends InstruccionByte {
-    cte: string;
+    dt: ByteDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: number){ 
         super(numeroLinea);
-        this.cte = cte;
+        this.dt = new ByteDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        let dt = new ByteDataType(+this.cte); 
-        stack.push(dt, this.getInstructionSize());
+        stack.push(this.dt, this.getInstructionSize());
     }
 }
 export class Pusha extends InstruccionAddress {
-    cte: string;
+    dt: AddressDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: number){ 
         super(numeroLinea);
-        this.cte = cte;
+        this.dt = new AddressDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        let dt = new AddressDataType(+this.cte); 
-        stack.push(dt, this.getInstructionSize());
+        stack.push(this.dt, this.getInstructionSize());
     }
 }
 /**

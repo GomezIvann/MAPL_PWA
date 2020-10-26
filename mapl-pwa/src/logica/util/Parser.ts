@@ -87,19 +87,23 @@ export class Parser {
                         case Lenguaje.PUSHI:
                             // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
                             var cte = linea.trim().split(/\s+/)[1];  // segunda palabra de la linea
-                            this.addInstruccion(new Push(this.contadorInstrucciones, cte), linea);
+                            /**  
+                             * +cte: para convertir una cadena que contiene un numero en un numero
+                             * En caso de contener un caracter no numerico devuelve NaN
+                             */
+                            this.addInstruccion(new Push(this.contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHF:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pushf(this.contadorInstrucciones, cte), linea);
+                            this.addInstruccion(new Pushf(this.contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHB:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pushb(this.contadorInstrucciones, cte), linea);
+                            this.addInstruccion(new Pushb(this.contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHA:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pusha(this.contadorInstrucciones, cte), linea);
+                            this.addInstruccion(new Pusha(this.contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.POP:
                         case Lenguaje.POPI:

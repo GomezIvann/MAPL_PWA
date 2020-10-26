@@ -97,6 +97,8 @@ export class AddressDataType extends PrimitiveDataType {
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("El valor de la instrucción no es una dirección de memoria (entero o BP).");
+        else if (value < 0)
+            throw new Error("Las direcciones de memoria no pueden ser negativas.");
         
         this.value = value.toString();
     }

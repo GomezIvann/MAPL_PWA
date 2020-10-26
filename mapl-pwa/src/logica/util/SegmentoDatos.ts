@@ -45,7 +45,6 @@ export class DataSegment {
         this.data$ = new Subject<[DataType, boolean][]>();
         this.data$.next(this._data);
     }
-
     public static getInstance(): DataSegment {
         if (!DataSegment.instance)
             DataSegment.instance = new DataSegment();
@@ -53,9 +52,8 @@ export class DataSegment {
         return DataSegment.instance;
     }
 
-
     /**
-     * Inserta un valor en la memoria
+     * Inserta un valor en la memoria.
      * @param value
      * @param address 
      */
@@ -68,10 +66,10 @@ export class DataSegment {
         for(let i = 1; i < value.size; i++)
             this._data[address+i] = [undefined, true]; // Marcamos como ocupadas las celdas de acuerdo a al tamaño del dato
 
-        this.data$.next(this._data);
+        this.data$.next(this._data); // Actualizamos la suscripcion para la vista
     }
     /**
-     * Elimina el elemento correspondiente a la direccion pasada como parametro
+     * Elimina el elemento correspondiente a la direccion pasada como parametro.
      * @param address
      */
     remove(address: number): DataType {
@@ -87,6 +85,9 @@ export class DataSegment {
     get(address: number): [DataType, boolean] {
         return this._data[address];
     }
+    /**
+     * Limpia el segmento de datos para un posible reinicio del programa o carga de uno nuevo.
+     */
     clean() {
         this._data = new Array<[DataType, boolean]>(this.SIZE);
         this.data$.next(this._data);
@@ -94,10 +95,35 @@ export class DataSegment {
     }
     /**
      * No se pueden insertar mas datos cuando la suma de los tamaños de los datos ya insertados es 
-     * igual o superior al tamaño maximo establecido
+     * igual o superior al tamaño maximo establecido.
      */
     isFull(): boolean {
         return this._actualSize >= this.SIZE;
+    }
+    /**
+     * Devuelve true si el dato es insertable en la direccion de memoria pasada como parametro.
+     * Para que un dato sea insertable ninguna de las posiciones que va a ocupar deben estarlo ya:
+     *      1. [undefined, true] OCUPADA parcialmente
+     *      2. undefined NO OCUPADA
+     *      3. [new IntegerDataType(10), true] OCUPADA (posicion inicial, si coincide con address devolvemos true)
+     * Sin embargo, si la direccion coincide con la posicion inicial de una variable ya almacenada, el nuevo dato debe sobreescribir
+     * al antiguo, luego debe devolver true.
+     * 
+     * @param address 
+     * @param size 
+     */
+    isInsertable(address: number, size: number): boolean {
+        // 1º pos de nueva variable == 1º pos de una variable ya en memoria: true
+        if (this._data[address] !== undefined && this._data[address][1] && this._data[address][0] !== undefined)
+            return true;
+
+        for(let i = 0; i < size; i++) {
+            if (this._data[address+i] === undefined)
+                continue;
+            else if (this._data[address+i][1])
+                return false;
+        }
+        return true;
     }
     /**
      * Devuelve un observable con los valores del segmento de datos para el componente visual que lo muestra.
