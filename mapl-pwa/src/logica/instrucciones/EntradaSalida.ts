@@ -81,7 +81,7 @@ export class Outf extends InstruccionFloat {
 }
 export class Outb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize()).value;
-        Consola.getInstance().addOutput(value);
+        let dt = stack.pop(this.getInstructionSize());
+        Consola.getInstance().addOutput(dt.toString());
     }
 }

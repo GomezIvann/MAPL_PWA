@@ -28,7 +28,7 @@ export class Consola {
      * Añade una salida a la consola.
      * @param message salida
      */
-    addOutput(message: string) {
+    addOutput(message: string|number) {
         this._outputs.push("> " + message);
     }
     /**

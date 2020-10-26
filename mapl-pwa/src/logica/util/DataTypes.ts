@@ -34,7 +34,7 @@ export class VariableDataType extends DataType {
  *      - Dirección/puntero (Address): 2 bytes.
  */
 export abstract class PrimitiveDataType extends DataType {
-    value: string;
+    value: number;
 
     constructor(value: number, size: number) {
         super(size);
@@ -46,7 +46,7 @@ export abstract class PrimitiveDataType extends DataType {
      * Ejemplo de funcionamiento: 5.4 no es integer, es float, luego retorna false
      */
     abstract setValue(value: number): void;
-    toString() { return this.value; }
+    toString() { return ""+this.value; }
 }
 /**
  * Posibles tamaños de los datos
@@ -65,7 +65,7 @@ export class IntegerDataType extends PrimitiveDataType {
         if (!Number.isInteger(value))
             throw new Error("El valor no es un número entero.");
             
-        this.value = value.toString();
+        this.value = value;
     }
 }
 export class FloatDataType extends PrimitiveDataType {
@@ -76,7 +76,7 @@ export class FloatDataType extends PrimitiveDataType {
         if (isNaN(value))
             throw new Error("El valor no es un número real.");
             
-        this.value = value.toString();
+        this.value = value;
     }
 }
 export class ByteDataType extends PrimitiveDataType {
@@ -87,7 +87,10 @@ export class ByteDataType extends PrimitiveDataType {
         if (!Number.isInteger(value))
             throw new Error("El valor de la instrucción no es un número entero.");
         
-        this.value = String.fromCharCode(value);
+        this.value = value;
+    }
+    toString() {
+        return String.fromCharCode(this.value);
     }
 }
 export class AddressDataType extends PrimitiveDataType {
@@ -100,6 +103,6 @@ export class AddressDataType extends PrimitiveDataType {
         else if (value < 0)
             throw new Error("Las direcciones de memoria no pueden ser negativas.");
         
-        this.value = value.toString();
+        this.value = value;
     }
 }

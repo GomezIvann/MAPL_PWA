@@ -20,7 +20,7 @@ export class Jmp extends InstruccionLabel {
  */
 export class Jz extends InstruccionLabel {
     execute(stack: Stack, memory: Memory): void {
-        let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        let value = stack.pop(PrimitiveSizes.INTEGER).value;
         if (value === 0)
             this.programa.jumpTo(this.label.primeraInstruccion);
     }
@@ -32,7 +32,7 @@ export class Jz extends InstruccionLabel {
  */
 export class Jnz extends InstruccionLabel {
     execute(stack: Stack, memory: Memory): void {
-        let value = parseInt(stack.pop(PrimitiveSizes.INTEGER).value);
+        let value = stack.pop(PrimitiveSizes.INTEGER).value;
         if (value !== 0)
             this.programa.jumpTo(this.label.primeraInstruccion);
     }

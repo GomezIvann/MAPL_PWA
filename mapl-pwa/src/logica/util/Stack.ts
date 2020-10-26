@@ -92,8 +92,8 @@ export class Stack extends AbstractDataSegmentZone {
     }
     popBP(instructionSize: number): number {
         this._sp = this._bp;
-        this._bp = parseInt(this.pop(instructionSize).value);
-        let returnDir = parseInt(this.pop(instructionSize).value);
+        this._bp = this.pop(instructionSize).value;
+        let returnDir = this.pop(instructionSize).value;
         return returnDir;
     }
 }
