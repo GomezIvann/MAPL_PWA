@@ -49,7 +49,7 @@ export class Inb extends InstruccionByte {
         if (this.cadena.isVacia()){
             let insertedValue = prompt("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):");
             insertedValue = insertedValue.trim() + "\n"; // Insertamos un salto de linea como delimitador
-            this.cadena.setValue(insertedValue.split("").reverse()); // para comenzar insertando por atras
+            this.cadena.value = insertedValue.split("").reverse(); // para comenzar insertando por atras
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
             stack.push(dt, this.getInstructionSize());
 
@@ -69,19 +69,24 @@ export class Inb extends InstruccionByte {
  */
 export class Out extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize()).value;
-        Consola.getInstance().addOutput(value);
+        let dt = stack.pop(this.getInstructionSize());
+        Consola.getInstance().addOutput(dt.toString());
     }
 }
 export class Outf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize()).value;
-        Consola.getInstance().addOutput(value);
+        let dt = stack.pop(this.getInstructionSize());
+        Consola.getInstance().addOutput(dt.toString());
     }
 }
 export class Outb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getInstructionSize());
-        Consola.getInstance().addOutput(dt.toString());
+        /**
+         * No podemos usar el toString() porque devuelve el JSON en string.
+         * En este caso si que necesitamos que interprete los caracteres especiales como \n (nueva linea)
+         * o \t (tabulacion).
+         */
+        Consola.getInstance().addOutput(String.fromCharCode(dt.value));
     }
 }

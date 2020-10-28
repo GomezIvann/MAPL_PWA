@@ -19,8 +19,7 @@ export class PilaComponent implements OnInit {
   displayedColumns: string[] = ["address", "value"];
   dataSource = new MatTableDataSource<[DataType, boolean]>();
 
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * Cada vez que el valor de la pila cambie (inyectado por app.component), esto es,
@@ -42,7 +41,7 @@ export class PilaComponent implements OnInit {
    * Modifica los datos de la tabla.
    */
   refresh() {
-    DataSegment.getInstance().data().subscribe((res) => {
+    DataSegment.getInstance().dataAsObservable().subscribe((res) => {
       this.dataSource.data = res;
       this.scrollToFondoPila();
     });

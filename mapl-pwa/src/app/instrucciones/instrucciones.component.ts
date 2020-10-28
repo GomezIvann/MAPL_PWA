@@ -58,8 +58,13 @@ export class InstruccionesComponent implements OnInit {
     this.scrollToActualInstruction(el);
   }
 
-  ejecutarHasta(row: Linea) {
-    this.programa.ejecutarHasta(row);
+  seleccionarInstruccion(row: Linea) {
+    this.programa.seleccionarInstruccion(row);
+  }
+
+  retrocederInstruccion(el: HTMLElement) {
+    this.programa.retroceder();
+    this.scrollToActualInstruction(el);
   }
 
   /**

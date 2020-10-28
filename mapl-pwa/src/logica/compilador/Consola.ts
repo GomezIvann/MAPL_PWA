@@ -23,19 +23,29 @@ export class Consola {
         }
         return Consola.instance;
     }
+    set outputs(value: string[]) {
+        this._outputs = value;
+    }
 
+    
+    /**
+     * Devuelve una copia de las salidas registradas por consola.
+     */
+    copy(): string[] {
+        return this._outputs.slice();
+    }
     /**
      * Añade una salida a la consola.
      * @param message salida
      */
-    addOutput(message: string|number) {
+    addOutput(message: string) {
         this._outputs.push("> " + message);
     }
     /**
-     * Devuelve todas las salidas de la ejecución del programa.
+     * Devuelve todas las salidas registradas por consola.
      * @param message salida
      */
-    outputs(): string {
+    outputsAsString(): string {
         return this._outputs.join("\n");
     }
     /**

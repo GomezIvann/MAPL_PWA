@@ -3,6 +3,7 @@ import { Programa } from '../compilador/Programa';
 import { PrimitiveSizes } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
+import { Grabadora } from './Grabadora';
 
 /**
  * Representa una instruccion de codigo del programa.
@@ -12,22 +13,29 @@ import { Stack } from '../util/Stack';
  * (vision tradicional de clase Abstracta). 
  */
 export abstract class Instruccion {
-	numero: string; // Numero de instruccion (mismo que en la clase Linea, 0001, 0002, ..., 000N).
+	numero: string; // Numero de instruccion (mismo que en la clase Linea, 0001, 0002, ..., 000N)
+
+	/**
+	 * Cada instruccion debe contener la informacion necesaria para deshacer su propia ejecucion.
+	 * Cada instruccion contiene tantas grabadoras como veces se ha ejecutado esta durante el programa.
+	 */
+	grabadoras: Grabadora[];
 
 	constructor(contadorInstrucciones: number){
 		this.numero = ("000" + contadorInstrucciones).slice(-4);
+		this.grabadoras = [];
 	}
 
 	abstract execute(stack: Stack, memory: Memory): void;
 	/**
 	 * Implementacion generica para Otras y Salto (Halt, nop, jz, jnz, jmp, call, ret y enter).
 	 */
-    getInstructionSize(): number { return 0; }
+	getInstructionSize(): number { return 0; }
 }
 
 /**
  * Implementacion generica para instrucciones que trabajan con datos
- * de tipo entero (pop, popi, push, push, out, outi...)
+ * de tipo entero (pop, popi, push, push, out, outi...).
  */
 export abstract class InstruccionInteger extends Instruccion {
 	getInstructionSize(): number {

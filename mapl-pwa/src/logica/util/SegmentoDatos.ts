@@ -35,15 +35,16 @@ export class DataSegment {
      * del almacen de datos (esto es, la variable stack).
      * El sujeto se actualiza en todos los sitios donde se actualice el segmento de datos (add, remove y clean)
      */
-    private data$: Subject<[DataType, boolean][]>;
+    private _data$: Subject<[DataType, boolean][]>;
 
     readonly SIZE: number = 1024;
     private _actualSize: number;
 
     private constructor() {
         this._data = new Array<[DataType, boolean]>(this.SIZE);
-        this.data$ = new Subject<[DataType, boolean][]>();
-        this.data$.next(this._data);
+        this._data$ = new Subject<[DataType, boolean][]>();
+        this._data$.next(this._data);
+        this._actualSize = 0;
     }
     public static getInstance(): DataSegment {
         if (!DataSegment.instance)
@@ -51,7 +52,18 @@ export class DataSegment {
         
         return DataSegment.instance;
     }
+    set data(data: [DataType, boolean][]) {
+        this._data = data;
+        this._data$.next(this._data); // Actualizamos la suscripcion para la vista
+    }
 
+
+    /**
+     * Devuelve una copia del segmento de datos.
+     */
+    copy(): [DataType, boolean][] {
+        return this._data.slice();
+    }
     /**
      * Inserta un valor en la memoria.
      * @param value
@@ -66,7 +78,7 @@ export class DataSegment {
         for(let i = 1; i < value.size; i++)
             this._data[address+i] = [undefined, true]; // Marcamos como ocupadas las celdas de acuerdo a al tamaño del dato
 
-        this.data$.next(this._data); // Actualizamos la suscripcion para la vista
+        this._data$.next(this._data); // Actualizamos la suscripcion para la vista
     }
     /**
      * Elimina el elemento correspondiente a la direccion pasada como parametro.
@@ -79,7 +91,7 @@ export class DataSegment {
         for(let i = 0; i < returned[0].size; i++)
             delete this._data[address+i]; // igual que this._data[address] = undefined
         
-        this.data$.next(this._data);
+        this._data$.next(this._data);
         return returned[0];
     }
     get(address: number): [DataType, boolean] {
@@ -90,7 +102,7 @@ export class DataSegment {
      */
     clean() {
         this._data = new Array<[DataType, boolean]>(this.SIZE);
-        this.data$.next(this._data);
+        this._data$.next(this._data);
         this._actualSize = 0;
     }
     /**
@@ -131,8 +143,8 @@ export class DataSegment {
      * dinamicamente, por medio de una suscripcion.
      * Un observable es un objeto que permite observar los eventos emitidos por el subject.
      */
-    data(): Observable<[DataType, boolean][]> {
-        return this.data$.asObservable();
+    dataAsObservable(): Observable<[DataType, boolean][]> {
+        return this._data$.asObservable();
     }
 }
 

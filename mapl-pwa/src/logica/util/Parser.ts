@@ -33,7 +33,7 @@ export class Parser {
     private _finInit: boolean;
     private _programaSinFunciones: boolean;
     
-    private contadorInstrucciones: number;  // Contador para el numero de instruccion. Aumenta en una unidad siempre que se lea una.
+    private _contadorInstrucciones: number;  // Contador para el numero de instruccion. Aumenta en una unidad siempre que se lea una.
 
     constructor(file: File) {
         this.file = file;
@@ -41,7 +41,7 @@ export class Parser {
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
         this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
         this._programaSinFunciones = true;
-        this.contadorInstrucciones = 0;
+        this._contadorInstrucciones = 0;
     }
 
     /**
@@ -91,203 +91,203 @@ export class Parser {
                              * +cte: para convertir una cadena que contiene un numero en un numero
                              * En caso de contener un caracter no numerico devuelve NaN
                              */
-                            this.addInstruccion(new Push(this.contadorInstrucciones, +cte), linea);
+                            this.addInstruccion(new Push(this._contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHF:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pushf(this.contadorInstrucciones, +cte), linea);
+                            this.addInstruccion(new Pushf(this._contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHB:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pushb(this.contadorInstrucciones, +cte), linea);
+                            this.addInstruccion(new Pushb(this._contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.PUSHA:
                             var cte = linea.trim().split(/\s+/)[1];
-                            this.addInstruccion(new Pusha(this.contadorInstrucciones, +cte), linea);
+                            this.addInstruccion(new Pusha(this._contadorInstrucciones, +cte), linea);
                             break;
                         case Lenguaje.POP:
                         case Lenguaje.POPI:
-                            this.addInstruccion(new Pop(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Pop(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.POPF:
-                            this.addInstruccion(new Popf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Popf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.POPB:
-                            this.addInstruccion(new Popb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Popb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LOAD:
                         case Lenguaje.LOADI:
-                            this.addInstruccion(new Load(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Load(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LOADF:
-                            this.addInstruccion(new Loadf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Loadf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LOADB:
-                            this.addInstruccion(new Loadb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Loadb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.STORE:
                         case Lenguaje.STOREI:
-                            this.addInstruccion(new Store(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Store(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.STOREF:
-                            this.addInstruccion(new Storef(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Storef(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.STOREB:
-                            this.addInstruccion(new Storeb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Storeb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.DUP:
                         case Lenguaje.DUPI:
-                            this.addInstruccion(new Dup(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Dup(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.DUPF:
-                            this.addInstruccion(new Dupf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Dupf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.DUPB:
-                            this.addInstruccion(new Dupb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Dupb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.ADD:
                         case Lenguaje.ADDI:
-                            this.addInstruccion(new Add(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Add(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.ADDF:
-                            this.addInstruccion(new Addf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Addf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.SUB:
                         case Lenguaje.SUBI:
-                            this.addInstruccion(new Sub(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Sub(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.SUBF:
-                            this.addInstruccion(new Subf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Subf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.DIV:
                         case Lenguaje.DIVI:
-                            this.addInstruccion(new Div(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Div(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.DIVF:
-                            this.addInstruccion(new Divf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Divf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.MUL:
                         case Lenguaje.MULI:
-                            this.addInstruccion(new Mul(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Mul(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.MULF:
-                            this.addInstruccion(new Mulf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Mulf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.MOD:
-                            this.addInstruccion(new Mod(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Mod(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.IN:
                         case Lenguaje.INI:
-                            this.addInstruccion(new In(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new In(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.INF:
-                            this.addInstruccion(new Inf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Inf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.INB:
-                            this.addInstruccion(new Inb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Inb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.OUT:
                         case Lenguaje.OUTI:
-                            this.addInstruccion(new Out(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Out(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.OUTF:
-                            this.addInstruccion(new Outf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Outf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.OUTB:
-                            this.addInstruccion(new Outb(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Outb(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.AND:
-                            this.addInstruccion(new And(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new And(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.OR:
-                            this.addInstruccion(new Or(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Or(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.NOT:
-                            this.addInstruccion(new Not(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Not(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.GT:
                         case Lenguaje.GTI:
-                            this.addInstruccion(new Gt(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Gt(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.GTF:
-                            this.addInstruccion(new Gtf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Gtf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LT:
                         case Lenguaje.LTI:
-                            this.addInstruccion(new Lt(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Lt(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LTF:
-                            this.addInstruccion(new Ltf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Ltf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.GE:
                         case Lenguaje.GEI:
-                            this.addInstruccion(new Ge(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Ge(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.GEF:
-                            this.addInstruccion(new Gef(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Gef(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LE:
                         case Lenguaje.LEI:
-                            this.addInstruccion(new Le(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Le(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.LEF:
-                            this.addInstruccion(new Lef(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Lef(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.EQ:
                         case Lenguaje.EQI:
-                            this.addInstruccion(new Eq(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Eq(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.EQF:
-                            this.addInstruccion(new Eqf(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Eqf(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.NE:
                         case Lenguaje.NEI:
-                            this.addInstruccion(new Ne(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Ne(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.NEF:
-                            this.addInstruccion(new Nef(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Nef(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.B2I:
-                            this.addInstruccion(new B2i(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new B2i(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.I2B:
-                            this.addInstruccion(new I2b(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new I2b(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.I2F:
-                            this.addInstruccion(new I2f(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new I2f(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.F2I:
-                            this.addInstruccion(new F2i(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new F2i(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.JMP:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            this.addInstruccion(new Jmp(this.contadorInstrucciones, label, this.programa), linea);
+                            this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this.programa), linea);
                             break;
                         case Lenguaje.JZ:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            this.addInstruccion(new Jz(this.contadorInstrucciones, label, this.programa), linea);
+                            this.addInstruccion(new Jz(this._contadorInstrucciones, label, this.programa), linea);
                             break;
                         case Lenguaje.JNZ:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            this.addInstruccion(new Jnz(this.contadorInstrucciones, label, this.programa), linea);
+                            this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this.programa), linea);
                             break;
                         case Lenguaje.CALL:
                             var label = linea.trim().split(/\s+/)[1] + ":";
-                            this.addInstruccion(new Call(this.contadorInstrucciones, label, this.programa), linea);
+                            this.addInstruccion(new Call(this._contadorInstrucciones, label, this.programa), linea);
                             break;
                         case Lenguaje.RET:
                             if (!this._finInit)
                                 throw new Error("La función 'init' no puede contener otra función.");
 
-                            this.addInstruccion(new Ret(this.contadorInstrucciones, this.programa), linea);
+                            this.addInstruccion(new Ret(this._contadorInstrucciones, this.programa), linea);
                             this._finFuncion = true; // Fin de la funcion actual leida
                             this._programaSinFunciones = false; // Hay mas funciones en el programa a parte de 'init'
                             break;
                         case Lenguaje.NOP:
-                            this.addInstruccion(new Nop(this.contadorInstrucciones), linea);
+                            this.addInstruccion(new Nop(this._contadorInstrucciones), linea);
                             break;
                         case Lenguaje.HALT:
-                            this.addInstruccion(new Halt(this.contadorInstrucciones, this.programa), linea);
+                            this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), linea);
                             this._finInit = true; // Fin de la funcion principal 'init'
                             break;
                         case Lenguaje.WHITE_LINE:
@@ -301,7 +301,7 @@ export class Parser {
                             else {
                                 let label = linea.trim();
                                 if (this.isValidLabel(label)) { // Es una etiqueta (o de funcion o de salto)
-                                    this.programa.labels.push(new Label(label, this.contadorInstrucciones));
+                                    this.programa.labels.push(new Label(label, this._contadorInstrucciones));
                                     this.programa.texto.push(new Linea(linea));
                                     
                                     // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
@@ -320,17 +320,20 @@ export class Parser {
                     }
                 });
 
+                // Si no se ha leido ninguna instruccion...
+                if (this.programa.codigo.length === 0)
+                    throw new Error("El fichero no contiene ninguna instrucción ejecutable.");
                 /** 
                  * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
                  * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion.
                  */
                 if (!this._finInit && this._programaSinFunciones) {
-                    this.addInstruccion(new Halt(this.contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
+                    this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
                     this._finInit = true; // Fin de la funcion principal 'init'
                 }
                 /**
                  * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede 
-                 * añadir automaticamente al haber funciones de por medio) o algunas de las funciones
+                 * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
                  * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
                  */
                 if (!this._finInit || !this._finFuncion)
@@ -346,7 +349,7 @@ export class Parser {
     }
 
     /**
-     * Añade una instruccion al programa y aumenta el contador de instruccion
+     * Añade una instruccion al programa y aumenta el contador de instruccion.
      * @param i Instruccion
      * @param linea Linea
      */
@@ -355,8 +358,8 @@ export class Parser {
             throw new Error("No puede haber una instruccion que no forme parte de una función.\n'" + linea.trim() + "'.");
 
         this.programa.codigo.push(i);
-        this.programa.texto.push(new Linea(linea, this.contadorInstrucciones));
-        this.contadorInstrucciones++;
+        this.programa.texto.push(new Linea(linea, this._contadorInstrucciones));
+        this._contadorInstrucciones++;
     }
 
     /**

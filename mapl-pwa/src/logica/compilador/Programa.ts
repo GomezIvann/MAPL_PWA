@@ -1,3 +1,4 @@
+import { Grabadora } from '../instrucciones/Grabadora';
 import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { CadenaInb } from '../util/CadenaInb';
 import { Memory } from '../util/Memoria';
@@ -13,14 +14,18 @@ export class Programa {
     codigo: Instruccion[];  // Conjunto de instrucciones que forman el programa
     labels: Label[];        // Etiquetas del programa
     texto: Linea[];         // Texto del programa
+
+    /**
+     * Segmento de datos.
+     */
     pila: Stack;            // Pila del programa
     memoria: Memory;        // Memoria del programa
 
     /**
      * Propiedades relativas a la ejecucion.
      */
-    private ip: number;             // IP (segmento de código). Dirección de la instrucción actual
-    private finalizado: boolean;    // true -> ejecucion del programa ha finalizado
+    private _ip: number;             // IP (segmento de código). Dirección de la instrucción actual
+    private _finalizado: boolean;    // true -> ejecucion del programa ha finalizado
 
     constructor() {
         this.codigo = [];
@@ -30,25 +35,39 @@ export class Programa {
         this.memoria = new Memory();
         CadenaInb.getInstance().clean();    // Limpiamos la cadena comun de las instrucciones Inb.
         DataSegment.getInstance().clean();  // Limpiamos el segmento de datos.
-        this.ip = 0;
-        this.finalizado = false;
+        this._ip = 0;
+        this._finalizado = false;
     }
-
+    get ip(): number {
+        return this._ip;
+    }
+    get finalizado(): boolean {
+        return this._finalizado;
+    }
 
     /**
      * Logica comun de los metodos ejecutar:
+     *      0. Cuando el programa apunte a la instruccion inicial guardar su estado (puesto que grabamos siempre despues de ejecutar
+     *          empezamos desde ip=1, se hace necesario meterla manualmente).
      *      1. Ejecutar instruccion actual.
      *      2. Apuntar a la siguiente instruccion.
-     *      Si salta un error en la ejecucion de la instruccion, 
-     *      indica la linea donde se produjo y lo lanza de nuevo.
+     *      3. Guardar el estado actual del programa tras la ejecucion, que representa el estado previo a la ejecucion
+     *         de la siguiente instruccion.
+     * Si salta un error en la ejecucion de la instruccion, 
+     * indica la linea donde se produjo y lo lanza de nuevo.
      */
     private ejecucion() {
         try {
-            this.codigo[this.ip].execute(this.pila, this.memoria);
-            this.ip++;
+            if (this._ip === 0)
+                this.codigo[this._ip].grabadoras.push(new Grabadora(this.getPila(), this._ip));
+            
+            let anteriorIp = this._ip;
+            this.codigo[this._ip].execute(this.pila, this.memoria);
+            this._ip++;
+            this.codigo[this._ip].grabadoras.push(new Grabadora(this.getPila(), anteriorIp));
         }
         catch (err) {
-            throw new Error("Línea " + this.codigo[this.ip].numero + ". " + err);
+            throw new Error("Línea " + this.codigo[this._ip].numero + ". " + err.message);
         }
     }
 
@@ -59,7 +78,7 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecuccionCompleta(): void  {
-        while (!this.finalizado && this.isCodigo())
+        while (!this._finalizado && this.isCodigo())
             this.ejecucion();
     }
 
@@ -70,7 +89,7 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecutarSiguienteInstruccion(): void  {
-        if (!this.finalizado && this.isCodigo())
+        if (!this._finalizado && this.isCodigo())
             this.ejecucion();
     }
 
@@ -82,17 +101,57 @@ export class Programa {
      * 
      * @param linea linea limite de ejecucion (no incluida).
      */
-    ejecutarHasta(linea: Linea): void {
-        let indice = this.getInstruccionByLinea(linea);
-        while (this.ip < indice)
+    ejecutarHasta(indice: number): void {
+        while (this._ip < indice)
             this.ejecucion();
     }
 
     /**
      * Devuelve el indice de la Instruccion correspondiente a la linea pasada como parametro.
      */
-    private getInstruccionByLinea(linea: Linea): number {
+    private getNumeroInstruccionByLinea(linea: Linea): number {
         return this.codigo.findIndex(instruccion => instruccion.numero === linea.numeroInstruccion);
+    }
+
+    /**
+     * Retrocede la ejecucion del programa en una instruccion. Esta accion implica:
+     *      1. Apuntar a la anterior instruccion.
+     *          a. Eliminando la grabadora de la instruccion actual (pop).
+     *      2. Obtener la ultima grabadora de la nueva instruccion.
+     *      3. Desgrabar su ultima ejecucion (sin eliminarla).
+     */
+    retroceder(): void {
+        if (this._ip > 0 && !this._finalizado) {
+            let grabActual = this.codigo[this._ip].grabadoras.pop();
+            this._ip = grabActual.anteriorIp;
+            let length = this.codigo[this._ip].grabadoras.length;
+            let grabPrevia = this.codigo[this._ip].grabadoras[length-1];
+            this.pila = grabPrevia.desgrabar();
+        }
+    }
+
+    /**
+     * ...
+     * @param linea
+     */
+    retrocederHasta(indice: number): void {
+        while (this._ip > indice)
+            this.retroceder();
+    }
+
+    /**
+     * Ejecuta la linea seleccionada por el usuario.
+     * Decide, en funcion de si la linea pulsada es anterior o posterior a la actual, si la ejecucion ha de retroceder
+     * o avanzar. 
+     * 
+     * @param linea
+     */
+    seleccionarInstruccion(linea: Linea) {
+        let indice = this.getNumeroInstruccionByLinea(linea);
+        if (indice > this._ip)
+            this.ejecutarHasta(indice);
+        else if (indice < this._ip)
+            this.retrocederHasta(indice);
     }
 
     /**
@@ -102,8 +161,8 @@ export class Programa {
         if (!this.pila.isEmpty())
             throw new Error("El programa finaliza dejando valores en la pila.");
  
-        this.finalizado = true;
-        this.ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
+        this._finalizado = true;
+        this._ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
         alert("Fin de la ejecución del programa.");
     }
 
@@ -114,14 +173,14 @@ export class Programa {
      *      2. Vaciar la cadena comun de las instrucciones Inb.
      *      3. Reubicar el puntero de la pila al fondo del segmento de datos.
      *      4. Apuntar a la primera instruccion.
-     *      5. Desmarcar el programa como finalizado.
+     *      5. Desmarcar el programa como finalizado (vuelve a ser ejecutable).
      */
     recargar(): void {
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
         this.pila.restaurar();
-        this.ip = 0;
-        this.finalizado = false;
+        this._ip = 0;
+        this._finalizado = false;
     }
 
     /**
@@ -136,7 +195,7 @@ export class Programa {
      * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose.
      */
     getLineaByInstruccionActual(): number {
-        return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this.ip].numero);
+        return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this._ip].numero);
     }
 
     /**
@@ -146,7 +205,7 @@ export class Programa {
      * @param nInstruccion
      */
     jumpTo(nInstruccion: number): void {
-        this.ip = nInstruccion;
+        this._ip = nInstruccion;
     }
 
     /**
@@ -174,5 +233,14 @@ export class Programa {
                 nombreLabel.label = label;
             }
         });
+    }
+
+    /**
+     * Devuelve una copia del objeto Pila. 
+     * Explicacion de que se hace en el fichero ManipulacionPila > Instruccion DUP.
+     */
+    getPila(): Stack {
+        let copy = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);
+        return copy;
     }
 }

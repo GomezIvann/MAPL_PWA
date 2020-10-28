@@ -17,18 +17,21 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero }"
-            (dblclick)="ejecutarHasta(row)"></tr>
+            (dblclick)="seleccionarInstruccion(row)"></tr>
     </table>
 </div>
 
 <div id="butonera">
-    <button id="ejecutar" (click)="ejecutar(tbContainer)" mat-raised-button >
+    <button id="ejecutar" (click)="ejecutar(tbContainer)" [disabled]="programa.finalizado" mat-raised-button >
         <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
     <button id="recargar" (click)="recargarPrograma(tbContainer)" mat-raised-button>
         <mat-icon>refresh</mat-icon> Reiniciar
     </button>
-    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" mat-raised-button>
-        <mat-icon>arrow_right_alt</mat-icon> Ejecutar siguiente instrucción
+    <button id="retrocederInstruccion" (click)="retrocederInstruccion(tbContainer)" [disabled]="programa.finalizado" mat-raised-button>
+        <mat-icon>chevron_left</mat-icon> Retroceder
+    </button>
+    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" [disabled]="programa.finalizado" mat-raised-button>
+        <mat-icon>chevron_right</mat-icon> Ejecutar siguiente instrucción
     </button>
 </div>

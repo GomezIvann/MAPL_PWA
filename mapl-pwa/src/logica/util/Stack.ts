@@ -1,6 +1,5 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { IntegerDataType, PrimitiveDataType } from './DataTypes';
-import { AbstractDataSegmentZone, DataSegment } from './SegmentoDatos';
+import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 /**
  * Pila del programa donde se almacenan los datos necesarios para la ejecucion del programa.

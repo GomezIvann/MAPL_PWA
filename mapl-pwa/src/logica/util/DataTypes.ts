@@ -5,6 +5,7 @@
  */
 export abstract class DataType {
     size: number; // Tamaño del dato.
+
     constructor(size: number){
         this.size = size;
     }
@@ -22,7 +23,8 @@ export class VariableDataType extends DataType {
         this.name = name;
         this.value = data;
     }
-    toString() { return this.name + " ("+this.value.value+")"; }
+
+    toString() { return this.name + " ("+this.value.toString()+")"; }
 }
 
 /**
@@ -61,6 +63,7 @@ export class IntegerDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.INTEGER);
     }
+
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("El valor no es un número entero.");
@@ -72,6 +75,7 @@ export class FloatDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.FLOAT);
     }
+
     setValue(value: number): void {
         if (isNaN(value))
             throw new Error("El valor no es un número real.");
@@ -83,20 +87,27 @@ export class ByteDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.BYTE);
     }
+
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("El valor de la instrucción no es un número entero.");
         
         this.value = value;
     }
+    /**
+     * JSON.stringify() convierte un objeto o valor de JavaScript en una cadena de texto JSON.
+     * Gracias a esto, los caracteres especiales como \n o \t no se interpretan y se muestran como tal.
+     */
     toString() {
-        return String.fromCharCode(this.value);
+        let str = String.fromCharCode(this.value);
+        return JSON.stringify(str);
     }
 }
 export class AddressDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.ADDRESS);
     }
+    
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("El valor de la instrucción no es una dirección de memoria (entero o BP).");
