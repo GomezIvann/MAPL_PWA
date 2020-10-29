@@ -17,7 +17,7 @@ export class Push extends InstruccionInteger {
         this.dt = new IntegerDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getInstructionSize());
+        stack.push(this.dt, this.getSize());
     }
 }
 export class Pushf extends InstruccionFloat {
@@ -28,7 +28,7 @@ export class Pushf extends InstruccionFloat {
         this.dt = new FloatDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getInstructionSize());
+        stack.push(this.dt, this.getSize());
     }
 }
 export class Pushb extends InstruccionByte {
@@ -39,7 +39,7 @@ export class Pushb extends InstruccionByte {
         this.dt = new ByteDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getInstructionSize());
+        stack.push(this.dt, this.getSize());
     }
 }
 export class Pusha extends InstruccionAddress {
@@ -50,7 +50,7 @@ export class Pusha extends InstruccionAddress {
         this.dt = new AddressDataType(cte);
     }
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getInstructionSize());
+        stack.push(this.dt, this.getSize());
     }
 }
 /**
@@ -61,22 +61,22 @@ export class Pusha extends InstruccionAddress {
 export class Load extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let variable = memory.load(this.getInstructionSize(), address);
-        stack.push(variable.value, this.getInstructionSize());
+        let variable = memory.load(this.getSize(), address);
+        stack.push(variable.value, this.getSize());
     }
 }
 export class Loadf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let variable = memory.load(this.getInstructionSize(), address);
-        stack.push(variable.value, this.getInstructionSize());
+        let variable = memory.load(this.getSize(), address);
+        stack.push(variable.value, this.getSize());
     }
 }
 export class Loadb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let variable = memory.load(this.getInstructionSize(), address);
-        stack.push(variable.value, this.getInstructionSize());
+        let variable = memory.load(this.getSize(), address);
+        stack.push(variable.value, this.getSize());
     }
 }
 /**
@@ -86,7 +86,7 @@ export class Loadb extends InstruccionByte {
  */
 export class Store extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize());
+        let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
         let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
@@ -94,7 +94,7 @@ export class Store extends InstruccionInteger {
 }
 export class Storef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize());
+        let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
         let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
@@ -102,7 +102,7 @@ export class Storef extends InstruccionFloat {
 }
 export class Storeb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize());
+        let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
         let vt: VariableDataType = new VariableDataType("Var"+address, value);
         memory.store(address, vt);
@@ -115,17 +115,17 @@ export class Storeb extends InstruccionByte {
  */
 export class Pop extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        stack.pop(this.getInstructionSize());
+        stack.pop(this.getSize());
     }
 }
 export class Popf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        stack.pop(this.getInstructionSize());
+        stack.pop(this.getSize());
     }
 }
 export class Popb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        stack.pop(this.getInstructionSize());
+        stack.pop(this.getSize());
     }
 }
 /**
@@ -148,25 +148,25 @@ export class Popb extends InstruccionByte {
  */
 export class Dup extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
-        stack.push(dt, this.getInstructionSize());
-        stack.push(copy, this.getInstructionSize());
+        stack.push(dt, this.getSize());
+        stack.push(copy, this.getSize());
     }
 }
 export class Dupf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
-        stack.push(dt, this.getInstructionSize());
-        stack.push(copy, this.getInstructionSize());
+        stack.push(dt, this.getSize());
+        stack.push(copy, this.getSize());
     }
 }
 export class Dupb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         let copy = Object.assign(Object.create(Object.getPrototypeOf(dt)), dt);
-        stack.push(dt, this.getInstructionSize());
-        stack.push(copy, this.getInstructionSize());
+        stack.push(dt, this.getSize());
+        stack.push(copy, this.getSize());
     }
 }

@@ -60,7 +60,7 @@ export class Programa {
         try {
             if (this._ip === 0)
                 this.codigo[this._ip].grabadoras.push(new Grabadora(this.getPila(), this._ip));
-            
+
             let anteriorIp = this._ip;
             this.codigo[this._ip].execute(this.pila, this.memoria);
             this._ip++;
@@ -77,7 +77,7 @@ export class Programa {
      *      - No haber finalizado.
      *      - Haber codigo disponible para ejecutar.
      */
-    ejecuccionCompleta(): void  {
+    ejecuccionCompleta(): void {
         while (!this._finalizado && this.isCodigo())
             this.ejecucion();
     }
@@ -88,29 +88,42 @@ export class Programa {
      *      - No haber finalizado.
      *      - Haber codigo disponible para ejecutar.
      */
-    ejecutarSiguienteInstruccion(): void  {
+    ejecutarSiguienteInstruccion(): void {
         if (!this._finalizado && this.isCodigo())
             this.ejecucion();
     }
 
     /**
-     * Ejecutar el codigo del programa hasta la instruccion actual seleccionada
-     * por el usuario.
+     * Ejecutar el codigo del programa hasta la instruccion especificada por parametro.
      * Condiciones para la ejecucion:
-     *      - La linea pulsada es posterior a la instruccion actual (IP).
+     *      - El indice es posterior a la instruccion actual (IP).
      * 
-     * @param linea linea limite de ejecucion (no incluida).
+     * @param indice de la instruccion hasta la que ejecutar (no incluida).
      */
-    ejecutarHasta(indice: number): void {
-        while (this._ip < indice)
+    private ejecutarHasta(indice: number): void {
+        while (this._ip !== indice)
             this.ejecucion();
     }
 
     /**
-     * Devuelve el indice de la Instruccion correspondiente a la linea pasada como parametro.
+     * Ejecuta la linea seleccionada por el usuario.
+     * Para decidir si debe avanzar o no utiliza el metodo hasGrabadora(). Esto es debido a que si la instruccion
+     * tiene grabadoras significa que es anterior a la actual apuntada por ip (solo tienen grabadoras las instrucciones ya ejecutadas)
+     * luego llamada a retrocederHasta que ya sabe como volver a esa instruccion.
+     * Lo mismo en caso contrario, si no tiene grabadoras es que aun no hay sido ejecutada, luego el programa debe avanzar.
+     * En caso de que haga click sobre la misma instruccion...
+     * 
+     * @param linea
      */
-    private getNumeroInstruccionByLinea(linea: Linea): number {
-        return this.codigo.findIndex(instruccion => instruccion.numero === linea.numeroInstruccion);
+    seleccionarInstruccion(linea: Linea): void {
+        if (!this._finalizado && linea.numeroInstruccion !== undefined) {
+            var indice = parseInt(linea.numeroInstruccion);
+            let instruccion = this.codigo[indice];
+            if (instruccion.hasGrabadoras())
+                this.retrocederHasta(indice);
+            else
+                this.ejecutarHasta(indice);
+        }
     }
 
     /**
@@ -119,39 +132,40 @@ export class Programa {
      *          a. Eliminando la grabadora de la instruccion actual (pop).
      *      2. Obtener la ultima grabadora de la nueva instruccion.
      *      3. Desgrabar su ultima ejecucion (sin eliminarla).
+     * 
+     * Se puede retroceder hasta la instruccion 0 y siempre y cuando el programa no haya finalizado.
      */
     retroceder(): void {
         if (this._ip > 0 && !this._finalizado) {
             let grabActual = this.codigo[this._ip].grabadoras.pop();
             this._ip = grabActual.anteriorIp;
             let length = this.codigo[this._ip].grabadoras.length;
-            let grabPrevia = this.codigo[this._ip].grabadoras[length-1];
+            let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
             this.pila = grabPrevia.desgrabar();
         }
     }
 
     /**
-     * ...
-     * @param linea
-     */
-    retrocederHasta(indice: number): void {
-        while (this._ip > indice)
-            this.retroceder();
-    }
-
-    /**
-     * Ejecuta la linea seleccionada por el usuario.
-     * Decide, en funcion de si la linea pulsada es anterior o posterior a la actual, si la ejecucion ha de retroceder
-     * o avanzar. 
+     * Retrocede la ejecucion hasta la instruccion especificada, limpiando las grabadoras de todas las instrucciones
+     * comprendidas entre la actual hasta la que se retrocede.
      * 
-     * @param linea
+     * @param indice
      */
-    seleccionarInstruccion(linea: Linea) {
-        let indice = this.getNumeroInstruccionByLinea(linea);
-        if (indice > this._ip)
-            this.ejecutarHasta(indice);
-        else if (indice < this._ip)
-            this.retrocederHasta(indice);
+    private retrocederHasta(indice: number): void {
+        var i = this._ip;
+        while (i !== indice)
+            i = this.codigo[i].grabadoras.pop().anteriorIp;
+
+        if (indice === this._ip && this.codigo[indice].grabadoras.length > 1) {
+            let grabPrevia = this.codigo[indice].grabadoras.pop();
+            this.pila = grabPrevia.desgrabar();
+        }
+        else {
+            this._ip = indice;
+            let length = this.codigo[this._ip].grabadoras.length;
+            let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
+            this.pila = grabPrevia.desgrabar();
+        }
     }
 
     /**
@@ -160,7 +174,7 @@ export class Programa {
     finDeEjecucion(): void {
         if (!this.pila.isEmpty())
             throw new Error("El programa finaliza dejando valores en la pila.");
- 
+
         this._finalizado = true;
         this._ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
         alert("Fin de la ejecución del programa.");
@@ -175,7 +189,7 @@ export class Programa {
      *      4. Apuntar a la primera instruccion.
      *      5. Desmarcar el programa como finalizado (vuelve a ser ejecutable).
      */
-    recargar(): void {
+    reiniciar(): void {
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
         this.pila.restaurar();
@@ -193,6 +207,8 @@ export class Programa {
 
     /**
      * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose.
+     * 
+     * @returns index de la instruccion actual
      */
     getLineaByInstruccionActual(): number {
         return this.texto.findIndex(linea => linea.numeroInstruccion === this.codigo[this._ip].numero);
@@ -209,10 +225,10 @@ export class Programa {
     }
 
     /**
-     * True si hay codigo para ejecutar.
+     * @returns true si hay codigo para ejecutar.
      */
     private isCodigo(): boolean {
-        return this.codigo.length != 0;
+        return this.codigo.length !== 0;
     }
 
     /**
@@ -228,7 +244,7 @@ export class Programa {
                 let label = this.labels.find(label => label.nombre === nombreLabel.labelNombre);
 
                 if (label === undefined)
-                    throw new Error("La etiqueta '"+ nombreLabel.labelNombre +"' no se ha encontrado en el fichero.");
+                    throw new Error("La etiqueta '" + nombreLabel.labelNombre + "' no se ha encontrado en el fichero.");
 
                 nombreLabel.label = label;
             }
@@ -238,6 +254,8 @@ export class Programa {
     /**
      * Devuelve una copia del objeto Pila. 
      * Explicacion de que se hace en el fichero ManipulacionPila > Instruccion DUP.
+     * 
+     * @returns copia de la pila
      */
     getPila(): Stack {
         let copy = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);

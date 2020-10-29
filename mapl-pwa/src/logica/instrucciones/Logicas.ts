@@ -10,11 +10,11 @@ import { InstruccionInteger } from './Instruccion';
  */
 export class And extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value1 && value2) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getSize());
     }
 }
 /**
@@ -24,11 +24,11 @@ export class And extends InstruccionInteger {
  */
 export class Or extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value1 || value2) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getSize());
     }
 }
 /**
@@ -38,9 +38,9 @@ export class Or extends InstruccionInteger {
  */
 export class Not extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value = stack.pop(this.getInstructionSize()).value;
+        let value = stack.pop(this.getSize()).value;
         let res = (!value) ? 1 : 0;
         let dt = new IntegerDataType(res);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getSize());
     }
 }

@@ -19,6 +19,7 @@ table {
 /* Instruccion actual (IP) */
 .selected {
     background-color: lightyellow;
+    font-weight: 550;
 }
 
 /* Tamaño de letra de celdas */

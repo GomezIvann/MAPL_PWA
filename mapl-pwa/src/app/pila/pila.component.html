@@ -14,7 +14,8 @@
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            (dblclick)="mostrarVariable($event, row)"></tr>
     </table>
 </div>
 <div id="div-pila" class="pila-table-container mat-elevation-z8">

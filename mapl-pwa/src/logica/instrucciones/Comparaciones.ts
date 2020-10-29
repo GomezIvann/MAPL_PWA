@@ -14,8 +14,8 @@ import { InstruccionInteger, InstruccionFloat } from './Instruccion';
  */
 export class Gt extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 > value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -23,8 +23,8 @@ export class Gt extends InstruccionInteger {
 }
 export class Gtf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 > value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -37,8 +37,8 @@ export class Gtf extends InstruccionFloat {
  */
 export class Lt extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 < value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -46,8 +46,8 @@ export class Lt extends InstruccionInteger {
 }
 export class Ltf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 < value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -60,8 +60,8 @@ export class Ltf extends InstruccionFloat {
  */
 export class Ge extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 >= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -69,8 +69,8 @@ export class Ge extends InstruccionInteger {
 }
 export class Gef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 >= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -83,8 +83,8 @@ export class Gef extends InstruccionFloat {
  */
 export class Le extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 <= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -92,8 +92,8 @@ export class Le extends InstruccionInteger {
 }
 export class Lef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 <= value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -106,8 +106,8 @@ export class Lef extends InstruccionFloat {
  */
 export class Eq extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 === value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -115,8 +115,8 @@ export class Eq extends InstruccionInteger {
 }
 export class Eqf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 === value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -129,8 +129,8 @@ export class Eqf extends InstruccionFloat {
  */
 export class Ne extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 !== value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);
@@ -138,8 +138,8 @@ export class Ne extends InstruccionInteger {
 }
 export class Nef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getInstructionSize()).value;
-        let value2 = stack.pop(this.getInstructionSize()).value;
+        let value1 = stack.pop(this.getSize()).value;
+        let value2 = stack.pop(this.getSize()).value;
         let res = (value2 !== value1) ? 1 : 0;
         let dt = new IntegerDataType(res);
         stack.push(dt, PrimitiveSizes.INTEGER);

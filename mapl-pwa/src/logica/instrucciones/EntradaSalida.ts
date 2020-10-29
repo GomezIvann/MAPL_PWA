@@ -18,7 +18,7 @@ export class In extends InstruccionInteger {
         }
         while (!Number.isSafeInteger(insertedValue));
         let dt = new IntegerDataType(insertedValue);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getSize());
 
         // Mostramos el entero por consola
         Consola.getInstance().addOutput("Escriba un entero: " + dt.value);
@@ -32,7 +32,7 @@ export class Inf extends InstruccionFloat {
         }
         while (isNaN(insertedValue));
         let dt = new FloatDataType(insertedValue);
-        stack.push(dt, this.getInstructionSize());
+        stack.push(dt, this.getSize());
 
         // Mostramos el real por consola
         Consola.getInstance().addOutput("Escriba un real: " + dt.value);
@@ -51,14 +51,14 @@ export class Inb extends InstruccionByte {
             insertedValue = insertedValue.trim() + "\n"; // Insertamos un salto de linea como delimitador
             this.cadena.value = insertedValue.split("").reverse(); // para comenzar insertando por atras
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
-            stack.push(dt, this.getInstructionSize());
+            stack.push(dt, this.getSize());
 
             // Mostramos la cadena completa por consola
             Consola.getInstance().addOutput("Escriba una cadena: " + insertedValue.trim());
         }
         else {
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
-            stack.push(dt, this.getInstructionSize());
+            stack.push(dt, this.getSize());
         }
     }
 }
@@ -69,19 +69,19 @@ export class Inb extends InstruccionByte {
  */
 export class Out extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         Consola.getInstance().addOutput(dt.toString());
     }
 }
 export class Outf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         Consola.getInstance().addOutput(dt.toString());
     }
 }
 export class Outb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let dt = stack.pop(this.getInstructionSize());
+        let dt = stack.pop(this.getSize());
         /**
          * No podemos usar el toString() porque devuelve el JSON en string.
          * En este caso si que necesitamos que interprete los caracteres especiales como \n (nueva linea)

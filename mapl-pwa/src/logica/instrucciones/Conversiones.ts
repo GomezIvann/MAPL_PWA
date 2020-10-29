@@ -10,7 +10,7 @@ import { InstruccionInteger, InstruccionFloat, InstruccionByte } from './Instruc
  */
 export class B2i extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
-        let dtByte = stack.pop(this.getInstructionSize());
+        let dtByte = stack.pop(this.getSize());
         let dtInteger = new IntegerDataType(dtByte.value);
 
         // no se hace necesaria la comprobacion de tipos ya que es un valor interno (se presupone correcto)
@@ -24,7 +24,7 @@ export class B2i extends InstruccionByte {
  */
 export class I2f extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let dtInteger = stack.pop(this.getInstructionSize());
+        let dtInteger = stack.pop(this.getSize());
         let dtFloat = new FloatDataType(dtInteger.value);
         stack.push(dtFloat, dtFloat.size);
     }
@@ -36,7 +36,7 @@ export class I2f extends InstruccionInteger {
  */
 export class I2b extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let dtInteger = stack.pop(this.getInstructionSize());
+        let dtInteger = stack.pop(this.getSize());
         let dtByte = new ByteDataType(dtInteger.value);
         stack.push(dtByte, dtByte.size);
     }
@@ -48,7 +48,7 @@ export class I2b extends InstruccionInteger {
  */
 export class F2i extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let dtFloat = stack.pop(this.getInstructionSize());
+        let dtFloat = stack.pop(this.getSize());
         let dtInteger = new IntegerDataType(Math.trunc(dtFloat.value));
         stack.push(dtInteger, dtInteger.size);
     }

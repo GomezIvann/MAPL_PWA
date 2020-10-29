@@ -44,7 +44,7 @@ export class InstruccionesComponent implements OnInit {
   }
 
   recargarPrograma(el: HTMLElement) {
-    this.programa.recargar();
+    this.programa.reiniciar();
     this.scrollToActualInstruction(el);
   }
 

@@ -72,4 +72,9 @@ export class PilaComponent implements OnInit {
     else if (tuple[1])
       return 0;
   }
+
+  mostrarVariable(event, row: [DataType, boolean]) {
+    if (event.shiftKey)
+      alert("Variable: "+ row[0] +"; Tamaño: "+ row[0].size + " bytes");
+  }
 }

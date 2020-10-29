@@ -30,7 +30,11 @@ export abstract class Instruccion {
 	/**
 	 * Implementacion generica para Otras y Salto (Halt, nop, jz, jnz, jmp, call, ret y enter).
 	 */
-	getInstructionSize(): number { return 0; }
+	getSize(): number { return 0; }
+	/**
+	 * @returns true si la instruccion tiene grabadoras
+	 */
+	hasGrabadoras(): boolean { return this.grabadoras.length !== 0; }
 }
 
 /**
@@ -38,7 +42,7 @@ export abstract class Instruccion {
  * de tipo entero (pop, popi, push, push, out, outi...).
  */
 export abstract class InstruccionInteger extends Instruccion {
-	getInstructionSize(): number {
+	getSize(): number {
 		return PrimitiveSizes.INTEGER;
 	}
 }
@@ -47,7 +51,7 @@ export abstract class InstruccionInteger extends Instruccion {
  * de tipo float (popf, pushf, outf, addf, gtf...).
  */
 export abstract class InstruccionFloat extends Instruccion {
-	getInstructionSize(): number {
+	getSize(): number {
 		return PrimitiveSizes.FLOAT;
 	}
 }
@@ -56,7 +60,7 @@ export abstract class InstruccionFloat extends Instruccion {
  * de tipo address (pusha cte, pusha bp...).
  */
 export abstract class InstruccionAddress extends Instruccion {
-	getInstructionSize(): number {
+	getSize(): number {
 		return PrimitiveSizes.ADDRESS;
 	}
 }
@@ -65,7 +69,7 @@ export abstract class InstruccionAddress extends Instruccion {
  * de tipo byte (popb, pushb, outb, inb...).
  */
 export abstract class InstruccionByte extends Instruccion {
-	getInstructionSize(): number {
+	getSize(): number {
 		return PrimitiveSizes.BYTE;
 	}
 }
