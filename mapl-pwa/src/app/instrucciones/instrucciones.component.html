@@ -17,21 +17,22 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero }"
-            (dblclick)="seleccionarInstruccion(row)"></tr>
+            [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
+            (dblclick)="seleccionarInstruccion($event, row, tbContainer)"></tr>
     </table>
 </div>
 
 <div id="butonera">
-    <button id="ejecutar" (click)="ejecutar(tbContainer)" [disabled]="programa.finalizado" mat-raised-button >
+    <button id="ejecutar" (click)="ejecutar(tbContainer)" [disabled]="disableBotones()" mat-raised-button >
         <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
-    <button id="recargar" (click)="recargarPrograma(tbContainer)" mat-raised-button>
+    <button id="recargar" (click)="recargarPrograma(tbContainer)" [disabled]="!programa.hasCodigo()" mat-raised-button>
         <mat-icon>refresh</mat-icon> Reiniciar
     </button>
-    <button id="retrocederInstruccion" (click)="retrocederInstruccion(tbContainer)" [disabled]="programa.finalizado" mat-raised-button>
+    <button id="retrocederInstruccion" (click)="retrocederInstruccion(tbContainer)" [disabled]="disableBotones()" mat-raised-button>
         <mat-icon>chevron_left</mat-icon> Retroceder
     </button>
-    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" [disabled]="programa.finalizado" mat-raised-button>
+    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" [disabled]="disableBotones()" mat-raised-button>
         <mat-icon>chevron_right</mat-icon> Ejecutar siguiente instrucción
     </button>
 </div>

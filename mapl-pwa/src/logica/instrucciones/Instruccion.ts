@@ -35,6 +35,7 @@ export abstract class Instruccion {
 	 * @returns true si la instruccion tiene grabadoras
 	 */
 	hasGrabadoras(): boolean { return this.grabadoras.length !== 0; }
+	limpiarGrabadoras(): void { this.grabadoras = []; }
 }
 
 /**

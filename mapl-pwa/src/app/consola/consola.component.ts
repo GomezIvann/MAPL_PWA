@@ -9,7 +9,7 @@ import { Consola } from 'src/logica/compilador/Consola';
 export class ConsolaComponent implements OnInit {
   consola: Consola;
   
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
     this.consola = Consola.getInstance();

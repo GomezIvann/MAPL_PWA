@@ -14,7 +14,7 @@ export class InstruccionesComponent implements OnInit {
   private _programa: Programa;
   
   // Define las columnas mostradas y establece su orden de aparicion
-  displayedColumns: string[] = ["numeroInstruccion", "contenido"];
+  displayedColumns: string[];
 
   /**
    * Altura de la fila px.
@@ -23,7 +23,9 @@ export class InstruccionesComponent implements OnInit {
    */ 
   private readonly ROW_HEIGHT: number = 44.8;
 
-  constructor() {}
+  constructor() {
+    this.displayedColumns = ["numeroInstruccion", "contenido"];
+  }
 
   ngOnInit(): void {}
 
@@ -43,6 +45,10 @@ export class InstruccionesComponent implements OnInit {
     return this._programa;
   }
 
+  disableBotones(): boolean {
+    return this.programa.finalizado || !this.programa.hasCodigo();
+  }
+
   recargarPrograma(el: HTMLElement) {
     this.programa.reiniciar();
     this.scrollToActualInstruction(el);
@@ -58,12 +64,18 @@ export class InstruccionesComponent implements OnInit {
     this.scrollToActualInstruction(el);
   }
 
-  seleccionarInstruccion(row: Linea) {
-    this.programa.seleccionarInstruccion(row);
+  seleccionarInstruccion(event, row: Linea, el: HTMLElement) {
+    if (event.shiftKey && row !== undefined)
+      this.programa.retrocederHasta(row);
+    else
+      this.programa.ejecutarHasta(row);
+
+    if (this.programa.finalizado) // Hace solo scroll si el programa se ejecuta hasta el final (por el motivo que sea)
+      this.scrollToActualInstruction(el);
   }
 
   retrocederInstruccion(el: HTMLElement) {
-    this.programa.retroceder();
+    this.programa.retrocederUnaInstruccion();
     this.scrollToActualInstruction(el);
   }
 

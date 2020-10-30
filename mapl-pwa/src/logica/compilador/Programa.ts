@@ -45,16 +45,38 @@ export class Programa {
         return this._finalizado;
     }
 
+
+    /** 
+     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
+     * Condiciones para la ejecucion:
+     *      - No haber finalizado.
+     *      - Haber codigo disponible para ejecutar.
+     */
+    ejecuccionCompleta(): void {
+        while (!this._finalizado && this.hasCodigo())
+            this.ejecucion();
+    }
+
+    /**
+     * Ejecuta la instruccion actual, determinada por el segmento de codigo (IP).
+     * Condiciones para la ejecucion:
+     *      - No haber finalizado.
+     *      - Haber codigo disponible para ejecutar.
+     */
+    ejecutarSiguienteInstruccion(): void {
+        if (!this._finalizado && this.hasCodigo())
+            this.ejecucion();
+    }
+
     /**
      * Logica comun de los metodos ejecutar:
-     *      0. Cuando el programa apunte a la instruccion inicial guardar su estado (puesto que grabamos siempre despues de ejecutar
-     *          empezamos desde ip=1, se hace necesario meterla manualmente).
+     *      0. Cuando el programa apunte a la instruccion inicial guardar su estado (puesto que grabamos siempre despues 
+     *         de ejecutar empezamos desde ip=1, se hace necesario meterla manualmente).
      *      1. Ejecutar instruccion actual.
      *      2. Apuntar a la siguiente instruccion.
      *      3. Guardar el estado actual del programa tras la ejecucion, que representa el estado previo a la ejecucion
      *         de la siguiente instruccion.
-     * Si salta un error en la ejecucion de la instruccion, 
-     * indica la linea donde se produjo y lo lanza de nuevo.
+     * Si salta un error en la ejecucion de la instruccion, indica la linea donde se produjo y lo lanza de nuevo.
      */
     private ejecucion() {
         try {
@@ -71,61 +93,6 @@ export class Programa {
         }
     }
 
-    /** 
-     * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
-     * Condiciones para la ejecucion:
-     *      - No haber finalizado.
-     *      - Haber codigo disponible para ejecutar.
-     */
-    ejecuccionCompleta(): void {
-        while (!this._finalizado && this.isCodigo())
-            this.ejecucion();
-    }
-
-    /**
-     * Ejecuta la instruccion actual, determinada por el segmento de codigo (IP).
-     * Condiciones para la ejecucion:
-     *      - No haber finalizado.
-     *      - Haber codigo disponible para ejecutar.
-     */
-    ejecutarSiguienteInstruccion(): void {
-        if (!this._finalizado && this.isCodigo())
-            this.ejecucion();
-    }
-
-    /**
-     * Ejecutar el codigo del programa hasta la instruccion especificada por parametro.
-     * Condiciones para la ejecucion:
-     *      - El indice es posterior a la instruccion actual (IP).
-     * 
-     * @param indice de la instruccion hasta la que ejecutar (no incluida).
-     */
-    private ejecutarHasta(indice: number): void {
-        while (this._ip !== indice)
-            this.ejecucion();
-    }
-
-    /**
-     * Ejecuta la linea seleccionada por el usuario.
-     * Para decidir si debe avanzar o no utiliza el metodo hasGrabadora(). Esto es debido a que si la instruccion
-     * tiene grabadoras significa que es anterior a la actual apuntada por ip (solo tienen grabadoras las instrucciones ya ejecutadas)
-     * luego llamada a retrocederHasta que ya sabe como volver a esa instruccion.
-     * Lo mismo en caso contrario, si no tiene grabadoras es que aun no hay sido ejecutada, luego el programa debe avanzar.
-     * En caso de que haga click sobre la misma instruccion...
-     * 
-     * @param linea
-     */
-    seleccionarInstruccion(linea: Linea): void {
-        if (!this._finalizado && linea.numeroInstruccion !== undefined) {
-            var indice = parseInt(linea.numeroInstruccion);
-            let instruccion = this.codigo[indice];
-            if (instruccion.hasGrabadoras())
-                this.retrocederHasta(indice);
-            else
-                this.ejecutarHasta(indice);
-        }
-    }
-
     /**
      * Retrocede la ejecucion del programa en una instruccion. Esta accion implica:
      *      1. Apuntar a la anterior instruccion.
@@ -135,7 +102,7 @@ export class Programa {
      * 
      * Se puede retroceder hasta la instruccion 0 y siempre y cuando el programa no haya finalizado.
      */
-    retroceder(): void {
+    retrocederUnaInstruccion(): void {
         if (this._ip > 0 && !this._finalizado) {
             let grabActual = this.codigo[this._ip].grabadoras.pop();
             this._ip = grabActual.anteriorIp;
@@ -149,22 +116,50 @@ export class Programa {
      * Retrocede la ejecucion hasta la instruccion especificada, limpiando las grabadoras de todas las instrucciones
      * comprendidas entre la actual hasta la que se retrocede.
      * 
+     * Si selecciona la misma instruccion que a la que apunta actualmente IP solo se retrocedera en caso de que sea un bucle 
+     * (la instruccion tiene varias grabadoras). Este caso se suele dar en instrucciones de salto. Ej. 3 Relaciones Logicas y Saltos).
+     * 
      * @param indice
      */
-    private retrocederHasta(indice: number): void {
-        var i = this._ip;
-        while (i !== indice)
-            i = this.codigo[i].grabadoras.pop().anteriorIp;
+    retrocederHasta(linea: Linea): void {
+        var indice = parseInt(linea.numeroInstruccion);
+        if (!this._finalizado && linea.numeroInstruccion !== "" && this.codigo[indice].hasGrabadoras()) {
 
-        if (indice === this._ip && this.codigo[indice].grabadoras.length > 1) {
-            let grabPrevia = this.codigo[indice].grabadoras.pop();
-            this.pila = grabPrevia.desgrabar();
+            if (this._ip === indice) {
+                if (this.codigo[indice].grabadoras.length > 1) {
+                    let grabActual = this.codigo[indice].grabadoras.pop();
+                    var i = grabActual.anteriorIp;
+                    while (i !== indice) // Limpiamos las instrucciones entre las dos ejecuciones de una misma instruccion (bucles)
+                        i = this.codigo[i].grabadoras.pop().anteriorIp;
+
+                    this.pila = this.codigo[indice].grabadoras[this.codigo[indice].grabadoras.length-1].desgrabar();
+                }
+            }
+            else {
+                var i = this._ip;
+                while (i !== indice) // Limpiamos las grabadoras posteriores a la nueva instruccion a la que se retrocede
+                    i = this.codigo[i].grabadoras.pop().anteriorIp;
+                
+                this._ip = indice;
+                let length = this.codigo[this._ip].grabadoras.length;
+                let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
+                this.pila = grabPrevia.desgrabar();
+            }
         }
-        else {
-            this._ip = indice;
-            let length = this.codigo[this._ip].grabadoras.length;
-            let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
-            this.pila = grabPrevia.desgrabar();
+    }
+
+    /**
+     * Ejecutar el codigo del programa hasta la instruccion especificada por parametro.
+     * Si es una instruccion anterior a la actual, ejecuta el programa hasta el final.
+     * 
+     * @param indice de la instruccion hasta la que ejecutar (no incluida).
+     */
+    ejecutarHasta(linea: Linea): void {
+        if (!this._finalizado && linea.numeroInstruccion !== "") {
+            var indice = parseInt(linea.numeroInstruccion);
+            this.ejecucion();
+            while (this._ip !== indice && !this._finalizado)
+                this.ejecucion();
         }
     }
 
@@ -195,6 +190,7 @@ export class Programa {
         this.pila.restaurar();
         this._ip = 0;
         this._finalizado = false;
+        this.codigo.forEach(i => i.limpiarGrabadoras());
     }
 
     /**
@@ -227,7 +223,7 @@ export class Programa {
     /**
      * @returns true si hay codigo para ejecutar.
      */
-    private isCodigo(): boolean {
+    hasCodigo(): boolean {
         return this.codigo.length !== 0;
     }
 

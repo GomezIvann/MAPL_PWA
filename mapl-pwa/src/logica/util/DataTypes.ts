@@ -9,6 +9,7 @@ export abstract class DataType {
     constructor(size: number){
         this.size = size;
     }
+    abstract informacion(): string;
 }
 /**
  * Variables almacenadas en memoria por el programa (store & load).
@@ -24,7 +25,13 @@ export class VariableDataType extends DataType {
         this.value = data;
     }
 
-    toString() { return this.name + " ("+this.value.toString()+")"; }
+    toString() { 
+        return this.name + " ("+this.value.toString()+")";
+    }
+    informacion(): string {
+        return "Variable global '"+this.name+"' con "
+            + this.value.informacion().charAt(0).toLowerCase() + this.value.informacion().slice(1);
+    }
 }
 
 /**
@@ -70,6 +77,9 @@ export class IntegerDataType extends PrimitiveDataType {
             
         this.value = value;
     }
+    informacion(): string {
+        return "Valor de tipo entero = "+this.value+".";
+    }
 }
 export class FloatDataType extends PrimitiveDataType {
     constructor(value: number) {
@@ -81,6 +91,9 @@ export class FloatDataType extends PrimitiveDataType {
             throw new Error("El valor no es un número real.");
             
         this.value = value;
+    }
+    informacion(): string {
+        return "Valor de tipo real = "+this.value+".";
     }
 }
 export class ByteDataType extends PrimitiveDataType {
@@ -102,6 +115,9 @@ export class ByteDataType extends PrimitiveDataType {
         let str = String.fromCharCode(this.value);
         return JSON.stringify(str);
     }
+    informacion(): string {
+        return "Valor de tipo byte = "+this.value+".";
+    }
 }
 export class AddressDataType extends PrimitiveDataType {
     constructor(value: number) {
@@ -115,5 +131,8 @@ export class AddressDataType extends PrimitiveDataType {
             throw new Error("Las direcciones de memoria no pueden ser negativas.");
         
         this.value = value;
+    }
+    informacion(): string {
+        return "Valor de tipo address/dirección/puntero = "+this.value +".";
     }
 }

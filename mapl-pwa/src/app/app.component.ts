@@ -8,10 +8,15 @@ import { Programa } from 'src/logica/compilador/Programa';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  titulo = 'MAPL - PWA';
-  version = '[v0.1.2]';
+  titulo: string;
+  version: string;
   fileToUpload: File;
   programa: Programa;
+
+  constructor() {
+    this.titulo = "MAPL - PWA";
+    this.version = "[v0.1.5]";
+  }
 
   ngOnInit(): void {
     this.soportaApiFile();

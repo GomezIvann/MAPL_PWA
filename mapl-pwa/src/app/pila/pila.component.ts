@@ -16,10 +16,17 @@ export class PilaComponent implements OnInit {
   private _pila: Stack;
 
   // Define las columnas mostradas y establece su orden de aparicion.
-  displayedColumns: string[] = ["address", "value"];
-  dataSource = new MatTableDataSource<[DataType, boolean]>();
+  displayedColumns: string[];
+  dataSource: MatTableDataSource<[DataType, boolean]>;
 
-  constructor() {}
+  // Tiempo que tarda en mostrar el tooltip
+  toolTipDelay: number
+
+  constructor() {
+    this.displayedColumns = ["address", "value"];
+    this.dataSource = new MatTableDataSource<[DataType, boolean]>();
+    this.toolTipDelay = 800;
+  }
 
   /**
    * Cada vez que el valor de la pila cambie (inyectado por app.component), esto es,
@@ -73,8 +80,14 @@ export class PilaComponent implements OnInit {
       return 0;
   }
 
-  mostrarVariable(event, row: [DataType, boolean]) {
-    if (event.shiftKey)
-      alert("Variable: "+ row[0] +"; Tamaño: "+ row[0].size + " bytes");
+  /**
+   * Muestra informacion sobre el DataType almacenado en memoria o en la pila.
+   * @param row 
+   */
+  mostrarToolTip(row: [DataType, boolean]): string {
+    if (row !== undefined && row[0] !== undefined)
+      return row[0].informacion();
+
+    return "";
   }
 }
