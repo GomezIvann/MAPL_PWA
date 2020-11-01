@@ -84,12 +84,12 @@ export class Stack extends AbstractDataSegmentZone {
     getBP(): number {
         return this._bp;
     }
-    pushBP(sf: StackFrame): void {
+    pushStackFrame(sf: StackFrame): void {
         this.push(sf.returnDir, sf.returnDir.size);
         this.push(sf.lastBP, sf.lastBP.size);
         this._bp = this._sp;
     }
-    popBP(instructionSize: number): number {
+    popStackFrame(instructionSize: number): number {
         this._sp = this._bp;
         this._bp = this.pop(instructionSize).value;
         let returnDir = this.pop(instructionSize).value;

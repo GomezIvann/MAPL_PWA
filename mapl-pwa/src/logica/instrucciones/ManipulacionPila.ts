@@ -1,7 +1,7 @@
-import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
+import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
-import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
+import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger, InstruccionConCteInterface } from './Instruccion';
 
 
 /**
@@ -9,48 +9,88 @@ import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteg
  * ----------------------PUSH---------------------------
  * -----------------------------------------------------
  */
-export class Push extends InstruccionInteger {
-    dt: IntegerDataType;
+export class Push extends InstruccionInteger implements InstruccionConCteInterface {
+    pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: number){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
-        this.dt = new IntegerDataType(cte);
+        this.setConstante(cte);
     }
+
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getSize());
+        stack.push(this.pdt, this.getSize());
+    }
+    setConstante(cte: string): void {
+        try {
+            this.pdt = new IntegerDataType(+cte);
+        }
+        catch (err) {
+            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+        }
     }
 }
-export class Pushf extends InstruccionFloat {
-    dt: FloatDataType;
+export class Pushf extends InstruccionFloat implements InstruccionConCteInterface {
+    pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: number){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
-        this.dt = new FloatDataType(cte);
+        this.setConstante(cte);
     }
+
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getSize());
+        stack.push(this.pdt, this.getSize());
+    }
+    setConstante(cte: string): void {
+        try {
+            this.pdt = new FloatDataType(+cte);
+        }
+        catch (err) {
+            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+        }
     }
 }
-export class Pushb extends InstruccionByte {
-    dt: ByteDataType;
+export class Pushb extends InstruccionByte implements InstruccionConCteInterface {
+    pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: number){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
-        this.dt = new ByteDataType(cte);
+        this.setConstante(cte);
     }
+
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getSize());
+        stack.push(this.pdt, this.getSize());
+    }
+    setConstante(cte: string): void {
+        try {
+            this.pdt = new ByteDataType(+cte);
+        }
+        catch (err) {
+            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+        }
     }
 }
-export class Pusha extends InstruccionAddress {
-    dt: AddressDataType;
+export class Pusha extends InstruccionAddress implements InstruccionConCteInterface {
+    pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: number){ 
+    constructor(numeroLinea: number, cte: string){ 
         super(numeroLinea);
-        this.dt = new AddressDataType(cte);
+        if (cte.toUpperCase() !== "BP")
+            this.setConstante(cte);
     }
+
     execute(stack: Stack, memory: Memory): void {
-        stack.push(this.dt, this.getSize());
+        if (this.pdt === undefined)
+            this.pdt = new AddressDataType(stack.getBP());
+            
+        stack.push(this.pdt, this.getSize());
+    }
+    setConstante(cte: string): void {
+        try {
+            this.pdt = new AddressDataType(+cte);
+        }
+        catch (err) {
+            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+        }
     }
 }
 /**

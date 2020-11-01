@@ -73,7 +73,7 @@ export class IntegerDataType extends PrimitiveDataType {
 
     setValue(value: number): void {
         if (!Number.isInteger(value))
-            throw new Error("El valor no es un número entero.");
+            throw new Error("Se esperaba un número entero.");
             
         this.value = value;
     }
@@ -88,7 +88,7 @@ export class FloatDataType extends PrimitiveDataType {
 
     setValue(value: number): void {
         if (isNaN(value))
-            throw new Error("El valor no es un número real.");
+            throw new Error("Se esperaba un número real.");
             
         this.value = value;
     }
@@ -103,7 +103,7 @@ export class ByteDataType extends PrimitiveDataType {
 
     setValue(value: number): void {
         if (!Number.isInteger(value))
-            throw new Error("El valor de la instrucción no es un número entero.");
+            throw new Error("Se esperaba un número entero.");
         
         this.value = value;
     }
@@ -126,9 +126,9 @@ export class AddressDataType extends PrimitiveDataType {
     
     setValue(value: number): void {
         if (!Number.isInteger(value))
-            throw new Error("El valor de la instrucción no es una dirección de memoria (entero o BP).");
+            throw new Error("Se esperaba una dirección de memoria (entero o BP).");
         else if (value < 0)
-            throw new Error("Las direcciones de memoria no pueden ser negativas.");
+            throw new Error("Se esperaba una dirección de memoria positiva.");
         
         this.value = value;
     }

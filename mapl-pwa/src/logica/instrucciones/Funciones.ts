@@ -14,7 +14,7 @@ export class Call extends InstruccionLabel {
         let returnDir: IntegerDataType  = new IntegerDataType(+this.numero);
         let lastBP: IntegerDataType  = new IntegerDataType(+stack.getBP());
         let sf: StackFrame = new StackFrame(returnDir, lastBP);
-        stack.pushBP(sf);
+        stack.pushStackFrame(sf);
         this.programa.jumpTo(this.label.primeraInstruccion);
     }
 }
@@ -40,6 +40,6 @@ export class Ret extends Instruccion {
 		this.programa = programa;
     }
     execute(stack: Stack, memory: Memory): void {
-        this.programa.jumpTo(stack.popBP(PrimitiveSizes.INTEGER));
+        this.programa.jumpTo(stack.popStackFrame(PrimitiveSizes.INTEGER));
     }
 }

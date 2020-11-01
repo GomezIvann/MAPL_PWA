@@ -1,6 +1,6 @@
 import { Label } from '../compilador/Label';
 import { Programa } from '../compilador/Programa';
-import { PrimitiveSizes } from '../util/DataTypes';
+import { PrimitiveDataType, PrimitiveSizes } from '../util/DataTypes';
 import { Memory } from '../util/Memoria';
 import { Stack } from '../util/Stack';
 import { Grabadora } from './Grabadora';
@@ -102,4 +102,14 @@ export abstract class InstruccionLabel extends Instruccion {
 		this.labelNombre = labelNombre;
 		this.programa = programa;
 	}
+}
+
+/**
+ * Interfaz a implementar por aquellas instrucciones que trabajan con constantes introducidas por el usuario
+ * Su principal objetivo es el control de errores y detallar mas la informacion que se muestra al usuario 
+ * sobre la formacion de un programa correcto.
+ */
+export interface InstruccionConCteInterface {
+	pdt: PrimitiveDataType;
+	setConstante(cte: string): void;
 }
