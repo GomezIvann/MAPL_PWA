@@ -1,7 +1,7 @@
 import { Programa } from '../compilador/Programa';
 import { IntegerDataType, PrimitiveSizes } from '../util/DataTypes';
-import { Memory } from '../util/Memoria';
-import { Stack, StackFrame } from '../util/Stack';
+import { Stack, StackFrame } from '../segmentoDatos/Stack';
+import { Memory } from '../segmentoDatos/Memoria';
 import { Instruccion, InstruccionLabel } from './Instruccion';
 
 /**

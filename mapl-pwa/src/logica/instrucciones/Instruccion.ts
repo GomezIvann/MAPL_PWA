@@ -1,9 +1,9 @@
 import { Label } from '../compilador/Label';
 import { Programa } from '../compilador/Programa';
 import { PrimitiveDataType, PrimitiveSizes } from '../util/DataTypes';
-import { Memory } from '../util/Memoria';
-import { Stack } from '../util/Stack';
+import { Stack } from '../segmentoDatos/Stack';
 import { Grabadora } from './Grabadora';
+import { Memory } from '../segmentoDatos/Memoria';
 
 /**
  * Representa una instruccion de codigo del programa.

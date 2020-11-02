@@ -1,6 +1,6 @@
+import { Memory } from '../segmentoDatos/Memoria';
+import { Stack } from '../segmentoDatos/Stack';
 import { FloatDataType, IntegerDataType } from '../util/DataTypes';
-import { Memory } from '../util/Memoria';
-import { Stack } from '../util/Stack';
 import { InstruccionFloat, InstruccionInteger } from './Instruccion';
 
 /**

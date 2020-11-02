@@ -1,4 +1,4 @@
-import { IntegerDataType, PrimitiveDataType } from './DataTypes';
+import { IntegerDataType, PrimitiveDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 /**

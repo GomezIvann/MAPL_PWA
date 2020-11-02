@@ -1,6 +1,6 @@
 import { Programa } from '../compilador/Programa';
-import { Memory } from '../util/Memoria';
-import { Stack } from '../util/Stack';
+import { Memory } from '../segmentoDatos/Memoria';
+import { Stack } from '../segmentoDatos/Stack';
 import { Instruccion } from './Instruccion';
 
 /**

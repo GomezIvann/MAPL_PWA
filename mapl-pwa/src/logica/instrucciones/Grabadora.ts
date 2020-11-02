@@ -1,8 +1,8 @@
 import { Consola } from '../compilador/Consola';
 import { CadenaInb } from '../util/CadenaInb';
 import { DataType } from '../util/DataTypes';
-import { DataSegment } from '../util/SegmentoDatos';
-import { Stack } from '../util/Stack';
+import { Stack } from '../segmentoDatos/Stack';
+import { DataSegment } from '../segmentoDatos/SegmentoDatos';
 
 /**
  * Clase encargada de grabar el estado del programa antes de la ejecuccion de la instruccion a la que esta asociada.

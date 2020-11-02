@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Parser } from 'src/logica/util/Parser';
 import { Programa } from 'src/logica/compilador/Programa';
+import { Consola } from 'src/logica/compilador/Consola';
 
 @Component({
   selector: 'app-root',
@@ -14,7 +15,7 @@ export class AppComponent {
   programa: Programa;
 
   constructor() {
-    this.titulo = "MAPL - PWA";
+    this.titulo = "MAPL as PWA";
     this.version = "[v0.1.5]";
   }
 
@@ -32,14 +33,15 @@ export class AppComponent {
 
   /**
    * Metodo ASINCRONO que lee el fichero subido por el usuario y lo convierte en un programa
-   * entendible por el interprete
+   * entendible por el interprete. Tambien limpia la consola.
    */
   private async cargarPrograma() {
     try {
       let parser = new Parser(this.fileToUpload);
-      this.programa = await parser.read(); // espera a que el parser termine de leer el fichero
+      Consola.getInstance().clean();
+      this.programa = await parser.read();
     } catch (e) {
-      throw new Error("Impossible to parser the specified file.");
+      throw new Error("No se ha podido leer el archivo especificado.");
     }
   }
   

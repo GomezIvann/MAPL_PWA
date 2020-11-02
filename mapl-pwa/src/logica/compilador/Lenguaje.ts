@@ -1,3 +1,6 @@
+/**
+ * Instrucciones entendibles por el programa.
+ */
 export enum Lenguaje {
     PUSH = "PUSH",
     PUSHI = "PUSHI",

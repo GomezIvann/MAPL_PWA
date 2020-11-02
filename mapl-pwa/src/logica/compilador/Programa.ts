@@ -1,11 +1,12 @@
 import { Grabadora } from '../instrucciones/Grabadora';
 import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { CadenaInb } from '../util/CadenaInb';
-import { Memory } from '../util/Memoria';
-import { DataSegment } from '../util/SegmentoDatos';
-import { Stack } from '../util/Stack';
+import { Stack } from '../segmentoDatos/Stack';
+import { Consola } from './Consola';
 import { Label } from './Label';
 import { Linea } from './Linea';
+import { Memory } from '../segmentoDatos/Memoria';
+import { DataSegment } from '../segmentoDatos/SegmentoDatos';
 
 /**
  * Representa el programa asociado al archivo cargado por el usuario.
@@ -180,13 +181,15 @@ export class Programa {
      * Reiniciar el programa implica:
      *      1. Vaciar el segmento de datos.
      *      2. Vaciar la cadena comun de las instrucciones Inb.
-     *      3. Reubicar el puntero de la pila al fondo del segmento de datos.
-     *      4. Apuntar a la primera instruccion.
-     *      5. Desmarcar el programa como finalizado (vuelve a ser ejecutable).
+     *      3. Limpiar la consola (menos el nombre del fichero).
+     *      4. Reubicar el puntero de la pila al fondo del segmento de datos.
+     *      5. Apuntar a la primera instruccion.
+     *      6. Desmarcar el programa como finalizado (vuelve a ser ejecutable).
      */
     reiniciar(): void {
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
+        Consola.getInstance().reiniciar();
         this.pila.restaurar();
         this._ip = 0;
         this._finalizado = false;

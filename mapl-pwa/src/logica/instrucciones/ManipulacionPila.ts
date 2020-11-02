@@ -1,6 +1,6 @@
 import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
-import { Memory } from '../util/Memoria';
-import { Stack } from '../util/Stack';
+import { Memory } from '../segmentoDatos/Memoria';
+import { Stack } from '../segmentoDatos/Stack';
 import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger, InstruccionConCteInterface } from './Instruccion';
 
 

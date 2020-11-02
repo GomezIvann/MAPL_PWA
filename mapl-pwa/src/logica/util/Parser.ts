@@ -352,7 +352,7 @@ export class Parser {
                 resolve(this.programa);
             };
             reader.readAsText(this.file);
-            Consola.getInstance().addOutput(this.file.name); // Mostramos el nombre del fichero por consola.
+            Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
     }
 

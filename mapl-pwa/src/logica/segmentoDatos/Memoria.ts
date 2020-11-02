@@ -1,4 +1,4 @@
-import { VariableDataType } from './DataTypes';
+import { VariableDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 export class Memory extends AbstractDataSegmentZone {

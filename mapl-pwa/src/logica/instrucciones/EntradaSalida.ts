@@ -1,8 +1,8 @@
 import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
-import { Stack } from '../util/Stack';
+import { Stack } from '../segmentoDatos/Stack';
 import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 import { Consola } from '../compilador/Consola';
-import { Memory } from '../util/Memoria';
+import { Memory } from '../segmentoDatos/Memoria';
 import { CadenaInb } from '../util/CadenaInb';
 
 /**
@@ -21,7 +21,7 @@ export class In extends InstruccionInteger {
         stack.push(dt, this.getSize());
 
         // Mostramos el entero por consola
-        Consola.getInstance().addOutput("Escriba un entero: " + dt.value);
+        Consola.getInstance().addOutputAndNewLine("Escriba un entero: "+dt.value);
     }
 }
 export class Inf extends InstruccionFloat {
@@ -35,7 +35,7 @@ export class Inf extends InstruccionFloat {
         stack.push(dt, this.getSize());
 
         // Mostramos el real por consola
-        Consola.getInstance().addOutput("Escriba un real: " + dt.value);
+        Consola.getInstance().addOutputAndNewLine("Escriba un real: "+dt.value);
     }
 }
 export class Inb extends InstruccionByte {
@@ -54,7 +54,7 @@ export class Inb extends InstruccionByte {
             stack.push(dt, this.getSize());
 
             // Mostramos la cadena completa por consola
-            Consola.getInstance().addOutput("Escriba una cadena: " + insertedValue.trim());
+            Consola.getInstance().addOutputAndNewLine("Escriba una cadena: "+insertedValue.trim());
         }
         else {
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));

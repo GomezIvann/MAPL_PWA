@@ -2,8 +2,8 @@ import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { DataType } from 'src/logica/util/DataTypes';
-import { DataSegment } from 'src/logica/util/SegmentoDatos';
-import { Stack } from 'src/logica/util/Stack';
+import { Stack } from 'src/logica/segmentoDatos/Stack';
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
 
 
 @Component({
