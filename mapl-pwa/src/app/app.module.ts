@@ -13,6 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { IncidenciasComponent } from './incidencias/incidencias.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Globals } from './globals';
 
 
 @NgModule({
@@ -33,7 +34,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatTableModule,
     MatTooltipModule
   ],
-  providers: [],
+  providers: [
+    Globals
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -2,20 +2,20 @@
     <table id="tbMemoria" mat-table [dataSource]="dataSource">
         <!-- Columna 1: Posicion -->
         <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef> Dirección </th>
+            <th mat-header-cell *matHeaderCellDef> Dir. </th>
             <td mat-cell *matCellDef="let tuple; let i = index"> {{i}} </td>
         </ng-container>
 
         <!-- Columna 2: Valor -->
         <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef> Dato </th>
+            <th mat-header-cell *matHeaderCellDef> Contenido </th>
             <td mat-cell *matCellDef="let tuple; let i = index" [attr.rowspan]="getRowSpan(i)"
                 [style.display]="getRowSpan(i) ? '' : 'none'"
                 [style.cursor]="tuple !== undefined ? 'help' : 'auto'"
                 [matTooltip]="mostrarToolTip(tuple)"
-                [matTooltipShowDelay]="toolTipDelay"> {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
+                [matTooltipShowDelay]="globals.toolTipDelay"
+                [style.border]="tuple !== undefined ? 'auto' : 'none'"> {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
         </ng-container>
-
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
@@ -24,22 +24,25 @@
     <table id="tbPila" mat-table [dataSource]="dataSource">
         <!-- Columna 1: Posicion -->
         <ng-container matColumnDef="address">
-            <th mat-header-cell *matHeaderCellDef> Dirección </th>
+            <th mat-header-cell *matHeaderCellDef> Dir. </th>
             <td mat-cell *matCellDef="let tuple; let i = index">
-                <div *ngIf="pila.getSP()!==i && pila.getBP()!==i; else elseBlock">{{i}}</div>
-                <div *ngIf="pila.getSP()==i">SP<i class="arrowSP right"></i></div>
-                <div *ngIf="pila.getBP()==i">BP<i class="arrowBP right"></i></div>
+                <div *ngIf="pila.getSP()!==i && pila.getBP()!==i">{{i}}</div>
+                <div id="SP" *ngIf="pila.getSP()==i">SP<i class="arrowSP right"></i></div>
+                <div id="BP" *ngIf="pila.getBP()==i">BP<i class="arrowBP right"></i></div>
             </td>
         </ng-container>
 
         <!-- Columna 2: Valor -->
         <ng-container matColumnDef="value">
-            <th mat-header-cell *matHeaderCellDef> Dato </th>
+            <th mat-header-cell *matHeaderCellDef> Contenido </th>
             <td mat-cell *matCellDef="let tuple; let i = index" [attr.rowspan]="getRowSpan(i)"
                 [style.display]="getRowSpan(i) ? '' : 'none'"
                 [style.cursor]="tuple !== undefined ? 'help' : 'auto'"
                 [matTooltip]="mostrarToolTip(tuple)"
-                [matTooltipShowDelay]="toolTipDelay"> {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
+                [matTooltipShowDelay]="globals.toolTipDelay"
+                [style.background-color]="tuple !== undefined ? '#F0F0F0' : 'none'"
+                [style.border-bottom-style]="tuple !== undefined ? 'auto' : 'none'"> 
+            {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>

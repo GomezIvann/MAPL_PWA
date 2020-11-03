@@ -4,6 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DataType } from 'src/logica/util/DataTypes';
 import { Stack } from 'src/logica/segmentoDatos/Stack';
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { Globals } from '../globals';
 
 
 @Component({
@@ -19,13 +20,9 @@ export class PilaComponent implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<[DataType, boolean]>;
 
-  // Tiempo que tarda en mostrar el tooltip
-  toolTipDelay: number
-
-  constructor() {
+  constructor(public globals: Globals) {
     this.displayedColumns = ["address", "value"];
     this.dataSource = new MatTableDataSource<[DataType, boolean]>();
-    this.toolTipDelay = 800;
   }
 
   /**

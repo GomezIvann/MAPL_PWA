@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Parser } from 'src/logica/util/Parser';
 import { Programa } from 'src/logica/compilador/Programa';
 import { Consola } from 'src/logica/compilador/Consola';
+import { Globals } from './globals';
 
 @Component({
   selector: 'app-root',
@@ -9,14 +10,12 @@ import { Consola } from 'src/logica/compilador/Consola';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  titulo: string;
   version: string;
   fileToUpload: File;
   programa: Programa;
 
-  constructor() {
-    this.titulo = "MAPL as PWA";
-    this.version = "[v0.1.5]";
+  constructor(public globals: Globals) {
+    this.version = "[v0.2.0]";
   }
 
   ngOnInit(): void {

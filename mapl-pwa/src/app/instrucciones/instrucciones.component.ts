@@ -2,6 +2,7 @@ import { Input } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
+import { Globals } from '../globals';
 
 
 @Component({
@@ -17,13 +18,11 @@ export class InstruccionesComponent implements OnInit {
   displayedColumns: string[];
 
   /**
-   * Altura de la fila px.
-   * No es exactamente 45px como en el css ya que al usar la propiedad 'sticky: true' el desplazamiento
-   * varia un poco (aprox. 0.2px).
+   * Altura de la fila px (la misma que en el css).
    */ 
-  private readonly ROW_HEIGHT: number = 44.8;
+  private readonly ROW_HEIGHT: number = 20;
 
-  constructor() {
+  constructor(public globals: Globals) {
     this.displayedColumns = ["numeroInstruccion", "contenido"];
   }
 

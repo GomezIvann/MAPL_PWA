@@ -18,7 +18,7 @@ export class Grabadora {
     data: [DataType, boolean][];
     cadenaInb: string[];
     consola: string[];
-    anteriorIp: number
+    anteriorIp: number;
 
     constructor(pila: Stack, anteriorIp: number) {
         this.pila = pila;
