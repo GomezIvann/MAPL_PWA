@@ -1,8 +1,8 @@
 <div class="main-container">
     <p>
-        <button mat-raised-button (click)="fileInput.click()" matTooltip="Subir un nuevo programa" 
-        [matTooltipShowDelay]="globals.toolTipDelay">
-            <mat-icon>cloud_upload</mat-icon> Subir programa
+        <button id="subirPrograma" mat-raised-button (click)="fileInput.click()" matTooltip="Subir un nuevo programa" 
+            [matTooltipShowDelay]="globals.toolTipDelay">
+                <mat-icon>cloud_upload</mat-icon> Subir programa
         </button>
         <input hidden onclick="this.value=''" (change)="cargar($event.target.files)" 
             #fileInput type="file" accept=".txt">

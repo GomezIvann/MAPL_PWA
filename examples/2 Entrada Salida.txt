@@ -1,7 +1,10 @@
-' Instrucciones:
-' - F7 para ejecutar una
-'   instrucción.
-' - F6 para retroceder.
+' Como ejecutar un programa:
+' - 'Ejecutar' para ejecución completa
+' - 'Ejecutar siguiente instruccion' para ejecutar la siguiente instrucción.
+' - Doble-click sobre una instrucción para avanzar a esta.
+' - 'Reiniciar' para volver la ejecución al estado inicial y poder repetirla.
+' - 'Retroceder' para volver a la anterior instrucción.
+' - SHIFT + Doble-click sobre una instrucción para volver a esta.
 
 
 '-----------------------------------------

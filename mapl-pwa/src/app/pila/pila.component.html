@@ -1,3 +1,4 @@
+<!-- MEMORIA -->
 <div class="memoria-table-container mat-elevation-z8">
     <table id="tbMemoria" mat-table [dataSource]="dataSource">
         <!-- Columna 1: Posicion -->
@@ -14,12 +15,15 @@
                 [style.cursor]="tuple !== undefined ? 'help' : 'auto'"
                 [matTooltip]="mostrarToolTip(tuple)"
                 [matTooltipShowDelay]="globals.toolTipDelay"
-                [style.border]="tuple !== undefined ? 'auto' : 'none'"> {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
+                [style.background-color]="tuple !== undefined ? '#F0F0F0' : 'none'"
+                [style.border-bottom-style]="tuple !== undefined ? 'auto' : 'none'"> 
+            {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
         </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     </table>
 </div>
+<!-- PILA -->
 <div id="div-pila" class="pila-table-container mat-elevation-z8">
     <table id="tbPila" mat-table [dataSource]="dataSource">
         <!-- Columna 1: Posicion -->
@@ -27,8 +31,9 @@
             <th mat-header-cell *matHeaderCellDef> Dir. </th>
             <td mat-cell *matCellDef="let tuple; let i = index">
                 <div *ngIf="pila.getSP()!==i && pila.getBP()!==i">{{i}}</div>
-                <div id="SP" *ngIf="pila.getSP()==i">SP<i class="arrowSP right"></i></div>
-                <div id="BP" *ngIf="pila.getBP()==i">BP<i class="arrowBP right"></i></div>
+                <div id="SP" *ngIf="pila.getSP()==i && pila.getBP()!=i">SP</div>
+                <div id="BP" *ngIf="pila.getSP()!=i && pila.getBP()==i">BP</div>
+                <div id="SPBP" *ngIf="pila.getSP()==i && pila.getBP()==i">SP BP</div>
             </td>
         </ng-container>
 
@@ -41,7 +46,7 @@
                 [matTooltip]="mostrarToolTip(tuple)"
                 [matTooltipShowDelay]="globals.toolTipDelay"
                 [style.background-color]="tuple !== undefined ? '#F0F0F0' : 'none'"
-                [style.border-bottom-style]="tuple !== undefined ? 'auto' : 'none'"> 
+                [style.border-bottom-style]="tuple !== undefined ? 'auto' : 'none'">
             {{ (tuple !== undefined) ? tuple[0] : tuple }} </td>
         </ng-container>
 

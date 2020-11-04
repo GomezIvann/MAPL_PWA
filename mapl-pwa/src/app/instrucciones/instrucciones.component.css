@@ -25,9 +25,15 @@ table {
     font-weight: 550;
 }
 
+/* Instruccion actual (IP) HALT y programa finalizado sin errores */
+.selectedFinished {
+    background-color: lightgreen;
+    font-weight: 550;
+}
+
 /* Tamaño de letra de celdas */
 .mat-cell, .mat-header-cell {
-    font-size: 13px;
+    font-size: 12px;
 }
 
 /* Filas sin borde */
