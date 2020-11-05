@@ -23,9 +23,11 @@ export class Grabadora {
     constructor(pila: Stack, anteriorIp: number) {
         this.pila = pila;
         this.anteriorIp = anteriorIp;
-        this.data = DataSegment.getInstance().copy();
-        this.cadenaInb = CadenaInb.getInstance().copy();
-        this.consola = Consola.getInstance().copy();
+
+        // Siempre se guarda una copia
+        this.data = DataSegment.getInstance().data;
+        this.cadenaInb = CadenaInb.getInstance().value;
+        this.consola = Consola.getInstance().outputs;
     }
     
     /**

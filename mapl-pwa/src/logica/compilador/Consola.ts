@@ -27,14 +27,10 @@ export class Consola {
     set outputs(value: string[]) {
         this._outputs = value;
     }
-
-    
-    /**
-     * Devuelve una copia de las salidas registradas por consola.
-     */
-    copy(): string[] {
+    get outputs(): string[] {
         return this._outputs.slice();
     }
+
     /**
      * Añade una nueva salida a la consola.
      * @param message salida

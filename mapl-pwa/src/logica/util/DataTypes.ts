@@ -10,6 +10,18 @@ export abstract class DataType {
         this.size = size;
     }
     abstract informacion(): string;
+    protected getTipo(): string {
+        let str = "";
+        if (this.size === PrimitiveSizes.INTEGER)
+            str = "de tipo entero";
+        else if (this.size === PrimitiveSizes.FLOAT)
+            str = "de tipo byte";
+        else if (this.size === PrimitiveSizes.BYTE)
+            str = "de tipo byte";
+        else if (this.size === PrimitiveSizes.ADDRESS)
+            str = "de tipo address/dirección/puntero";
+        return str;
+    }
 }
 /**
  * Variables almacenadas en memoria por el programa (store & load).
@@ -33,10 +45,9 @@ export class VariableDataType extends DataType {
     }
     informacion(): string {
         if (this.value === undefined)
-            return "Variable global '" + this.name + "' sin inicializar.";
+            return "Variable global '" + this.name + "' " + this.getTipo() + ". Sin inicializar.";
 
-        return "Variable global '" + this.name + "' con "
-            + this.value.informacion().charAt(0).toLowerCase() + this.value.informacion().slice(1);
+        return "Variable global '" + this.name + "' " + this.getTipo() +". Su valor actual es "+this.value.toString()+".";
     }
 }
 

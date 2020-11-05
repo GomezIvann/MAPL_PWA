@@ -80,7 +80,9 @@ export enum Lenguaje {
     WHITE_LINE = "",
     VAR = "#VAR",
     DATA = "#DATA",
-    GLOBAL = "#GLOBAL"
+    GLOBAL = "#GLOBAL",
+    STRUCT = "#STRUCT",
+    TYPE = "#TYPE"
 }
 
 export enum Tipos {

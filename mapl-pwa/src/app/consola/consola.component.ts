@@ -14,8 +14,4 @@ export class ConsolaComponent implements OnInit {
   ngOnInit(): void {
     this.consola = Consola.getInstance();
   }
-
-  limpiar() {
-    this.consola.clean();
-  }
 }

@@ -12,7 +12,7 @@ import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteg
 export class Push extends InstruccionInteger implements InstruccionConCteInterface {
     pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
         this.setConstante(cte);
     }
@@ -22,17 +22,21 @@ export class Push extends InstruccionInteger implements InstruccionConCteInterfa
     }
     setConstante(cte: string): void {
         try {
+            /**  
+             * +cte: para convertir una cadena que contiene un numero en un numero
+             * En caso de contener un caracter no numerico devuelve NaN
+             */
             this.pdt = new IntegerDataType(+cte);
         }
         catch (err) {
-            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+            throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
 }
 export class Pushf extends InstruccionFloat implements InstruccionConCteInterface {
     pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
         this.setConstante(cte);
     }
@@ -45,14 +49,14 @@ export class Pushf extends InstruccionFloat implements InstruccionConCteInterfac
             this.pdt = new FloatDataType(+cte);
         }
         catch (err) {
-            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+            throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
 }
 export class Pushb extends InstruccionByte implements InstruccionConCteInterface {
     pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
         this.setConstante(cte);
     }
@@ -65,14 +69,14 @@ export class Pushb extends InstruccionByte implements InstruccionConCteInterface
             this.pdt = new ByteDataType(+cte);
         }
         catch (err) {
-            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+            throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
 }
 export class Pusha extends InstruccionAddress implements InstruccionConCteInterface {
     pdt: PrimitiveDataType;
 
-    constructor(numeroLinea: number, cte: string){ 
+    constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
         if (cte.toUpperCase() !== "BP")
             this.setConstante(cte);
@@ -81,7 +85,7 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
     execute(stack: Stack, memory: Memory): void {
         if (this.pdt === undefined)
             this.pdt = new AddressDataType(stack.getBP());
-            
+
         stack.push(this.pdt, this.getSize());
     }
     setConstante(cte: string): void {
@@ -89,7 +93,7 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
             this.pdt = new AddressDataType(+cte);
         }
         catch (err) {
-            throw new Error(err.message+" En su lugar, se encontró '"+cte+"'.");
+            throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
 }
@@ -128,7 +132,7 @@ export class Store extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
         memory.store(address, vt);
     }
 }
@@ -136,7 +140,7 @@ export class Storef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
         memory.store(address, vt);
     }
 }
@@ -144,7 +148,7 @@ export class Storeb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
         memory.store(address, vt);
     }
 }

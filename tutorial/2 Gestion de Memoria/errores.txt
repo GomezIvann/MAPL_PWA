@@ -1,0 +1,11 @@
+#global b:byte  ' char b;
+
+call main
+halt
+
+main:
+    ' b = 'a'
+    pusha 0
+    pushb 97
+    storeb
+    ret

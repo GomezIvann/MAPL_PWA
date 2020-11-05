@@ -7,15 +7,22 @@ call main
 halt
 
 main:
+    ' b = "b"
     pusha 0
     pushb 98
     storeb
+
+    ' f = 10.5
     pusha 1
-    pushf 10.1
+    pushf 10.5
     storef
+
+    ' i = 600
     pusha 5
-    push 666
+    push 600
     store
+
+    ' a = 0 (dir)
     pusha 7
     push 0
     store

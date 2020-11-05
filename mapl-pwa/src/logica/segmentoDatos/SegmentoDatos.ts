@@ -41,9 +41,8 @@ export class DataSegment {
     private _actualSize: number;
 
     private constructor() {
-        this._data = new Array<[DataType, boolean]>(this.SIZE);
         this._data$ = new Subject<[DataType, boolean][]>();
-        this._data$.next(this._data);
+        this.data = new Array<[DataType, boolean]>(this.SIZE);
         this._actualSize = 0;
     }
     public static getInstance(): DataSegment {
@@ -56,14 +55,10 @@ export class DataSegment {
         this._data = data;
         this._data$.next(this._data); // Actualizamos la suscripcion para la vista
     }
-
-
-    /**
-     * Devuelve una copia del segmento de datos.
-     */
-    copy(): [DataType, boolean][] {
+    get data(): [DataType, boolean][] {
         return this._data.slice();
     }
+    
     /**
      * Inserta un valor en la memoria.
      * @param value
@@ -105,8 +100,7 @@ export class DataSegment {
      * Vacia el segmento de datos.
      */
     clean() {
-        this._data = new Array<[DataType, boolean]>(this.SIZE);
-        this._data$.next(this._data);
+        this.data = new Array<[DataType, boolean]>(this.SIZE);
         this._actualSize = 0;
     }
     /**

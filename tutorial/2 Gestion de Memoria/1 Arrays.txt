@@ -1,0 +1,43 @@
+#global b:byte      ' char b;
+#global i:int       ' int i;
+#global v:10*int    ' int v[10];
+
+call main
+halt
+
+main:
+    ' v[7] = 100;
+    pusha 3
+    push 7
+    push 2
+    mul
+    add
+    push 100
+    store
+
+    ' print v[7];
+    pusha 3
+    push 7
+    push 2
+    mul
+    add
+    load
+    out
+
+    ' i = 2;
+    pusha 1
+    push 2
+    store
+
+    ' print v[i + 5];
+    pusha 3
+    pusha 1
+    load
+    push 5
+    add
+    push 2
+    mul
+    add
+    load
+    out
+    ret

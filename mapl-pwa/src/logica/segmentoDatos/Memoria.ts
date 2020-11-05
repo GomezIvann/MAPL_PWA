@@ -11,7 +11,6 @@ export class Memory extends AbstractDataSegmentZone {
 
     /**
      * Almacena una variable en la memoria.
-     * 
      * @param dt 
      * @param instructionSize 
      */
@@ -43,7 +42,6 @@ export class Memory extends AbstractDataSegmentZone {
      * Sin embargo, si la direccion coincide con la posicion inicial de una variable (ej. [new IntegerDataType(10), true]) 
      * ya almacenada, el nuevo dato debe sobreescribir al antiguo, sin cambiarle el nombre. 
      * En ese caso debe devolver true.
-     * 
      * @param address 
      * @param size 
      */
@@ -64,18 +62,36 @@ export class Memory extends AbstractDataSegmentZone {
 
     /**
      * Reserva espacio de la memoria para una variable global. Lleva la cuenta de donde insertar la variable declarada.
-     * 
+     * No puede haber variables repetidas.
      * @param dt 
      * @param instructionSize 
      */
     storeGlobalVariable(variable: VariableDataType): void {
+        if (this.searchVariable(variable) !== undefined)
+            throw new Error("Existen dos variables definidas con el mismo identificador: '"+variable.name+"'.");
+
         this.store(this._globalVariablesAddress, variable);
         this._globalVariablesAddress += variable.size;
+    }
+    /**
+     * Busca una variable por el nombre para ver si se encuentra repetida.
+     * @param variable
+     */
+    private searchVariable(variable: VariableDataType)  {
+        return this.dataSegment.data.find(tuple => {
+            if (tuple === undefined || tuple[0] === undefined || !(tuple[0] instanceof VariableDataType))
+                return false;
+            else {
+                let v = tuple[0] as VariableDataType;
+                if (v.name === variable.name)
+                    return true;
+                return false;
+            }
+        });
     }
 
     /**
      * Devuelve la variable almacenada en memoria.
-     * 
      * @param instructionSize tamaño de la instruccion
      * @returns DataType que expulsa
      */

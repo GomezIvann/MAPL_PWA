@@ -32,14 +32,10 @@ export class CadenaInb {
     set value(value: string[]) {
         this._value = value;
     }
-
-    
-    /**
-     * Devuelve una copia de la cadenaInb.
-     */
-    copy(): string[] {
+    get value(): string[] {
         return this._value.slice();
     }
+
     getChar(): string {
         return this._value.pop();
     }

@@ -70,11 +70,17 @@ export class Parser {
                  */
                 lineas.forEach((linea, index) => {
                     /**
-                     * Expresion regular reemplaza todo un string por "" salvo la primera palabra que encuentra
-                     * trim() elimina los espacios y terminadores de linea de un string (ubicados ante y despues del texto)
-                     * ej. "       hello  world       " --trim()--> "hello  world"
+                     * Elimina los posibles comentarios de la linea para facilitar la labor de parseo 
+                     * (se siguen mostrando por pantalla, solo es interno).
                      */
-                    primeraPalabra = linea.trim().replace(/ .*/, "").toUpperCase();
+                    var lineaSinComentarios = linea.trim().split("'")[0];
+                    /**
+                     * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto)
+                     * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra
+                     * ej. "       hello  world       " --trim()--> "hello  world"
+                     *     "hello  world" --replace(REG_EXP)--> "hello"
+                     */
+                    primeraPalabra = lineaSinComentarios.trim().replace(/ .*/, "").toUpperCase();
 
                     try {
                         /** 
@@ -88,23 +94,19 @@ export class Parser {
                             case Lenguaje.PUSH:
                             case Lenguaje.PUSHI:
                                 // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
-                                var cte = linea.trim().split(/\s+/)[1];  // segunda palabra de la linea
-                                /**  
-                                 * +cte: para convertir una cadena que contiene un numero en un numero
-                                 * En caso de contener un caracter no numerico devuelve NaN
-                                 */
+                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];  // segunda palabra de la linea
                                 this.addInstruccion(new Push(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHF:
-                                var cte = linea.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
                                 this.addInstruccion(new Pushf(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHB:
-                                var cte = linea.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
                                 this.addInstruccion(new Pushb(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHA:
-                                var cte = linea.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
                                 this.addInstruccion(new Pusha(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.POP:
@@ -266,15 +268,15 @@ export class Parser {
                                 this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.JZ:
-                                var label = linea.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
                                 this.addInstruccion(new Jz(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.JNZ:
-                                var label = linea.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
                                 this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.CALL:
-                                var label = linea.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
                                 this.addInstruccion(new Call(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.RET:
@@ -300,25 +302,27 @@ export class Parser {
                             case Lenguaje.VAR:
                             case Lenguaje.DATA:
                             case Lenguaje.GLOBAL:
-                                let declaracion = linea.trim().split(/\s+/)[1];  // ej. a:int
+                                let declaracion = lineaSinComentarios.trim().split(/\s+/)[1];  // ej. a:int
                                 if (declaracion.includes(":")){
                                     let nombre = declaracion.split(":")[0].trim();
                                     let tipo = declaracion.split(":")[1].trim().toUpperCase();
-                                    if (tipo === "")
-                                        tipo = linea.split(":")[1].trim().toUpperCase();
+                                    if (tipo === "") // hay espacios entre ':' y el tipo de la variable (ej. a:   int).
+                                        tipo = lineaSinComentarios.split(":")[1].trim().toUpperCase();
 
-                                    let variable = new VariableDataType(nombre, undefined, this.getPrimitiveDataType(tipo));
-                                    this.programa.memoria.storeGlobalVariable(variable);
+                                    this.addGlobalVariable(tipo, nombre);
                                     this.programa.texto.push(new Linea(linea));
                                 }
                                 else
                                     throw new Error("La declaración de la variable global está mal formada.");
                                 break;
+                            case Lenguaje.TYPE:
+                            case Lenguaje.STRUCT:
+                                break;
                             default:
                                 if (this.isComment(linea.trim()))
                                     this.programa.texto.push(new Linea(linea));
                                 else {
-                                    let label = linea.trim();
+                                    let label = lineaSinComentarios.trim();
                                     if (this.isValidLabel(label)) { // Es una etiqueta (o de funcion o de salto)
                                         this.programa.labels.push(new Label(label, this._contadorInstrucciones));
                                         this.programa.texto.push(new Linea(linea));
@@ -345,7 +349,7 @@ export class Parser {
                 });
 
                 // Si no se ha leido ninguna instruccion...
-                if (this.programa.codigo.length === 0)
+                if (!this.programa.hasCodigo())
                     throw new Error("El fichero no contiene ninguna instrucción ejecutable.");
                 /** 
                  * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
@@ -371,12 +375,35 @@ export class Parser {
             Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
     }
+    
+    private addGlobalVariable(def: string, nombre: string): void {
+        if (def.includes("*")) { // Es un array
+            let lengthSTR = def.split("*")[0].trim();
+            let tipo = def.split("*")[1];
+
+            if (!Number.isInteger(lengthSTR)) {
+                let length = parseInt(lengthSTR);
+
+                for (let i = 0; i < length; i++) 
+                    this.addPrimitiveGlobalVariable(tipo, nombre+"["+i+"]");
+            }
+            else
+                throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero).")
+        }
+        else // Es un tipo primitivo
+            this.addPrimitiveGlobalVariable(def, nombre);
+    }
+
+    private addPrimitiveGlobalVariable(tipo: string, nombre: string): void {
+        let variable = new VariableDataType(nombre, undefined, this.getPrimitiveDataType(tipo));
+        this.programa.memoria.storeGlobalVariable(variable);
+    }
 
     /**
      * Devuelve un dato primitivo vacio en funcion del tipo leido (int devuelve un IntegerDataType y viceversa).
      * @param tipo string
      */
-    getPrimitiveDataType(tipo: string): number {
+    private getPrimitiveDataType(tipo: string): number {
         switch (tipo) {
             case Tipos.INTEGER:
                 return PrimitiveSizes.INTEGER;
