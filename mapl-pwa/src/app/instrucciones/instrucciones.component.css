@@ -1,5 +1,5 @@
 #ejecutar, #recargar, #retrocederInstruccion {
-    margin-right: 17.5px;
+    margin-right: 15.5px;
 }
 #butonera {
     margin-top: 15px;
@@ -10,7 +10,7 @@ button {
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .table-container {
     height: 430px;
-    width: 650px;
+    width: 645px;
     max-width: 100%;
     overflow: auto;
 }

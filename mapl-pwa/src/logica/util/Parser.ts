@@ -8,11 +8,12 @@ import { Halt, Nop } from '../instrucciones/Otras';
 import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
 import { Consola } from '../compilador/Consola';
 import { Label } from '../compilador/Label';
-import { Lenguaje } from '../compilador/Lenguaje';
+import { Lenguaje, Tipos } from '../compilador/Lenguaje';
 import { Programa } from '../compilador/Programa';
 import { Linea } from '../compilador/Linea';
 import { Call, Ret } from '../instrucciones/Funciones';
 import { Instruccion } from '../instrucciones/Instruccion';
+import { PrimitiveSizes, VariableDataType } from './DataTypes';
 
 /**
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
@@ -296,6 +297,23 @@ export class Parser {
                                 // asi se conserva la linea vacia y se interpretan todas igual.
                                 this.programa.texto.push(new Linea(linea));
                                 break;
+                            case Lenguaje.VAR:
+                            case Lenguaje.DATA:
+                            case Lenguaje.GLOBAL:
+                                let declaracion = linea.trim().split(/\s+/)[1];  // ej. a:int
+                                if (declaracion.includes(":")){
+                                    let nombre = declaracion.split(":")[0].trim();
+                                    let tipo = declaracion.split(":")[1].trim().toUpperCase();
+                                    if (tipo === "")
+                                        tipo = linea.split(":")[1].trim().toUpperCase();
+
+                                    let variable = new VariableDataType(nombre, undefined, this.getPrimitiveDataType(tipo));
+                                    this.programa.memoria.storeGlobalVariable(variable);
+                                    this.programa.texto.push(new Linea(linea));
+                                }
+                                else
+                                    throw new Error("La declaración de la variable global está mal formada.");
+                                break;
                             default:
                                 if (this.isComment(linea.trim()))
                                     this.programa.texto.push(new Linea(linea));
@@ -321,10 +339,8 @@ export class Parser {
                         }
                     }
                     catch (err) {
-                        /**
-                         * Añade la linea donde se produjo el error para que el usuario tenga mas informacion sobre este.
-                         */
-                        throw new Error("Línea " + (index+1) + ". " + err.message);
+                        // Añade la linea donde se produjo el error para que el usuario tenga mas informacion sobre este.
+                        throw new Error("Línea " + (index + 1) + ". " + err.message);
                     }
                 });
 
@@ -354,6 +370,27 @@ export class Parser {
             reader.readAsText(this.file);
             Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
+    }
+
+    /**
+     * Devuelve un dato primitivo vacio en funcion del tipo leido (int devuelve un IntegerDataType y viceversa).
+     * @param tipo string
+     */
+    getPrimitiveDataType(tipo: string): number {
+        switch (tipo) {
+            case Tipos.INTEGER:
+                return PrimitiveSizes.INTEGER;
+            case Tipos.REAL:
+            case Tipos.FLOAT:
+                return PrimitiveSizes.FLOAT;
+            case Tipos.CHAR:
+            case Tipos.BYTE:
+                return PrimitiveSizes.BYTE;
+            case Tipos.ADDRESS:
+                return PrimitiveSizes.ADDRESS;
+            default:
+                throw Error("No existe en MAPL el tipo de la variable declarada '"+tipo+"'.");
+        }
     }
 
     /**

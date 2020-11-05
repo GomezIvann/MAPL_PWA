@@ -27,15 +27,15 @@
 <div id="butonera">
     <button id="ejecutar" (click)="ejecutar(tbContainer)" [disabled]="disableBotones()" 
         matTooltip="Ejecutar programa hasta su finalización" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
-        <mat-icon>play_circle_outline</mat-icon> Ejecutar
+            <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
     <button id="recargar" (click)="recargarPrograma(tbContainer)" [disabled]="!programa.hasCodigo()" 
         matTooltip="Retroceder al inicio del programa (la E/S se reutiliza)" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
-        <mat-icon>refresh</mat-icon> Reiniciar
+            <mat-icon>refresh</mat-icon> Reiniciar
     </button>
-    <button id="retrocederInstruccion" (click)="retrocederInstruccion(tbContainer)" [disabled]="disableBotones()" 
+    <button id="retrocederInstruccion" (click)="retrocederInstruccion(tbContainer)" [disabled]="disableBotones() || programa.ip == 0" 
         matTooltip="Retroceder a la instrucción anterior" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
-        <mat-icon>chevron_left</mat-icon> Retroceder
+            <mat-icon>chevron_left</mat-icon> Retroceder
     </button>
     <button id="ejecutarInstruccion" (click)="ejecutarInstruccion(tbContainer)" [disabled]="disableBotones()" 
         matTooltip="Ejecutar la instrucción actual" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>

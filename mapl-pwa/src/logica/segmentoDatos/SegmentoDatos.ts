@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { DataType } from '../util/DataTypes';
+import { DataType, PrimitiveDataType, VariableDataType } from '../util/DataTypes';
 
 /**
  * Zona comun de memoria para los valores y variables de la pila y memoria, respectivamente, en la ejecucion de un
@@ -94,11 +94,15 @@ export class DataSegment {
         this._data$.next(this._data);
         return returned[0];
     }
+    /**
+     * Devuelve la tupla almacenada en la direccion del segmento de datos
+     * @param address dir
+     */
     get(address: number): [DataType, boolean] {
         return this._data[address];
     }
     /**
-     * Limpia el segmento de datos para un posible reinicio del programa o carga de uno nuevo.
+     * Vacia el segmento de datos.
      */
     clean() {
         this._data = new Array<[DataType, boolean]>(this.SIZE);
@@ -111,31 +115,6 @@ export class DataSegment {
      */
     isFull(): boolean {
         return this._actualSize >= this.SIZE;
-    }
-    /**
-     * Devuelve true si el dato es insertable en la direccion de memoria pasada como parametro.
-     * Para que un dato sea insertable ninguna de las posiciones que va a ocupar deben estarlo ya:
-     *      1. [undefined, true] OCUPADA parcialmente
-     *      2. undefined NO OCUPADA
-     *      3. [new IntegerDataType(10), true] OCUPADA (posicion inicial, si coincide con address devolvemos true)
-     * Sin embargo, si la direccion coincide con la posicion inicial de una variable ya almacenada, el nuevo dato debe sobreescribir
-     * al antiguo, luego debe devolver true.
-     * 
-     * @param address 
-     * @param size 
-     */
-    isInsertable(address: number, size: number): boolean {
-        // 1º pos de nueva variable == 1º pos de una variable ya en memoria: true
-        if (this._data[address] !== undefined && this._data[address][1] && this._data[address][0] !== undefined)
-            return true;
-
-        for(let i = 0; i < size; i++) {
-            if (this._data[address+i] === undefined)
-                continue;
-            else if (this._data[address+i][1])
-                return false;
-        }
-        return true;
     }
     /**
      * Devuelve un observable con los valores del segmento de datos para el componente visual que lo muestra.

@@ -101,7 +101,7 @@ export class Programa {
      *      2. Obtener la ultima grabadora de la nueva instruccion.
      *      3. Desgrabar su ultima ejecucion (sin eliminarla).
      * 
-     * Se puede retroceder hasta la instruccion 0 y siempre y cuando el programa no haya finalizado.
+     * Se puede retroceder hasta la primera instruccion siempre y cuando el programa no haya finalizado.
      */
     retrocederUnaInstruccion(): void {
         if (this._ip > 0 && !this._finalizado) {
@@ -122,10 +122,8 @@ export class Programa {
      * 
      * @param indice
      */
-    retrocederHasta(linea: Linea): void {
-        var indice = parseInt(linea.numeroInstruccion);
-        if (!this._finalizado && linea.numeroInstruccion !== "" && this.codigo[indice].hasGrabadoras()) {
-
+    retrocederHasta(indice: number): void {
+        if (!this._finalizado && this.codigo[indice].hasGrabadoras()) {
             if (this._ip === indice) {
                 if (this.codigo[indice].grabadoras.length > 1) {
                     let grabActual = this.codigo[indice].grabadoras.pop();
@@ -133,14 +131,14 @@ export class Programa {
                     while (i !== indice) // Limpiamos las instrucciones entre las dos ejecuciones de una misma instruccion (bucles)
                         i = this.codigo[i].grabadoras.pop().anteriorIp;
 
-                    this.pila = this.codigo[indice].grabadoras[this.codigo[indice].grabadoras.length-1].desgrabar();
+                    this.pila = this.codigo[indice].grabadoras[this.codigo[indice].grabadoras.length - 1].desgrabar();
                 }
             }
             else {
                 var i = this._ip;
                 while (i !== indice) // Limpiamos las grabadoras posteriores a la nueva instruccion a la que se retrocede
                     i = this.codigo[i].grabadoras.pop().anteriorIp;
-                
+
                 this._ip = indice;
                 let length = this.codigo[this._ip].grabadoras.length;
                 let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
@@ -155,9 +153,8 @@ export class Programa {
      * 
      * @param indice de la instruccion hasta la que ejecutar (no incluida).
      */
-    ejecutarHasta(linea: Linea): void {
-        if (!this._finalizado && linea.numeroInstruccion !== "") {
-            var indice = parseInt(linea.numeroInstruccion);
+    ejecutarHasta(indice: number): void {
+        if (!this._finalizado) {
             this.ejecucion();
             while (this._ip !== indice && !this._finalizado)
                 this.ejecucion();
@@ -178,22 +175,11 @@ export class Programa {
 
     /**
      * Reinicia el programa para que pueda ser ejecutado de nuevo.
-     * Reiniciar el programa implica:
-     *      1. Vaciar el segmento de datos.
-     *      2. Vaciar la cadena comun de las instrucciones Inb.
-     *      3. Limpiar la consola (menos el nombre del fichero).
-     *      4. Reubicar el puntero de la pila al fondo del segmento de datos.
-     *      5. Apuntar a la primera instruccion.
-     *      6. Desmarcar el programa como finalizado (vuelve a ser ejecutable).
+     * Para reiniciar el programa bastaria con retroceder hasta antes de la ejecucion primera instruccion.
      */
     reiniciar(): void {
-        CadenaInb.getInstance().clean();
-        DataSegment.getInstance().clean();
-        Consola.getInstance().reiniciar();
-        this.pila.restaurar();
-        this._ip = 0;
         this._finalizado = false;
-        this.codigo.forEach(i => i.limpiarGrabadoras());
+        this.retrocederHasta(0);
     }
 
     /**

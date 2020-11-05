@@ -1,0 +1,22 @@
+#var b:byte
+#data f:float
+#global i:int
+#global a:address
+
+call main
+halt
+
+main:
+    pusha 0
+    pushb 98
+    storeb
+    pusha 1
+    pushf 10.1
+    storef
+    pusha 5
+    push 666
+    store
+    pusha 7
+    push 0
+    store
+    ret

@@ -1,13 +1,13 @@
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .memoria-table-container, .pila-table-container {
     height: 430px;
-    width: 375px;
+    width: 380px;
     max-width: 100%;
     overflow: auto;
     float: left;
 }
 .pila-table-container {
-    margin-left: 35px;
+    margin-left: 32px;
 }
 table {
     width: 100%;

@@ -64,10 +64,13 @@ export class InstruccionesComponent implements OnInit {
   }
 
   seleccionarInstruccion(event, row: Linea, el: HTMLElement) {
-    if (event.shiftKey && row !== undefined)
-      this.programa.retrocederHasta(row);
-    else
-      this.programa.ejecutarHasta(row);
+    if (row.numeroInstruccion !== "") {
+      let indice = parseInt(row.numeroInstruccion);
+      if (event.shiftKey && row !== undefined)
+        this.programa.retrocederHasta(indice);
+      else
+        this.programa.ejecutarHasta(indice);
+    }
 
     if (this.programa.finalizado) // Hace solo scroll si el programa se ejecuta hasta el final (por el motivo que sea)
       this.scrollToActualInstruction(el);

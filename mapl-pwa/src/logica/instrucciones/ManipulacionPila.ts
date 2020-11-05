@@ -128,7 +128,7 @@ export class Store extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
         memory.store(address, vt);
     }
 }
@@ -136,7 +136,7 @@ export class Storef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
         memory.store(address, vt);
     }
 }
@@ -144,7 +144,7 @@ export class Storeb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var"+address, value);
+        let vt: VariableDataType = new VariableDataType("Var"+address, value, value.size);
         memory.store(address, vt);
     }
 }

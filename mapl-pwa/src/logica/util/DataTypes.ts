@@ -6,7 +6,7 @@
 export abstract class DataType {
     size: number; // Tamaño del dato.
 
-    constructor(size: number){
+    constructor(size: number) {
         this.size = size;
     }
     abstract informacion(): string;
@@ -19,17 +19,23 @@ export class VariableDataType extends DataType {
     value: PrimitiveDataType; // El valor de las variables en memoria es un tipo primitivo.
     name: string; // Nombre de la variable.
 
-    constructor(name: string, data: PrimitiveDataType) {
-        super(data.size);
+    constructor(name: string, data: PrimitiveDataType, size: number) {
+        super(size);
         this.name = name;
         this.value = data;
     }
 
-    toString() { 
-        return this.name + " ("+this.value.toString()+")";
+    toString() {
+        if (this.value === undefined)
+            return this.name + " (sin inicializar)";
+
+        return this.name + " (" + this.value.toString() + ")";
     }
     informacion(): string {
-        return "Variable global '"+this.name+"' con "
+        if (this.value === undefined)
+            return "Variable global '" + this.name + "' sin inicializar.";
+
+        return "Variable global '" + this.name + "' con "
             + this.value.informacion().charAt(0).toLowerCase() + this.value.informacion().slice(1);
     }
 }
@@ -55,7 +61,7 @@ export abstract class PrimitiveDataType extends DataType {
      * Ejemplo de funcionamiento: 5.4 no es integer, es float, luego retorna false
      */
     abstract setValue(value: number): void;
-    toString() { return ""+this.value; }
+    toString() { return "" + this.value; }
 }
 /**
  * Posibles tamaños de los datos
@@ -74,11 +80,11 @@ export class IntegerDataType extends PrimitiveDataType {
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("Se esperaba un número entero.");
-            
+
         this.value = value;
     }
     informacion(): string {
-        return "Valor de tipo entero = "+this.value+".";
+        return "Valor de tipo entero = " + this.value + ".";
     }
 }
 export class FloatDataType extends PrimitiveDataType {
@@ -89,11 +95,11 @@ export class FloatDataType extends PrimitiveDataType {
     setValue(value: number): void {
         if (isNaN(value))
             throw new Error("Se esperaba un número real.");
-            
+
         this.value = value;
     }
     informacion(): string {
-        return "Valor de tipo real = "+this.value+".";
+        return "Valor de tipo real = " + this.value + ".";
     }
 }
 export class ByteDataType extends PrimitiveDataType {
@@ -104,7 +110,7 @@ export class ByteDataType extends PrimitiveDataType {
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("Se esperaba un número entero.");
-        
+
         this.value = value;
     }
     /**
@@ -116,23 +122,23 @@ export class ByteDataType extends PrimitiveDataType {
         return JSON.stringify(str);
     }
     informacion(): string {
-        return "Valor de tipo byte = "+this.value+".";
+        return "Valor de tipo byte = " + this.value + ".";
     }
 }
 export class AddressDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.ADDRESS);
     }
-    
+
     setValue(value: number): void {
         if (!Number.isInteger(value))
             throw new Error("Se esperaba una dirección de memoria (entero o BP).");
         else if (value < 0)
             throw new Error("Se esperaba una dirección de memoria positiva.");
-        
+
         this.value = value;
     }
     informacion(): string {
-        return "Valor de tipo address/dirección/puntero = "+this.value +".";
+        return "Valor de tipo address/dirección/puntero = " + this.value + ".";
     }
 }

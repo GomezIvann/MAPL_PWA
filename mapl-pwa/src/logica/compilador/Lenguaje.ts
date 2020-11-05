@@ -77,5 +77,17 @@ export enum Lenguaje {
     RET = "RET",
     NOP = "NOP",
     HALT = "HALT",
-    WHITE_LINE = ""
+    WHITE_LINE = "",
+    VAR = "#VAR",
+    DATA = "#DATA",
+    GLOBAL = "#GLOBAL"
+}
+
+export enum Tipos {
+    INTEGER = "INT",
+    REAL = "REAL",
+    FLOAT = "FLOAT",
+    BYTE = "BYTE",
+    CHAR = "CHAR",
+    ADDRESS = "ADDRESS"
 }
