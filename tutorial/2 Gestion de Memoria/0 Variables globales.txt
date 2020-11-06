@@ -1,7 +1,8 @@
+' Las variables globales pueden definirse como:
+'       (#var || #data || #global) IDENT ':' tipo
 #var b:byte
 #data f:float
 #global i:int
-#global a:address
 
 call main
 halt

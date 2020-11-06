@@ -19,8 +19,9 @@ import { PrimitiveSizes, VariableDataType } from './DataTypes';
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
  */
 export class Parser {
-    file: File;                             // Fichero de entrada
-    programa: Programa;                     // Programa obtenido de la lectura del fichero
+    file: File;             // Fichero de entrada
+    programa: Programa;     // Programa obtenido de la lectura del fichero
+    tiposUsuario: Struct[];   // Tipos de usuario declarados en la lectura del programa           
 
     /**
      * Todas estas variables son para deteccion de errores de programa que puedan ayudar al usuario a formarlo correctamente, dando un mensaje de error
@@ -39,6 +40,7 @@ export class Parser {
     constructor(file: File) {
         this.file = file;
         this.programa = new Programa();
+        this.tiposUsuario = [];
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
         this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
         this._programaSinFunciones = true;
@@ -62,18 +64,18 @@ export class Parser {
 
             reader.onload = (e) => {
                 let lineas = reader.result.toString().split("\n"); // Fichero divido en lineas
-                var primeraPalabra = ""; // Primera palabra de la linea
+                let primeraPalabra = ""; // Primera palabra de la linea
+                let linea = "";
+                let lineaSinComentarios = "";
 
-                /**
-                 * El metodo some se comporta igual que forEach, con la diferencia de que en este se
-                 * puede parar su ejecucion con simplemente retornar true de acuerdo a la condicion que queramos
-                 */
-                lineas.forEach((linea, index) => {
+                // LECTURA LINEA A LINEA
+                for (let index = 0; index < lineas.length; index++) {
+                    linea = lineas[index];
                     /**
                      * Elimina los posibles comentarios de la linea para facilitar la labor de parseo 
                      * (se siguen mostrando por pantalla, solo es interno).
                      */
-                    var lineaSinComentarios = linea.trim().split("'")[0];
+                    lineaSinComentarios = linea.trim().split("'")[0];
                     /**
                      * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto)
                      * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra
@@ -302,14 +304,14 @@ export class Parser {
                             case Lenguaje.VAR:
                             case Lenguaje.DATA:
                             case Lenguaje.GLOBAL:
-                                let declaracion = lineaSinComentarios.trim().split(/\s+/)[1];  // ej. a:int
-                                if (declaracion.includes(":")){
-                                    let nombre = declaracion.split(":")[0].trim();
-                                    let tipo = declaracion.split(":")[1].trim().toUpperCase();
-                                    if (tipo === "") // hay espacios entre ':' y el tipo de la variable (ej. a:   int).
-                                        tipo = lineaSinComentarios.split(":")[1].trim().toUpperCase();
+                                // #global a:int ---> a:int (elimina la directiva)
+                                let declaracion = lineaSinComentarios.toUpperCase().replace(primeraPalabra, "").trim();
 
-                                    this.addGlobalVariable(tipo, nombre);
+                                if (declaracion.includes(":")) {
+                                    let nombre = declaracion.split(":")[0].trim().toLowerCase();
+                                    let tipo = declaracion.split(":")[1].trim();
+
+                                    this.definirVariableGlobal(tipo, nombre).forEach(variable => this.programa.memoria.storeGlobalVariable(variable));
                                     this.programa.texto.push(new Linea(linea));
                                 }
                                 else
@@ -317,6 +319,13 @@ export class Parser {
                                 break;
                             case Lenguaje.TYPE:
                             case Lenguaje.STRUCT:
+                                let end = lineas.findIndex(linea => linea.trim().split("'")[0].includes("}"));
+                                if (end === -1)
+                                    throw new Error("Se declara una estructura pero no se llega a cerrar nunca (falta un '}').");
+
+                                let declaracionStruct = lineas.slice(index, end + 1);
+                                this.tiposUsuario.push(this.definirTipoUsuario(declaracionStruct, primeraPalabra));
+                                index = end + 1; // Saltamos la definicion de la estructura ya que ya ha sido leida
                                 break;
                             default:
                                 if (this.isComment(linea.trim()))
@@ -346,7 +355,8 @@ export class Parser {
                         // Añade la linea donde se produjo el error para que el usuario tenga mas informacion sobre este.
                         throw new Error("Línea " + (index + 1) + ". " + err.message);
                     }
-                });
+                }
+
 
                 // Si no se ha leido ninguna instruccion...
                 if (!this.programa.hasCodigo())
@@ -375,28 +385,72 @@ export class Parser {
             Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
     }
-    
-    private addGlobalVariable(def: string, nombre: string): void {
-        if (def.includes("*")) { // Es un array
-            let lengthSTR = def.split("*")[0].trim();
-            let tipo = def.split("*")[1];
 
-            if (!Number.isInteger(lengthSTR)) {
-                let length = parseInt(lengthSTR);
+    /**
+     * Recibe la declaracion de un nuevo tipo de usuario y lo guarda para posibles definiciones.
+     * @param def
+     * @returns estructura resultante de la lectura
+     */
+    private definirTipoUsuario(def: string[], primeraPalabra: string): Struct {
+        // Definicion Struct: #type Persona: 
+        let declaracion = def[0].toUpperCase().replace(primeraPalabra, "").trim(); // "#type Persona: {" ---> "Persona: {"
+        let nombreStruct = declaracion.split(":")[0].trim().toLowerCase();
+        let struct = new Struct(nombreStruct);
+        this.programa.texto.push(new Linea(def[0]));
 
-                for (let i = 0; i < length; i++) 
-                    this.addPrimitiveGlobalVariable(tipo, nombre+"["+i+"]");
+        // Cuerpo del struct: { ... }
+        let cuerpo = def.join("\n").split("{")[1].replace("}", "").split("\n");
+        let linea = "";
+        for (let i = 0; i < cuerpo.length; i++) {
+            linea = cuerpo[i].trim();
+
+            if (linea !== "") { // Si no es una linea vacia
+                if (linea.includes(":")) {
+                    let nombrePropiedad = linea.split(":")[0].trim();
+                    let tipoPropiedad = linea.split(":")[1].trim().toUpperCase();
+                    struct.variables = [...struct.variables, ...this.definirVariableGlobal(tipoPropiedad, nombrePropiedad)]; // Destructuring assignment
+                }
+                else
+                    throw new Error("La estructura '" + nombreStruct + "' contiene una propiedad (declaración de variable) mal formada: '" + linea + "'.");
+            }
+
+            this.programa.texto.push(new Linea(def[i + 1]));
+        }
+        return struct;
+    }
+
+    /**
+     * Devuelve la variable asociada a la definicion y nombre pasados como parametro.
+     * @param def 
+     * @param nombre 
+     */
+    private definirVariableGlobal(def: string, nombre: string): VariableDataType[] {
+        let variables = [];
+        let struct = this.tiposUsuario.find(s => s.nombre.toUpperCase() === def);
+
+        if (def.includes("*")) { // Es de tipo array
+            let length = +def.split("*")[0].trim();
+            let tipo = def.split("*")[1].trim();
+            struct = this.tiposUsuario.find(s => s.nombre.toUpperCase() === tipo);
+
+            if (Number.isSafeInteger(length)) {
+                for (let i = 0; i < length; i++) {
+                    if (struct !== undefined)
+                        variables = [...variables, ...struct.getVariables(nombre + "[" + i + "]")];
+                    else
+                        variables.push(new VariableDataType(nombre + "[" + i + "]", undefined, this.getPrimitiveDataType(tipo)));
+                }
             }
             else
                 throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero).")
         }
-        else // Es un tipo primitivo
-            this.addPrimitiveGlobalVariable(def, nombre);
-    }
+        else if (struct !== undefined)
+            variables = struct.getVariables(nombre);
+        else // Es de tipo primitivo
+            variables.push(new VariableDataType(nombre, undefined, this.getPrimitiveDataType(def)));
 
-    private addPrimitiveGlobalVariable(tipo: string, nombre: string): void {
-        let variable = new VariableDataType(nombre, undefined, this.getPrimitiveDataType(tipo));
-        this.programa.memoria.storeGlobalVariable(variable);
+        console.log(variables)
+        return variables;
     }
 
     /**
@@ -416,7 +470,7 @@ export class Parser {
             case Tipos.ADDRESS:
                 return PrimitiveSizes.ADDRESS;
             default:
-                throw Error("No existe en MAPL el tipo de la variable declarada '"+tipo+"'.");
+                throw Error("No existe en MAPL el tipo de la variable declarada '" + tipo + "'.");
         }
     }
 
@@ -452,5 +506,31 @@ export class Parser {
      */
     private isComment(linea: string): boolean {
         return /^\'/.test(linea);
+    }
+}
+
+/**
+ * Clase estructura para la definicion de Tipos de Usuario
+ */
+export class Struct {
+    nombre: string;
+    variables: VariableDataType[];
+
+    constructor(nombre: string) {
+        this.nombre = nombre;
+        this.variables = [];
+    }
+
+    /**
+     * Devuelve un array de copias con el nombre de las variables adaptado al de la variable declarada del tipo
+     * de este Struct.
+     * @param nombreVariable nombre de la variable de tipo Struct
+     */
+    getVariables(nombreVariable: string): VariableDataType[] {
+        return this.variables.map(v => {
+            let copy = Object.assign(Object.create(Object.getPrototypeOf(v)), v);
+            copy.name = nombreVariable + "." + copy.name;
+            return copy;
+        });
     }
 }

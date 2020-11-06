@@ -89,7 +89,7 @@ export class IntegerDataType extends PrimitiveDataType {
     }
 
     setValue(value: number): void {
-        if (!Number.isInteger(value))
+        if (!Number.isSafeInteger(value))
             throw new Error("Se esperaba un número entero.");
 
         this.value = value;
@@ -119,7 +119,7 @@ export class ByteDataType extends PrimitiveDataType {
     }
 
     setValue(value: number): void {
-        if (!Number.isInteger(value))
+        if (!Number.isSafeInteger(value))
             throw new Error("Se esperaba un número entero.");
 
         this.value = value;
@@ -142,7 +142,7 @@ export class AddressDataType extends PrimitiveDataType {
     }
 
     setValue(value: number): void {
-        if (!Number.isInteger(value))
+        if (!Number.isSafeInteger(value))
             throw new Error("Se esperaba una dirección de memoria (entero o BP).");
         else if (value < 0)
             throw new Error("Se esperaba una dirección de memoria positiva.");

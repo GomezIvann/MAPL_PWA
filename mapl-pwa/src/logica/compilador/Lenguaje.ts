@@ -91,5 +91,5 @@ export enum Tipos {
     FLOAT = "FLOAT",
     BYTE = "BYTE",
     CHAR = "CHAR",
-    ADDRESS = "ADDRESS"
+    ADDRESS = "ADDRESS",
 }

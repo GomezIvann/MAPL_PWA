@@ -12,48 +12,47 @@ call main
 halt
 
 main:
+	' alberto.edad = 20;
+	pusha 1
+	push 4
+	add
+	push 20
+	store 
 
-' alberto.edad = 20;
-pusha 1
-push 4
-add
-push 20
-store 
+	' javi.edad = 20;
+	pusha 8
+	push 4
+	add
+	push 20
+	store 
 
-' javi.edad = 20;
-pusha 8
-push 4
-add
-push 20
-store 
+	' alberto.inicial = 'a';
+	pusha 1
+	push 6
+	add
+	pushb 97
+	storeb
 
-' alberto.inicial = 'a';
-pusha 1
-push 6
-add
-pushb 97
-storeb
-
-' javi.inicial = 'a';
-pusha 8
-push 6
-add
-pushb 97
-storeb
+	' javi.inicial = 'a';
+	pusha 8
+	push 6
+	add
+	pushb 97
+	storeb
 
 
-' alberto.sueldo = 3000.0;
-pusha 1
-push 0
-add
-pushf 3000.0
-storef
+	' alberto.sueldo = 3000.0;
+	pusha 1
+	push 0
+	add
+	pushf 3000.0
+	storef
 
-' javi.sueldo = 3000.0;
-pusha 8
-push 0
-add
-pushf 3000.0
-storef
+	' javi.sueldo = 3000.0;
+	pusha 8
+	push 0
+	add
+	pushf 3000.0
+	storef
 
 ret
