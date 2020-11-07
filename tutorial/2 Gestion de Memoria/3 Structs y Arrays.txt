@@ -1,7 +1,7 @@
 #type Persona: {
 	inicial:char
 	notas:3*int
-	sueldo:real
+	sueldo:real 'Sueldo de la persona
 }
 
 #global a:byte
@@ -35,4 +35,4 @@ main:
 	pushf 999.5
 	storef
 
-	ret
+ret

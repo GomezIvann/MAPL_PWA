@@ -1,8 +1,10 @@
 ' Las variables globales pueden definirse como:
 '       (#var || #data || #global) IDENT ':' tipo
-#var b:byte
-#data f:float
-#global i:int
+
+#var b: byte
+#data f: float
+#global entero: int
+#global Dir: address
 
 call main
 halt
@@ -27,4 +29,5 @@ main:
     pusha 7
     push 0
     store
-    ret
+    
+ret

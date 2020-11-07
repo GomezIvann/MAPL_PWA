@@ -1,0 +1,15 @@
+call main
+halt
+
+america:
+    ' return 1492;
+    push 1492
+ret 2, 0, 0
+
+main:
+    ' print 2010 - america();
+    push 2010
+    call america
+    sub
+    out
+ret

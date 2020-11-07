@@ -21,7 +21,7 @@ import { PrimitiveSizes, VariableDataType } from './DataTypes';
 export class Parser {
     file: File;             // Fichero de entrada
     programa: Programa;     // Programa obtenido de la lectura del fichero
-    tiposUsuario: Struct[];   // Tipos de usuario declarados en la lectura del programa           
+    tiposUsuario: Struct[];   // Tipos de usuario declarados durante la lectura del programa           
 
     /**
      * Todas estas variables son para deteccion de errores de programa que puedan ayudar al usuario a formarlo correctamente, dando un mensaje de error
@@ -77,12 +77,14 @@ export class Parser {
                      */
                     lineaSinComentarios = linea.trim().split("'")[0];
                     /**
-                     * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto)
-                     * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra
+                     * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto).
+                     * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra.
+                     * La primera palabra es aquella que se encuentra seguida de cualquier caracter que suponga un espacio en blanco (igual a [\r\n\t\f\v])
+                     * 
                      * ej. "       hello  world       " --trim()--> "hello  world"
                      *     "hello  world" --replace(REG_EXP)--> "hello"
                      */
-                    primeraPalabra = lineaSinComentarios.trim().replace(/ .*/, "").toUpperCase();
+                    primeraPalabra = lineaSinComentarios.trim().replace(/\s.*/, "");
 
                     try {
                         /** 
@@ -92,7 +94,7 @@ export class Parser {
                          *      case XXX(I):
                          *          ...                     (exclusivo de Javascript)
                          */
-                        switch (primeraPalabra) {
+                        switch (primeraPalabra.toUpperCase()) {
                             case Lenguaje.PUSH:
                             case Lenguaje.PUSHI:
                                 // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
@@ -305,11 +307,11 @@ export class Parser {
                             case Lenguaje.DATA:
                             case Lenguaje.GLOBAL:
                                 // #global a:int ---> a:int (elimina la directiva)
-                                let declaracion = lineaSinComentarios.toUpperCase().replace(primeraPalabra, "").trim();
+                                let definicion = lineaSinComentarios.replace(primeraPalabra, "").trim();
 
-                                if (declaracion.includes(":")) {
-                                    let nombre = declaracion.split(":")[0].trim().toLowerCase();
-                                    let tipo = declaracion.split(":")[1].trim();
+                                if (definicion.includes(":")) {
+                                    let nombre = definicion.split(":")[0].trim();
+                                    let tipo = definicion.split(":")[1].trim();
 
                                     this.definirVariableGlobal(tipo, nombre).forEach(variable => this.programa.memoria.storeGlobalVariable(variable));
                                     this.programa.texto.push(new Linea(linea));
@@ -319,13 +321,14 @@ export class Parser {
                                 break;
                             case Lenguaje.TYPE:
                             case Lenguaje.STRUCT:
+                                // Busca el indice de la linea que contiene la primera llave de cierre del struct.
                                 let end = lineas.findIndex(linea => linea.trim().split("'")[0].includes("}"));
                                 if (end === -1)
-                                    throw new Error("Se declara una estructura pero no se llega a cerrar nunca (falta un '}').");
+                                    throw new Error("Se declara una estructura pero no se llega a cerrar nunca (falta una llave de cierre '}').");
 
-                                let declaracionStruct = lineas.slice(index, end + 1);
-                                this.tiposUsuario.push(this.definirTipoUsuario(declaracionStruct, primeraPalabra));
-                                index = end + 1; // Saltamos la definicion de la estructura ya que ya ha sido leida
+                                let definicionStruct = lineas.slice(index, end + 1);
+                                this.tiposUsuario.push(this.definirTipoUsuario(definicionStruct, primeraPalabra));
+                                index = end + 1; // Saltamos la definicion de la estructura ya que ya ha sido leida.
                                 break;
                             default:
                                 if (this.isComment(linea.trim()))
@@ -387,69 +390,85 @@ export class Parser {
     }
 
     /**
-     * Recibe la declaracion de un nuevo tipo de usuario y lo guarda para posibles definiciones.
-     * @param def
+     * Recibe la definicion de un nuevo tipo de usuario y lo guarda para posibles declaraciones de variables de este nuevo tipo.
+     * 
+     * @param definicion ej. #type Persona: { sueldo:int } ESTRUCTURA COMPLETA
+     * @param primeraPalabra ej. #type
      * @returns estructura resultante de la lectura
      */
-    private definirTipoUsuario(def: string[], primeraPalabra: string): Struct {
-        // Definicion Struct: #type Persona: 
-        let declaracion = def[0].toUpperCase().replace(primeraPalabra, "").trim(); // "#type Persona: {" ---> "Persona: {"
-        let nombreStruct = declaracion.split(":")[0].trim().toLowerCase();
+    private definirTipoUsuario(definicion: string[], primeraPalabra: string): Struct {
+        this.estructuraBienFormada(definicion);
+
+        // Declaracion Struct: "#type Persona:"
+        let declaracion = definicion[0].replace(primeraPalabra, "").trim(); // Elimina la directiva: "#type Persona: {" ---> "Persona: {"
+        let nombreStruct = declaracion.split(":")[0].trim();
         let struct = new Struct(nombreStruct);
-        this.programa.texto.push(new Linea(def[0]));
+        this.programa.texto.push(new Linea(definicion[0]));
 
         // Cuerpo del struct: { ... }
-        let cuerpo = def.join("\n").split("{")[1].replace("}", "").split("\n");
-        let linea = "";
+        let cuerpo = definicion.join("\n").split("{")[1].replace("}", "").split("\n");
+        let lineaCuerpo = "";
         for (let i = 0; i < cuerpo.length; i++) {
-            linea = cuerpo[i].trim();
+            lineaCuerpo = cuerpo[i].trim().split("'")[0]; // Eliminamos los comentarios para facilitar la lectura del cuerpo
 
-            if (linea !== "") { // Si no es una linea vacia
-                if (linea.includes(":")) {
-                    let nombrePropiedad = linea.split(":")[0].trim();
-                    let tipoPropiedad = linea.split(":")[1].trim().toUpperCase();
-                    struct.variables = [...struct.variables, ...this.definirVariableGlobal(tipoPropiedad, nombrePropiedad)]; // Destructuring assignment
+            if (lineaCuerpo !== "") { // Si no es una linea vacia
+                if (lineaCuerpo.includes(":")) {
+                    let nombrePropiedad = lineaCuerpo.split(":")[0].trim();
+                    let tipoPropiedad = lineaCuerpo.split(":")[1].trim();
+                    struct.variables = [...struct.variables, ...this.definirVariableGlobal(tipoPropiedad, nombrePropiedad)]; // Destructuring assignment (mas optimo que concat)
                 }
                 else
-                    throw new Error("La estructura '" + nombreStruct + "' contiene una propiedad (declaración de variable) mal formada: '" + linea + "'.");
+                    throw new Error("La estructura '" + nombreStruct + "' contiene una propiedad (declaración de variable) mal formada: '" + lineaCuerpo + "'.");
             }
-
-            this.programa.texto.push(new Linea(def[i + 1]));
+            this.programa.texto.push(new Linea(definicion[i + 1]));
         }
         return struct;
     }
 
     /**
-     * Devuelve la variable asociada a la definicion y nombre pasados como parametro.
-     * @param def 
-     * @param nombre 
+     * Comprueba que la definicion de la estructura esta bien formada. En caso contrario, lanza
+     * @param definicionStruct ej. #type Persona: { sueldo:int } ESTRUCTURA COMPLETA
      */
-    private definirVariableGlobal(def: string, nombre: string): VariableDataType[] {
-        let variables = [];
-        let struct = this.tiposUsuario.find(s => s.nombre.toUpperCase() === def);
+    private estructuraBienFormada(definicionStruct: string[]) {
+        if (!definicionStruct[0].includes(":"))
+            throw new Error("La declaración de la estructura está mal formada. Falta un ':' que separe el cuerpo del nombre de esta.");
+        else if (!definicionStruct.join("\n").includes("{"))
+            throw new Error("Se declara una estructura pero no se llega a abrir nunca (falta una llave de apertura '{').");
+    }
 
-        if (def.includes("*")) { // Es de tipo array
-            let length = +def.split("*")[0].trim();
-            let tipo = def.split("*")[1].trim();
-            struct = this.tiposUsuario.find(s => s.nombre.toUpperCase() === tipo);
+    /**
+     * Devuelve la variable asociada a la definicion y nombre pasados como parametro.
+     * 
+     * Dadas las declaraciones: a:int, array:10*char y p:Persona:
+     * @param definicion int, 10*char, Persona, etc
+     * @param nombre a, array, p
+     */
+    private definirVariableGlobal(definicion: string, nombre: string): VariableDataType[] {
+        let variables = [];
+
+        if (definicion.includes("*")) { // Es de tipo array
+            let length = +definicion.split("*")[0].trim();
+            let tipoArray = definicion.split("*")[1].trim();
+            let struct = this.tiposUsuario.find(s => s.nombre === tipoArray);
 
             if (Number.isSafeInteger(length)) {
                 for (let i = 0; i < length; i++) {
                     if (struct !== undefined)
                         variables = [...variables, ...struct.getVariables(nombre + "[" + i + "]")];
                     else
-                        variables.push(new VariableDataType(nombre + "[" + i + "]", undefined, this.getPrimitiveDataType(tipo)));
+                        variables.push(new VariableDataType(nombre + "[" + i + "]", undefined, this.getPrimitiveDataType(tipoArray)));
                 }
             }
             else
                 throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero).")
         }
-        else if (struct !== undefined)
-            variables = struct.getVariables(nombre);
-        else // Es de tipo primitivo
-            variables.push(new VariableDataType(nombre, undefined, this.getPrimitiveDataType(def)));
-
-        console.log(variables)
+        else {
+            let struct = this.tiposUsuario.find(s => s.nombre === definicion);
+            if (struct !== undefined) // Es de tipo Struct
+                variables = struct.getVariables(nombre);
+            else // Es de tipo primitivo
+                variables.push(new VariableDataType(nombre, undefined, this.getPrimitiveDataType(definicion)));
+        }
         return variables;
     }
 
@@ -458,7 +477,7 @@ export class Parser {
      * @param tipo string
      */
     private getPrimitiveDataType(tipo: string): number {
-        switch (tipo) {
+        switch (tipo.toUpperCase()) {
             case Tipos.INTEGER:
                 return PrimitiveSizes.INTEGER;
             case Tipos.REAL:
@@ -513,12 +532,21 @@ export class Parser {
  * Clase estructura para la definicion de Tipos de Usuario
  */
 export class Struct {
-    nombre: string;
+    private _nombre: string;
     variables: VariableDataType[];
 
     constructor(nombre: string) {
         this.nombre = nombre;
         this.variables = [];
+    }
+    get nombre(): string {
+        return this._nombre;
+    }
+    set nombre(value: string) {
+        if ((<any>Object).values(Tipos).includes(value.toUpperCase()))
+            throw new Error("No se puede definir un nuevo tipo usando el nombre de un tipo predefinido.");
+
+        this._nombre = value;
     }
 
     /**

@@ -1,0 +1,46 @@
+#global a:int
+#global b:real
+#global c:byte
+
+call main
+halt
+
+#func ejemplo
+#param par1:float
+#param par2:int
+#local local1:float
+#local local2:float
+
+ejemplo:
+    ' float local2;
+    enter 8
+
+    ' b = 3.4;
+    pusha 2
+    pushf 3.4
+    Storef
+
+    ' par1 = 3.4;
+    pusha bp
+    push 6
+    add
+    pushf 3.4
+    Storef
+
+    ' local2 = 3.4;
+    pusha bp
+    push -8
+    add
+    pushf 3.4
+    Storef
+
+ret 0, 8, 6
+
+#func main
+main:
+    ' ejemplo(1.5, 27);
+    pushf 1.5
+    push 27
+    call ejemplo
+
+ret

@@ -1,10 +1,18 @@
+' Estructuras o Tipos de usuario:
+' 		(#type || #struct) IDENT_S ':' '{' IDENT_P: tipo '}'
+' OJO, a diferencia de los tipos primitivos, las estructuras son sensibles a mayúsculas y minúsculas. 
+' Ej:
+' 	#type Persona: {...} la variable:
+'		- alberto:Persona CORRECTO
+'		- alberto:persona INCORRECTO
+
 #type Persona: {
 	sueldo:real
 	edad:int	
 	inicial:char
 }
 
-#global a:byte
+#global	a:byte
 #global alberto:Persona
 #global javi:Persona
 

@@ -1,3 +1,6 @@
+' Listas o Arrays:
+'       (#var || #data || #global) IDENT ':' NUM_ENTERO '*' tipo
+
 #global b:byte      ' char b;
 #global i:int       ' int i;
 #global v:10*int    ' int v[10];

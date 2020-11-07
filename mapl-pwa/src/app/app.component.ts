@@ -15,7 +15,7 @@ export class AppComponent {
   programa: Programa;
 
   constructor(public globals: Globals) {
-    this.version = "[v0.2.0]";
+    this.version = "[v0.3.0]";
   }
 
   ngOnInit(): void {
