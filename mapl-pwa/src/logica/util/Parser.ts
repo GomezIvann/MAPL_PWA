@@ -11,9 +11,10 @@ import { Label } from '../compilador/Label';
 import { Lenguaje, Tipos } from '../compilador/Lenguaje';
 import { Programa } from '../compilador/Programa';
 import { Linea } from '../compilador/Linea';
-import { Call, Ret } from '../instrucciones/Funciones';
+import { Call, Enter, Ret } from '../instrucciones/Funciones';
 import { Instruccion } from '../instrucciones/Instruccion';
 import { PrimitiveSizes, VariableDataType } from './DataTypes';
+import { Funcion } from '../compilador/Funcion';
 
 /**
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
@@ -21,29 +22,28 @@ import { PrimitiveSizes, VariableDataType } from './DataTypes';
 export class Parser {
     file: File;             // Fichero de entrada
     programa: Programa;     // Programa obtenido de la lectura del fichero
-    tiposUsuario: Struct[];   // Tipos de usuario declarados durante la lectura del programa           
+
+    private _tiposUsuario: Struct[];   // Tipos de usuario declarados durante la lectura del programa  
+    private _funciones: Funcion[];     // Funciones del programa
 
     /**
      * Todas estas variables son para deteccion de errores de programa que puedan ayudar al usuario a formarlo correctamente, dando un mensaje de error
      * lo mas personalizado posible.
      *      _finFuncion: True si finaliza la lectura de una funcion CORRECTAMENTE (HALT, y fuera de la funcion 'init').
      *      _finInit: True si finaliza la lectura de la funcion principal 'init' CORRECTAMENTE (HALT y bien formado).
-     *      _programaSinFunciones: True si la lectura del programa finaliza sin haber leido una funcion que no sea 'init'. Sirve para
-     *                             añadir un HALT a 'init' cuando no hay funciones de por medio.
      */
     private _finFuncion: boolean;
     private _finInit: boolean;
-    private _programaSinFunciones: boolean;
 
     private _contadorInstrucciones: number;  // Contador para el numero de instruccion. Aumenta en una unidad siempre que se lea una.
 
     constructor(file: File) {
         this.file = file;
         this.programa = new Programa();
-        this.tiposUsuario = [];
+        this._tiposUsuario = [];
+        this._funciones = [];
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
         this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
-        this._programaSinFunciones = true;
         this._contadorInstrucciones = 0;
     }
 
@@ -67,6 +67,7 @@ export class Parser {
                 let primeraPalabra = ""; // Primera palabra de la linea
                 let linea = "";
                 let lineaSinComentarios = "";
+                let funcionActual: Funcion;
 
                 // LECTURA LINEA A LINEA
                 for (let index = 0; index < lineas.length; index++) {
@@ -75,7 +76,7 @@ export class Parser {
                      * Elimina los posibles comentarios de la linea para facilitar la labor de parseo 
                      * (se siguen mostrando por pantalla, solo es interno).
                      */
-                    lineaSinComentarios = linea.trim().split("'")[0];
+                    lineaSinComentarios = linea.split("'")[0].trim();
                     /**
                      * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto).
                      * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra.
@@ -84,7 +85,7 @@ export class Parser {
                      * ej. "       hello  world       " --trim()--> "hello  world"
                      *     "hello  world" --replace(REG_EXP)--> "hello"
                      */
-                    primeraPalabra = lineaSinComentarios.trim().replace(/\s.*/, "");
+                    primeraPalabra = lineaSinComentarios.replace(/\s.*/, "");
 
                     try {
                         /** 
@@ -98,19 +99,19 @@ export class Parser {
                             case Lenguaje.PUSH:
                             case Lenguaje.PUSHI:
                                 // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
-                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];  // segunda palabra de la linea
+                                var cte = lineaSinComentarios.split(/\s+/)[1];  // segunda palabra de la linea
                                 this.addInstruccion(new Push(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHF:
-                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Pushf(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHB:
-                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Pushb(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHA:
-                                var cte = lineaSinComentarios.trim().split(/\s+/)[1];
+                                var cte = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Pusha(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.POP:
@@ -268,28 +269,38 @@ export class Parser {
                                 this.addInstruccion(new F2i(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.JMP:
-                                var label = linea.trim().split(/\s+/)[1] + ":";
+                                var label = linea.trim().split(/\s+/)[1];
                                 this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.JZ:
-                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Jz(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.JNZ:
-                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.CALL:
-                                var label = lineaSinComentarios.trim().split(/\s+/)[1] + ":";
+                                var label = lineaSinComentarios.split(/\s+/)[1];
                                 this.addInstruccion(new Call(this._contadorInstrucciones, label, this.programa), linea);
                                 break;
                             case Lenguaje.RET:
                                 if (!this._finInit)
                                     throw new Error("La función 'init' no puede contener otra función.");
 
-                                this.addInstruccion(new Ret(this._contadorInstrucciones, this.programa), linea);
+                                let params = lineaSinComentarios.replace(primeraPalabra, "").trim().split(","); // params = [<cte1>, <cte2>, <cte3>]
+                                let ret = new Ret(this._contadorInstrucciones, this.programa, params);
+                                this.addInstruccion(ret, linea);
                                 this._finFuncion = true; // Fin de la funcion actual leida
-                                this._programaSinFunciones = false; // Hay mas funciones en el programa a parte de 'init'
+                                funcionActual.sizeParams = ret.cte3;
+                                this._funciones.push(funcionActual);
+                                break;
+                            case Lenguaje.ENTER:
+                                if (!this._finInit)
+                                    throw new Error("La función 'init' no puede contener otra función.");
+
+                                var cte = lineaSinComentarios.split(/\s+/)[1];
+                                this.addInstruccion(new Enter(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.NOP:
                                 this.addInstruccion(new Nop(this._contadorInstrucciones), linea);
@@ -301,6 +312,7 @@ export class Parser {
                             case Lenguaje.WHITE_LINE:
                                 // Al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
                                 // asi se conserva la linea vacia y se interpretan todas igual.
+                                // Los comentarios tambien entran por aquí, ya que se eliminan al comienzo de la iteracion (variable 'lineaSinComentarios')
                                 this.programa.texto.push(new Linea(linea));
                                 break;
                             case Lenguaje.VAR:
@@ -327,31 +339,27 @@ export class Parser {
                                     throw new Error("Se declara una estructura pero no se llega a cerrar nunca (falta una llave de cierre '}').");
 
                                 let definicionStruct = lineas.slice(index, end + 1);
-                                this.tiposUsuario.push(this.definirTipoUsuario(definicionStruct, primeraPalabra));
+                                this._tiposUsuario.push(this.definirTipoUsuario(definicionStruct, primeraPalabra));
                                 index = end + 1; // Saltamos la definicion de la estructura ya que ya ha sido leida.
                                 break;
                             default:
-                                if (this.isComment(linea.trim()))
+                                if (this.isValidLabel(lineaSinComentarios)) { // Es una etiqueta (o de funcion o de salto)
+                                    this.programa.labels.push(new Label(lineaSinComentarios, this._contadorInstrucciones));
                                     this.programa.texto.push(new Linea(linea));
-                                else {
-                                    let label = lineaSinComentarios.trim();
-                                    if (this.isValidLabel(label)) { // Es una etiqueta (o de funcion o de salto)
-                                        this.programa.labels.push(new Label(label, this._contadorInstrucciones));
-                                        this.programa.texto.push(new Linea(linea));
 
-                                        // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
-                                        // funcion. Fin de funcion pasa a ser false, estamos dentro de una funcion
-                                        if (this._finInit) {
-                                            // NO se puede declarar una funcion dentro de otra.
-                                            if (!this._finFuncion)
-                                                throw new Error("No se puede declarar una función dentro de otra.\n'" + linea.trim() + "'.");
+                                    // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
+                                    // funcion. Fin de funcion pasa a ser false ya que estamos dentro de una funcion.
+                                    if (this._finInit) {
+                                        // NO se puede declarar una funcion dentro de otra.
+                                        if (!this._finFuncion)
+                                            throw new Error("No se puede declarar una función dentro de otra.\n'" + linea.trim() + "'.");
 
-                                            this._finFuncion = false;
-                                        }
+                                        this._finFuncion = false;
+                                        funcionActual = new Funcion(lineaSinComentarios);
                                     }
-                                    else
-                                        throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea.trim() + "'.");
                                 }
+                                else
+                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea.trim() + "'.");
                         }
                     }
                     catch (err) {
@@ -368,7 +376,7 @@ export class Parser {
                  * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
                  * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion.
                  */
-                if (!this._finInit && this._programaSinFunciones) {
+                if (!this._finInit && this._funciones.length > 0) {
                     this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
                     this._finInit = true; // Fin de la funcion principal 'init'
                 }
@@ -382,10 +390,22 @@ export class Parser {
                         + " en otra función, respectivamente.");
 
                 this.programa.labelForInstruction();
+                this.functionForCall();
                 resolve(this.programa);
             };
             reader.readAsText(this.file);
             Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
+        });
+    }
+
+
+    private functionForCall() {
+        this.programa.codigo.forEach(i => {
+            if (i instanceof Call) {
+                let iCall = i as Call;
+                let funcion = this._funciones.find(f => f.nombre === iCall.labelNombre);
+                iCall.funcion = funcion;
+            }
         });
     }
 
@@ -449,7 +469,7 @@ export class Parser {
         if (definicion.includes("*")) { // Es de tipo array
             let length = +definicion.split("*")[0].trim();
             let tipoArray = definicion.split("*")[1].trim();
-            let struct = this.tiposUsuario.find(s => s.nombre === tipoArray);
+            let struct = this._tiposUsuario.find(s => s.nombre === tipoArray);
 
             if (Number.isSafeInteger(length)) {
                 for (let i = 0; i < length; i++) {
@@ -463,7 +483,7 @@ export class Parser {
                 throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero).")
         }
         else {
-            let struct = this.tiposUsuario.find(s => s.nombre === definicion);
+            let struct = this._tiposUsuario.find(s => s.nombre === definicion);
             if (struct !== undefined) // Es de tipo Struct
                 variables = struct.getVariables(nombre);
             else // Es de tipo primitivo
@@ -517,14 +537,6 @@ export class Parser {
             throw new Error("Etiqueta repetida: '" + linea + "'.");
 
         return linea.endsWith(":");
-    }
-
-    /**
-     * True si la linea es un comentario.
-     * @param linea 
-     */
-    private isComment(linea: string): boolean {
-        return /^\'/.test(linea);
     }
 }
 

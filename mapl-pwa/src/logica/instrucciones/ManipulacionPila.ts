@@ -2,6 +2,7 @@ import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, Primitiv
 import { Memory } from '../segmentoDatos/Memoria';
 import { Stack } from '../segmentoDatos/Stack';
 import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger, InstruccionConCteInterface } from './Instruccion';
+import { Lenguaje } from '../compilador/Lenguaje';
 
 
 /**
@@ -14,10 +15,14 @@ export class Push extends InstruccionInteger implements InstruccionConCteInterfa
 
     constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
-        this.setConstante(cte);
+        if (cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
+            this.setConstante(cte);
     }
 
     execute(stack: Stack, memory: Memory): void {
+        if (this.pdt === undefined)
+            this.pdt = new AddressDataType(stack.getBP());
+
         stack.push(this.pdt, this.getSize());
     }
     setConstante(cte: string): void {
@@ -78,7 +83,7 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
 
     constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
-        if (cte.toUpperCase() !== "BP")
+        if (cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
             this.setConstante(cte);
     }
 

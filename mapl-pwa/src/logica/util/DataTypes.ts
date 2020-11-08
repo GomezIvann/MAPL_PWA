@@ -52,6 +52,16 @@ export class VariableDataType extends DataType {
 }
 
 /**
+ * Variables pasadas como parametro a una funcion. Se crean en la instruccion CALL gracias al parametro inferido del RET de la funcion.
+ */
+export class ParametroVariable extends VariableDataType {
+    informacion(): string {
+        return "Parámetro '" + this.name + "' " + this.getTipo() +". Su valor actual es "+this.value.toString()+". "+
+               "Ha sido inferido a partir de la tercera constante del RET de la funcion.";
+    }
+}
+
+/**
  * Datos de tipos primitivos que usan los programas del compilador. Cada uno de estos datos tiene asociado un tamaño (size).
  * Pueden ser:
  *      - Entero (Integer o int): 2 bytes.
@@ -74,8 +84,9 @@ export abstract class PrimitiveDataType extends DataType {
     abstract setValue(value: number): void;
     toString() { return "" + this.value; }
 }
+
 /**
- * Posibles tamaños de los datos
+ * Posibles tamaños de los datos primitivos.
  */
 export enum PrimitiveSizes {
     FLOAT = 4,
@@ -83,6 +94,10 @@ export enum PrimitiveSizes {
     ADDRESS = 2,
     BYTE = 1
 }
+
+/**
+ * DATOS DE TIPO ENTERO
+ */
 export class IntegerDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.INTEGER);
@@ -98,6 +113,10 @@ export class IntegerDataType extends PrimitiveDataType {
         return "Valor de tipo entero = " + this.value + ".";
     }
 }
+
+/**
+ * DATOS DE TIPO REAL
+ */
 export class FloatDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.FLOAT);
@@ -113,6 +132,10 @@ export class FloatDataType extends PrimitiveDataType {
         return "Valor de tipo real = " + this.value + ".";
     }
 }
+
+/**
+ * DATOS DE TIPO BYTE
+ */
 export class ByteDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.BYTE);
@@ -136,6 +159,10 @@ export class ByteDataType extends PrimitiveDataType {
         return "Valor de tipo byte = " + this.value + ".";
     }
 }
+
+/**
+ * DATOS DE TIPO ADDRESS (DIRECCIONES DE MEMORIA O PUNTEROS)
+ */
 export class AddressDataType extends PrimitiveDataType {
     constructor(value: number) {
         super(value, PrimitiveSizes.ADDRESS);

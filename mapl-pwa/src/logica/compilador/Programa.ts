@@ -217,7 +217,7 @@ export class Programa {
     }
 
     /**
-     * Asocia a las instrucciones que usan etiquetas el objeto asociado al nombre leido por el parser.
+     * Asocia a las instrucciones que usan etiquetas el objeto Label con el mismo nombre.
      * Este metodo se llama al finalizar la lectura del fichero en el parser.
      * Controla los errores de etiquetas inexistentes referenciadas en instrucciones ya que,
      * llegados a este punto, la etiqueta deberia de existir.
@@ -225,13 +225,13 @@ export class Programa {
     labelForInstruction(): void {
         this.codigo.forEach(i => {
             if (i instanceof InstruccionLabel) {
-                let nombreLabel = i as InstruccionLabel;
-                let label = this.labels.find(label => label.nombre === nombreLabel.labelNombre);
+                let iLabel = i as InstruccionLabel;
+                let label = this.labels.find(label => label.nombre === iLabel.labelNombre);
 
                 if (label === undefined)
-                    throw new Error("La etiqueta '" + nombreLabel.labelNombre + "' no se ha encontrado en el fichero.");
+                    throw new Error("La etiqueta '" + iLabel.labelNombre + "' no se ha encontrado en el fichero.");
 
-                nombreLabel.label = label;
+                iLabel.label = label;
             }
         });
     }

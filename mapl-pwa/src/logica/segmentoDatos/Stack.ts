@@ -1,4 +1,4 @@
-import { IntegerDataType, PrimitiveDataType } from '../util/DataTypes';
+import { IntegerDataType, ParametroVariable, PrimitiveDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 /**
@@ -23,10 +23,10 @@ export class Stack extends AbstractDataSegmentZone {
 
     /**
      * Cuando el puntero de la pila esté abajo del todo del segmento de datos,
-     * la pila esta vacia
+     * la pila esta vacia.
      */
     isEmpty(): boolean {
-        return this._sp === this.dataSegment.SIZE;
+        return this.getSize() === 0;
     }
 
     /**
@@ -45,6 +45,31 @@ export class Stack extends AbstractDataSegmentZone {
     }
 
     /**
+     * Usado por CALL para convertir los valores almacenados en la cima de la pila en parametros para la funcion, 
+     * de acuerdo al valor de cte3.
+     * 
+     * @param pdt PrimitiveDataType
+     * @param instructionSize 
+     */
+    pushAsParameters(sizeParams: number): void {
+        let cte3 = sizeParams;
+        let pdt: PrimitiveDataType;
+        let i = 1;
+
+        while (cte3 !== 0) {
+            if (cte3 < 0)
+                throw new Error("Se esperaban en la cima de la pila "+sizeParams+" bytes."+ 
+                                "Sin embargo, ese valor no retira de la pila valores completos.");
+
+            pdt = this.pop(this.top().size);
+            this._sp -= pdt.size;
+            this.dataSegment.add(new ParametroVariable("Param"+i, pdt, pdt.size), this._sp); // lo convertimos a parametro
+            cte3 -= pdt.size;
+            i++;
+        }
+    }
+
+    /**
      * El puntero a la cima de la pila (SP) decrementa en cada extraccion 
      * de acuerdo al tamaño del dato extraido.
      * 
@@ -52,15 +77,18 @@ export class Stack extends AbstractDataSegmentZone {
      * @returns PrimitiveDataType
      */
     pop(instructionSize: number): PrimitiveDataType {
-        if (this.top().size > instructionSize)
-            throw new Error("Los bytes retirados para la instrucción dejan en la pila los últimos bytes de valor sin retirar.");
+        if (this.getSize() < instructionSize)
+            throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
+        else if (this.top().size > instructionSize)
+            throw new Error("Los bytes retirados para la instrucción dejan en la pila los últimos bytes del valor sin retirar.");
         else if (this.top().size < instructionSize)
-            throw new Error("Los bytes retirados para la instrucción son restos de un valor parcialmente retirado.");
+            throw new Error("Los bytes retirados para la instrucción no corresponden a un único valor.");
 
         let removedValue = this.dataSegment.remove(this._sp) as PrimitiveDataType;
         this._sp += removedValue.size;
         return removedValue;
     }
+
     /**
      * Devuelve el dato ubicado la cima de la pila, sin sacarlo de esta.
      * 
@@ -72,28 +100,71 @@ export class Stack extends AbstractDataSegmentZone {
 
         return this.dataSegment.get(this._sp)[0] as PrimitiveDataType;
     }
+
     /**
      * Reinicia el puntero de la pila (para recargar() en Programa).
      */
     restaurar(): void {
         this._sp = this.dataSegment.SIZE;
     }
+
+    /**
+     * @returns registro SP
+     */
     getSP(): number {
         return this._sp;
     }
+
+    /**
+     * @returns registro BP
+     */
     getBP(): number {
         return this._bp;
     }
+
+    /**
+     * @returns number tamaño total de los datos almacenados en la pila.
+     */
+    getSize(): number {
+        return this.dataSegment.SIZE - this._sp;
+    }
+
+    /**
+     * Introduce en memoria el StackFrame de una funcion.
+     * @param sf 
+     */
     pushStackFrame(sf: StackFrame): void {
         this.push(sf.returnDir, sf.returnDir.size);
         this.push(sf.lastBP, sf.lastBP.size);
         this._bp = this._sp;
     }
+
+    /**
+     * Extrae de la pila el stack frame de la funcion, actualiza el registro BP y devuelve la direccion de retorno de la funcion.
+     * @param instructionSize ENTERO
+     */
     popStackFrame(instructionSize: number): number {
         this._sp = this._bp;
         this._bp = this.pop(instructionSize).value;
         let returnDir = this.pop(instructionSize).value;
         return returnDir;
+    }
+
+    /**
+     * Reserva una zona de la pila para las variables locales de una funcion (ENTER <cte>)
+     * @param cte sumatorio del tamaño de las variables locales de la funcion
+     */
+    allocateStackZone(cte: number) {
+        this._sp -= cte;
+    }
+
+    /**
+     * Elimina la zona de la pila reservada por la funcion para las variables locales (ENTER <cte> === RET <cte1>, ..., ...)
+     * @param cte sumatorio del tamaño de las variables locales de la funcion
+     */
+    eraseStackZone(cte: number) {
+        this.dataSegment.deleteDataZone(this._sp, cte);
+        this._sp += cte;
     }
 }
 

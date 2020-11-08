@@ -99,7 +99,7 @@ export abstract class InstruccionLabel extends Instruccion {
 
 	constructor(numeroInstruccion: number, labelNombre: string, programa: Programa){
 		super(numeroInstruccion);
-		this.labelNombre = labelNombre;
+		this.labelNombre = labelNombre + ":";
 		this.programa = programa;
 	}
 }

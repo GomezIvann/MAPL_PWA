@@ -17,9 +17,7 @@ export class InstruccionesComponent implements OnInit {
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[];
 
-  /**
-   * Altura de la fila px (la misma que en el css).
-   */ 
+  // Altura de la fila px (la misma que en el css).
   private readonly ROW_HEIGHT: number = 20;
 
   constructor(public globals: Globals) {
@@ -48,22 +46,22 @@ export class InstruccionesComponent implements OnInit {
     return this.programa.finalizado || !this.programa.hasCodigo();
   }
 
-  recargarPrograma(el: HTMLElement) {
+  recargarPrograma() {
     this.programa.reiniciar();
-    this.scrollToActualInstruction(el);
+    this.scrollToActualInstruction();
   }
 
-  ejecutar(el: HTMLElement) {
+  ejecutar() {
     this.programa.ejecuccionCompleta();
-    this.scrollToActualInstruction(el);
+    this.scrollToActualInstruction();
   }
 
-  ejecutarInstruccion(el: HTMLElement) {
+  ejecutarInstruccion() {
     this.programa.ejecutarSiguienteInstruccion();
-    this.scrollToActualInstruction(el);
+    this.scrollToActualInstruction();
   }
 
-  seleccionarInstruccion(event, row: Linea, el: HTMLElement) {
+  seleccionarInstruccion(event, row: Linea) {
     if (row.numeroInstruccion !== "") {
       let indice = parseInt(row.numeroInstruccion);
       if (event.shiftKey && row !== undefined)
@@ -73,12 +71,12 @@ export class InstruccionesComponent implements OnInit {
     }
 
     if (this.programa.finalizado) // Hace solo scroll si el programa se ejecuta hasta el final (por el motivo que sea)
-      this.scrollToActualInstruction(el);
+      this.scrollToActualInstruction();
   }
 
-  retrocederInstruccion(el: HTMLElement) {
+  retrocederInstruccion() {
     this.programa.retrocederUnaInstruccion();
-    this.scrollToActualInstruction(el);
+    this.scrollToActualInstruction();
   }
 
   /**
@@ -88,9 +86,9 @@ export class InstruccionesComponent implements OnInit {
    *      siendo:
    *          n = numero fila (objeto Linea) actual ejecutandose
    *          h = altura de cada fila definido en el css = ROW_HEIGHT (en px)
-   * @param container <div> contenedor de la tabla
    */
-  scrollToActualInstruction(container: HTMLElement) {
+  scrollToActualInstruction() {
+    let container = document.getElementById("instrucciones-container");
     container.scrollTo({
       top: this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT,
       behavior: 'smooth', // animacion

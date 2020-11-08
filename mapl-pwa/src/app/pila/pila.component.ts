@@ -20,9 +20,12 @@ export class PilaComponent implements OnInit {
   displayedColumns: string[];
   dataSource: MatTableDataSource<[DataType, boolean]>;
 
+  private _bottom: boolean;
+
   constructor(public globals: Globals) {
     this.displayedColumns = ["address", "value"];
     this.dataSource = new MatTableDataSource<[DataType, boolean]>();
+    this._bottom = false;
   }
 
   /**
@@ -47,7 +50,10 @@ export class PilaComponent implements OnInit {
   refresh() {
     DataSegment.getInstance().dataAsObservable().subscribe((res) => {
       this.dataSource.data = res;
-      this.scrollToFondoPila();
+      if (!this._bottom) {
+        this.scrollToFondoPila();
+        this._bottom = true;
+      }
     });
   }
 
@@ -55,7 +61,7 @@ export class PilaComponent implements OnInit {
    * Mueve el scroll del contenedor asociada a la pila al fondo del segmento de datos.
    */
   scrollToFondoPila() {
-    let div = document.getElementById("div-pila");
+    let div = document.getElementById("pila-container");
     div.scrollTop = div.scrollHeight;
   }
 

@@ -5,13 +5,8 @@
 call main
 halt
 
-#func ejemplo
-#param par1:float
-#param par2:int
-#local local1:float
-#local local2:float
-
 ejemplo:
+    ' float local1;
     ' float local2;
     enter 8
 
@@ -36,11 +31,9 @@ ejemplo:
 
 ret 0, 8, 6
 
-#func main
 main:
     ' ejemplo(1.5, 27);
     pushf 1.5
     push 27
     call ejemplo
-
 ret

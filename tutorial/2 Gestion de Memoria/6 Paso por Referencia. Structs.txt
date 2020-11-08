@@ -1,0 +1,60 @@
+#type Persona: {
+	edad:int
+	sueldo:float
+}
+
+#data personaGlobal:Persona
+
+call main
+halt
+
+inicia:
+	' Persona personaLocal; 
+	enter 6
+
+	' personaGlobal.sueldo = 1000.5;
+	pusha 0
+	push 2
+	add
+	pushf 1000.5
+	storef
+
+	' personaLocal.sueldo = 1000.5;
+	push bp
+	push -6
+	add
+	push 2
+	add
+	pushf 1000.5
+	storef
+
+	' personaParam.sueldo = 1000.5;
+	push bp
+	push 4
+	add
+	load
+	push 2
+	add
+	pushf 1000.5
+	storef
+ret 0, 6, 2
+
+main:
+	' Persona juan; 
+	enter 6
+
+	' inicia(juan);
+	push bp
+	push -6
+	add
+	call inicia
+
+	' print juan.sueldo;
+	push bp
+	push -6
+	add
+	push 2
+	add
+	loadf
+	outf
+ret 0,6,0

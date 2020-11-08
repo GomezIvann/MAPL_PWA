@@ -1,0 +1,64 @@
+call main
+halt
+
+#data vectorGlobal: 3 * int
+
+asigna:
+    'int[3] vectorLocal;
+    enter 6
+
+    'vectorGlobal[1] = 79;
+    pusha 0
+    push 1
+    push 2
+    mul
+    add
+    push 79
+    store
+
+    'vectorLocal[1] = 79;
+    push bp
+    push -6
+    add
+    push 1
+    push 2
+    mul
+    add
+    push 79
+    store
+
+    'vectorParam[1] = 79;
+    push bp
+    push 4
+    add
+    load
+    push 1
+    push 2
+    mul
+    add
+    push 79
+    store
+ret 0, 6, 2
+
+main:
+    ' int[3] meses;
+    enter 6
+
+    'asigna(meses)
+    push bp
+    push -6
+    add
+    call asigna
+
+    'print meses[1];
+    push bp
+    push -6
+    add
+    push 1
+    push 2
+    mul
+    add
+    load
+    out
+ret 0, 6, 0
+

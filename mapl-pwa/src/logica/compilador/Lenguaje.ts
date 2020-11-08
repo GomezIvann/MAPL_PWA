@@ -7,6 +7,7 @@ export enum Lenguaje {
     PUSHF = "PUSHF",
     PUSHB = "PUSHB",
     PUSHA = "PUSHA",
+    REGISTRO_BP = "BP",
     LOAD = "LOAD",
     LOADI = "LOADI",
     LOADB = "LOADB",
@@ -73,8 +74,8 @@ export enum Lenguaje {
     JZ = "JZ",
     JNZ = "JNZ",
     CALL = "CALL",
-    ENTER = "ENTER",
     RET = "RET",
+    ENTER = "ENTER",
     NOP = "NOP",
     HALT = "HALT",
     WHITE_LINE = "",
@@ -82,7 +83,7 @@ export enum Lenguaje {
     DATA = "#DATA",
     GLOBAL = "#GLOBAL",
     STRUCT = "#STRUCT",
-    TYPE = "#TYPE"
+    TYPE = "#TYPE",
 }
 
 export enum Tipos {

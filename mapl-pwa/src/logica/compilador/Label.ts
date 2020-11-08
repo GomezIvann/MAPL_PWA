@@ -6,10 +6,7 @@
  */
 export class Label {
     nombre: string;
-    /**
-     * Numero que determina cual es la siguiente instruccion tras el Label
-     */ 
-    primeraInstruccion: number;
+    primeraInstruccion: number; // Numero que determina cual es la siguiente instruccion tras el Label
 
     constructor(nombre: string, primeraInstruccion: number) {
         this.nombre = nombre;

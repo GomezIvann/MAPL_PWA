@@ -38,7 +38,7 @@ export class DataSegment {
     private _data$: Subject<[DataType, boolean][]>;
 
     readonly SIZE: number = 1024;
-    private _actualSize: number;
+    private _actualSize: number; // Tamaño de todos los datos almacenados en el Segmento de Datos hasta ese momento (Pila + Memoria)
 
     private constructor() {
         this._data$ = new Subject<[DataType, boolean][]>();
@@ -75,9 +75,11 @@ export class DataSegment {
 
         this._data$.next(this._data); // Actualizamos la suscripcion para la vista
     }
+
     /**
      * Elimina el elemento correspondiente a la direccion pasada como parametro.
      * @param address
+     * @returns DataType elemento borrado
      */
     remove(address: number): DataType {
         this._actualSize -= this._data[address][0].size;
@@ -89,6 +91,7 @@ export class DataSegment {
         this._data$.next(this._data);
         return returned[0];
     }
+
     /**
      * Devuelve la tupla almacenada en la direccion del segmento de datos
      * @param address dir
@@ -96,6 +99,7 @@ export class DataSegment {
     get(address: number): [DataType, boolean] {
         return this._data[address];
     }
+
     /**
      * Vacia el segmento de datos.
      */
@@ -103,6 +107,7 @@ export class DataSegment {
         this.data = new Array<[DataType, boolean]>(this.SIZE);
         this._actualSize = 0;
     }
+
     /**
      * No se pueden insertar mas datos cuando la suma de los tamaños de los datos ya insertados es 
      * igual o superior al tamaño maximo establecido.
@@ -110,6 +115,7 @@ export class DataSegment {
     isFull(): boolean {
         return this._actualSize >= this.SIZE;
     }
+
     /**
      * Devuelve un observable con los valores del segmento de datos para el componente visual que lo muestra.
      * De esta forma, el receptor de este metodo estara pendiente de los cambios que se hagan sobre la pila
@@ -118,6 +124,18 @@ export class DataSegment {
      */
     dataAsObservable(): Observable<[DataType, boolean][]> {
         return this._data$.asObservable();
+    }
+
+    /**
+     * Elimina la zona de memoria especificada (RET). 
+     * @param startDir direccion de comienzo de la zona
+     * @param zoneSize tamaño de la zona
+     */
+    deleteDataZone(startDir: number, zoneSize: number) {
+        this._actualSize -= zoneSize;
+        for(let i = 0; i < zoneSize; i++)
+            delete this._data[startDir+i]; // igual que this._data[address] = undefined
+        this._data$.next(this._data);
     }
 }
 
