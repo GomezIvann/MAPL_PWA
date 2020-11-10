@@ -1,57 +1,66 @@
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .memoria-table-container, .pila-table-container {
     height: 430px;
-    width: 380px;
+    width: 369px;
     max-width: 100%;
     overflow: auto;
     float: left;
+    margin-top: 46px;
 }
-.pila-table-container {
-    margin-left: 32px;
+.memoria-table-container {
+    margin-right: 30px;
+}
+label {
+    display: block;
 }
 table {
     width: 100%;
 }
 
+/* Label de las tablas */
+label {
+    font-size: 12px;
+    font-weight: 420;
+    color: dimgrey;
+    background-color: #ece7d6;
+    padding: 8px 15px;
+    border-bottom: 1.5px solid #bdb9ab;
+}
+
 /* Tamaño de letra de celdas */
-.mat-cell, .mat-header-cell {
+.mat-cell {
     font-size: 12px;
 }
 
-/* Porcentajes de ocupacion de cada columna de una fila y estetica */
-.mat-column-address {
+/* Porcentajes de ocupacion de los valores de cada columna, nos encabezados no inclusive */
+.mat-column-address.mat-cell {
     width: 17.5%;
     text-align: right;
     padding-right: 8px;
 }
+.mat-column-value.mat-cell {
+    width: 82.5%;
+    padding-left: 8px; /* margen celda */
+}
+
+/* Selectores específicos gracias a matColumnDef */
 .mat-column-address.mat-cell {
     background-color:#f4f4ea;
     border-bottom-style: none;
     font-size: 11px;
-}
-.mat-column-value {
-    width: 82.5%;
-    padding-left: 8px; /* margen celda */
 }
 .mat-column-value.mat-cell {
     border-bottom: 2px solid white;
     font-weight: 550;
 }
 
-/* Altura de los encabezados y filas */
-.mat-header-row {
-    height: 30px;
-}
+/* Altura de las filas */
 .mat-row {
     height: 20px;
 }
 
-/* Encabezados tabla */
-.mat-header-cell {
-    text-align: left;
-    background-color: #ece7d6;
-}
-
+/* Punteros */
 #BP, #SP, #SPBP {
     font-weight: bold;
+    font-size: 10.5px;
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Logger } from 'src/logica/util/Logger';
 
 @Component({
   selector: 'app-incidencias',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./incidencias.component.css']
 })
 export class IncidenciasComponent implements OnInit {
+  logger: Logger;
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit(): void {
+    this.logger = Logger.getInstance();
   }
 
 }

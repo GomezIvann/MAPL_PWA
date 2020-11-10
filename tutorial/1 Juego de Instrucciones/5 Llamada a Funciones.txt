@@ -26,4 +26,4 @@ ret 'Fin de función (return)
 america:
 push 1492
 out
-ret
+ret 'void

@@ -1,5 +1,5 @@
 /**
- * SINGLETON: Logger con las incidencias de la ejecución del programa.
+ * SINGLETON: Logger con las incidencias de la ejecucion del programa.
  */
 export class Logger {
     private static instance: Logger;
@@ -9,7 +9,7 @@ export class Logger {
      * Constructor privado para evitar new Logger
      */
     private constructor() {
-        this._messages = [];
+        this._messages = ["Fallo"];
     }
 
     /**
@@ -23,6 +23,13 @@ export class Logger {
             Logger.instance = new Logger();
         
         return Logger.instance;
+    }
+    
+    get messages(): string[] {
+        return this._messages;
+    }
+    set messages(value: string[]) {
+        this._messages = value;
     }
 
     /**

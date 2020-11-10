@@ -1,7 +1,9 @@
-import { Input } from '@angular/core';
+import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
+import { Consola } from 'src/logica/compilador/Consola';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
+import { Parser } from 'src/logica/util/Parser';
 import { Globals } from '../globals';
 
 
@@ -13,6 +15,10 @@ import { Globals } from '../globals';
 export class InstruccionesComponent implements OnInit {
   // Lo recibe del componente padre app.component
   private _programa: Programa;
+  fileToUpload: File;
+
+  // Objeto encargado de notificar al componente padre el cambio de referencia de programa (de producirse).
+  @Output () programResponse: EventEmitter<Programa> = new EventEmitter();
   
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[];
@@ -46,7 +52,7 @@ export class InstruccionesComponent implements OnInit {
     return this.programa.finalizado || !this.programa.hasCodigo();
   }
 
-  recargarPrograma() {
+  reiniciarPrograma() {
     this.programa.reiniciar();
     this.scrollToActualInstruction();
   }
@@ -82,16 +88,43 @@ export class InstruccionesComponent implements OnInit {
   /**
    * Desplaza el scroll para enfocar a la instrucciona actual ejecutandose
    * El calculo se realiza de la siguiente forma:
-   *      scroll (px a desplazar dentro del div) = n * h
+   *      scroll (px a desplazar dentro del div) = (n * h) - 150
    *      siendo:
    *          n = numero fila (objeto Linea) actual ejecutandose
    *          h = altura de cada fila definido en el css = ROW_HEIGHT (en px)
+   *          -150: mantener en una posicion central a la instruccion actual,
+   *                sin ese desplazamiento quedaria en la parte superior de la tabla
    */
   scrollToActualInstruction() {
     let container = document.getElementById("instrucciones-container");
     container.scrollTo({
-      top: this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT,
+      top: (this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT)-150,
       behavior: 'smooth', // animacion
     });
+  }
+  
+  cargar(files: FileList) {
+    this.fileToUpload = files.item(0);
+    let tipoTexto = /text.*/; // solo archivos de texto
+    if (this.fileToUpload.type.match(tipoTexto))
+      this.cargarPrograma();
+  }
+
+  /**
+   * Metodo ASINCRONO que lee el fichero subido por el usuario y lo convierte en un programa
+   * entendible por el interprete (en caso de que este bien formado). Tambien limpia la consola.
+   * Cuando finaliza la lectura (await), se notifica al padre de que la referencia de programa a cambiado 
+   * y se le pasa el nuevo valor. Gracias a esto, todos los componentes de la app usan la misma instancia
+   * de programa (aquellos que lo necesitan).
+   */
+  private async cargarPrograma() {
+    try {
+      let parser = new Parser(this.fileToUpload);
+      Consola.getInstance().clean();
+      this.programa = await parser.read();
+      this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
+    } catch (e) {
+      throw new Error("No se ha podido leer el archivo especificado.");
+    }
   }
 }

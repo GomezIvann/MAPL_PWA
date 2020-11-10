@@ -9,19 +9,14 @@
                                         supported by Chrome, Edge, Opera and Firefox */
 }
 .main-container {
-    margin: 20px;
+    margin: 30px;
+}
+#instrucciones, #consola, #incidencias {
+    float: left;
 }
 #instrucciones {
-    float: left;
-    margin-right: 32px;
+    margin-right: 30px;
 }
-#consola {
-    margin-left: 1000px;
-}
-#footer {
-    float: right;
-    margin-bottom: 20px;
-}
-button {
-    background-color: #ece7d6;
+#consola, #incidencias {
+    margin-top: 30px;
 }

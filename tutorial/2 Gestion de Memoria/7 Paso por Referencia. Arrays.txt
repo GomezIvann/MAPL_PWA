@@ -24,7 +24,7 @@ asigna:
     push 2
     mul
     add
-    push 79
+    push 80
     store
 
     'vectorParam[1] = 79;
@@ -36,7 +36,7 @@ asigna:
     push 2
     mul
     add
-    push 79
+    push 81
     store
 ret 0, 6, 2
 
@@ -61,4 +61,3 @@ main:
     load
     out
 ret 0, 6, 0
-

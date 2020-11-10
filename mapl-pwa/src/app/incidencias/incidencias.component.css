@@ -1,0 +1,23 @@
+.incidencias-container {
+    width: 769px;
+    margin-bottom: 30px;
+}
+textarea, label {
+    display: block;
+}
+textarea {
+    resize: none;
+    height: 175px;
+    width: 99%;
+    border: none;
+    outline: none;
+    cursor: default;
+}
+label {
+    font-size: 12px;
+    font-weight: 420;
+    color: dimgrey;
+    background-color: #ece7d6;
+    padding: 8px 15px;
+    border-bottom: 1.5px solid #bdb9ab;
+}

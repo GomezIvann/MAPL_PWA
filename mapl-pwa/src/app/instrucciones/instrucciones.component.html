@@ -1,35 +1,14 @@
-<div id="instrucciones-container" class="table-container mat-elevation-z8">
-    <table id="tbInstrucciones" mat-table [dataSource]="programa.texto">
-        <!-- Columna 1: Numero de la instruccion (si lo tiene) -->
-        <ng-container matColumnDef="numeroInstruccion">
-            <th mat-header-cell *matHeaderCellDef> No. </th>
-            <td mat-cell *matCellDef="let element"> {{ element.numeroInstruccion }} </td>
-        </ng-container>
-
-        <!-- Columna 2: Contenido de la linea -->
-        <ng-container matColumnDef="contenido">
-            <th mat-header-cell *matHeaderCellDef> Instrucción </th>
-            <td mat-cell *matCellDef="let element"> {{ element.contenido }} </td>
-        </ng-container>
-
-        <!-- Definicion de las columnas -->
-        <!-- Si el numero de instruccion de la Linea coincide con el de la instruccion actual ejecutandose (IP) se muestra de color amarillo -->
-        <!-- Ademas, si el cursor esta sobre una fila que contiene una instruccion, este cambia para indicarle al usuario que es pulsable -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-            [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero, 
-                         'selectedFinished': (programa.finalizado && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
-            [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
-            (dblclick)="seleccionarInstruccion($event, row)"></tr>
-    </table>
-</div>
-
 <div id="butonera">
+    <button id="upload" mat-raised-button (click)="fileInput.click()" matTooltip="Subir un nuevo programa"
+        [matTooltipShowDelay]="globals.toolTipDelay">
+        <mat-icon>cloud_upload</mat-icon> Subir
+    </button>
+    <input hidden onclick="this.value=''" (change)="cargar($event.target.files)" #fileInput type="file" accept=".txt">
     <button id="ejecutar" (click)="ejecutar()" [disabled]="disableBotones()" 
         matTooltip="Ejecutar programa hasta su finalización" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
-    <button id="recargar" (click)="recargarPrograma()" [disabled]="!programa.hasCodigo()" 
+    <button id="reiniciar" (click)="reiniciarPrograma()" [disabled]="!programa.hasCodigo()" 
         matTooltip="Retroceder al inicio del programa (la E/S se reutiliza)" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>refresh</mat-icon> Reiniciar
     </button>
@@ -41,4 +20,27 @@
         matTooltip="Ejecutar la instrucción actual" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>chevron_right</mat-icon> Ejecutar siguiente instrucción
     </button>
+</div>
+<div id="instrucciones-container" class="instrucciones-table-container mat-elevation-z8">
+    <label for="tbInstrucciones">Instrucciones</label>
+    <table id="tbInstrucciones" mat-table [dataSource]="programa.texto">
+        <!-- Columna 1: Numero de la instruccion (si lo tiene) -->
+        <ng-container matColumnDef="numeroInstruccion">
+            <td mat-cell *matCellDef="let element"> {{ element.numeroInstruccion }} </td>
+        </ng-container>
+
+        <!-- Columna 2: Contenido de la linea -->
+        <ng-container matColumnDef="contenido">
+            <td mat-cell *matCellDef="let element"> {{ element.contenido }} </td>
+        </ng-container>
+
+        <!-- Definicion de las columnas -->
+        <!-- Si el numero de instruccion de la Linea coincide con el de la instruccion actual ejecutandose (IP) se muestra de color amarillo -->
+        <!-- Ademas, si el cursor esta sobre una fila que contiene una instruccion, este cambia para indicarle al usuario que es pulsable -->
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+            [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero, 
+                         'selectedFinished': (programa.finalizado && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
+            [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
+            (dblclick)="seleccionarInstruccion($event, row)"></tr>
+    </table>
 </div>

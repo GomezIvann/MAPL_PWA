@@ -10,14 +10,14 @@ import { Instruccion } from './Instruccion';
  * Si no aparece explicitamente en el programa, se añade.
  */
 export class Halt extends Instruccion {
-    programa: Programa;
+    private _programa: Programa;
 
     constructor(numeroInstruccion: number, programa: Programa){
         super(numeroInstruccion);
-        this.programa = programa;
+        this._programa = programa;
     }
     execute(stack: Stack, memory: Memory): void {
-        this.programa.finDeEjecucion();
+        this._programa.finDeEjecucion();
     }
 }
 /**

@@ -25,7 +25,7 @@ inicia:
 	add
 	push 2
 	add
-	pushf 1000.5
+	pushf 2000.5
 	storef
 
 	' personaParam.sueldo = 1000.5;
@@ -35,7 +35,7 @@ inicia:
 	load
 	push 2
 	add
-	pushf 1000.5
+	pushf 3000.5
 	storef
 ret 0, 6, 2
 

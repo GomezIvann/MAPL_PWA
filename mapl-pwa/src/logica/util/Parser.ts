@@ -374,9 +374,9 @@ export class Parser {
                     throw new Error("El fichero no contiene ninguna instrucción ejecutable.");
                 /** 
                  * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
-                 * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion.
+                 * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
                  */
-                if (!this._finInit && this._funciones.length > 0) {
+                if (!this._finInit && this._funciones.length === 0) {
                     this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
                     this._finInit = true; // Fin de la funcion principal 'init'
                 }

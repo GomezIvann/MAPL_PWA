@@ -1,22 +1,47 @@
-#ejecutar, #recargar, #retrocederInstruccion {
-    margin-right: 15.5px;
+#ejecutar, #reiniciar, #retrocederInstruccion, #upload {
+    margin-right: 8px;
 }
 #butonera {
-    margin-top: 15px;
+    margin-bottom: 10px;
 }
 button {
     background-color: #ece7d6;
+    font-size: 12.75px;
 }
+.mat-icon {
+    transform: scale(0.73);
+    width: 19px;
+}
+
+
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
-.table-container {
+.instrucciones-table-container {
     height: 430px;
-    width: 645px;
+    width: 660px;
     max-width: 100%;
     overflow: auto;
 }
+label {
+    display: block;
+}
 table {
     width: 100%;
-    height: 100%;
+    /*  
+        Porcentaje restante del div que no usa el label. 
+        Sin este porcentaje la tabla, si su contenido ocupa menos del espacio disponible, no ocuparia todo 
+        y quedarian espacios en blanco.
+    */
+    height: 92.65%;
+}
+
+/* Label de la tabla */
+label {
+    font-size: 12px;
+    font-weight: 420;
+    color: dimgrey;
+    background-color: #ece7d6;
+    padding: 8px 15px;
+    border-bottom: 1.5px solid #bdb9ab;
 }
 
 /* Instruccion actual (IP) */
@@ -31,13 +56,9 @@ table {
     font-weight: 550;
 }
 
-/* Tamaño de letra de celdas */
-.mat-cell, .mat-header-cell {
-    font-size: 12px;
-}
-
-/* Filas sin borde */
+/* Tamaño de letra de celdas y filas sin borde */
 .mat-cell {
+    font-size: 12px;
     border-bottom-style: none;
 }
 
@@ -47,7 +68,7 @@ table {
     text-align: right;
     padding-right: 8px;
 }
-.mat-column-numeroInstruccion.mat-cell{
+.mat-column-numeroInstruccion.mat-cell {
     background-color: #f4f4ea;
 }
 .mat-column-contenido {
@@ -55,15 +76,7 @@ table {
     padding-left: 8px; /*margen celda*/
 }
 
-/* Altura de los encabezados y filas */
-.mat-header-row {
-    height: 30px;
-}
+/* Altura de las filas */
 .mat-row {
     height: 20px;
-}
-
-.mat-header-cell {
-    text-align: left;
-    background-color: #ece7d6;
 }

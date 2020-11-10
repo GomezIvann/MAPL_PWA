@@ -54,19 +54,26 @@ export class Stack extends AbstractDataSegmentZone {
     pushAsParameters(sizeParams: number): void {
         let cte3 = sizeParams;
         let pdt: PrimitiveDataType;
-        let i = 1;
+        let parametros: ParametroVariable[] = [];
 
         while (cte3 !== 0) {
             if (cte3 < 0)
                 throw new Error("Se esperaban en la cima de la pila "+sizeParams+" bytes."+ 
                                 "Sin embargo, ese valor no retira de la pila valores completos.");
 
-            pdt = this.pop(this.top().size);
-            this._sp -= pdt.size;
-            this.dataSegment.add(new ParametroVariable("Param"+i, pdt, pdt.size), this._sp); // lo convertimos a parametro
+            pdt = this.pop(this.top().size); // Sacamos el valor en la cima
+            parametros.push(new ParametroVariable("Param", pdt, pdt.size)); // lo convertimos a parametro
             cte3 -= pdt.size;
-            i++;
         }
+
+        // Insertamos de nuevo los parametros (OJO, hay que conservar el orden inicial)
+        let i = 1;
+        parametros.reverse().forEach(p => {
+            this._sp -= p.size;
+            p.name += i;
+            this.dataSegment.add(p, this._sp);
+            i++;
+        });
     }
 
     /**

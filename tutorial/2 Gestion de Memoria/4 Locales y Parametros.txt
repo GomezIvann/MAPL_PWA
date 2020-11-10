@@ -15,7 +15,7 @@ ejemplo:
     pushf 3.4
     Storef
 
-    ' par1 = 3.4;
+    ' Param1 = 3.4;
     pusha bp
     push 6
     add
