@@ -39,7 +39,8 @@
         <!-- Ademas, si el cursor esta sobre una fila que contiene una instruccion, este cambia para indicarle al usuario que es pulsable -->
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero, 
-                         'selectedFinished': (programa.finalizado && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
+                         'selectedFinished': (programa.finalizado && row.numeroInstruccion === programa.codigo[programa.ip].numero),
+                         'selectedWithErrors': (programa.hasErrors() && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
             [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
             (dblclick)="seleccionarInstruccion($event, row)"></tr>
     </table>

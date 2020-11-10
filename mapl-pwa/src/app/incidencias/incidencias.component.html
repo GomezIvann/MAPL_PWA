@@ -1,4 +1,33 @@
 <div class="incidencias-container mat-elevation-z8">
     <label for="incidencias">Incidencias</label>
-    <textarea id="incidencias" readonly>Aquí irían las incidencias del programa.</textarea>
+    <table id="incidencias" mat-table [dataSource]="dataSource">
+        <!-- Columna 1 -->
+        <ng-container matColumnDef="identificador">
+            <th mat-header-cell *matHeaderCellDef> Identificador </th>
+            <td mat-cell *matCellDef="let element"> <mat-icon>error</mat-icon> 
+                <span class="aligned-with-icon"> {{element.identificador}} </span>
+            </td>
+        </ng-container>
+
+        <!-- Columna 2 -->
+        <ng-container matColumnDef="tipo">
+            <th mat-header-cell *matHeaderCellDef> Tipo de Incidencia </th>
+            <td mat-cell *matCellDef="let element"> {{element.tipo}} </td>
+        </ng-container>
+
+        <!-- Columna 3 -->
+        <ng-container matColumnDef="linea">
+            <th mat-header-cell *matHeaderCellDef> Contenido </th>
+            <td mat-cell *matCellDef="let element"> {{element.getContenido()}} </td>
+        </ng-container>
+
+        <!-- Columna 4 -->
+        <ng-container matColumnDef="message">
+            <th mat-header-cell *matHeaderCellDef> Descripción </th>
+            <td mat-cell *matCellDef="let element"> {{element.message}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
 </div>

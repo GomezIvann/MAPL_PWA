@@ -1,18 +1,15 @@
 .incidencias-container {
     width: 769px;
-    margin-bottom: 30px;
+    height: 211px;
 }
-textarea, label {
+label {
     display: block;
 }
-textarea {
-    resize: none;
-    height: 175px;
-    width: 99%;
-    border: none;
-    outline: none;
-    cursor: default;
+table {
+    width: 100%;
 }
+
+/* Label de la tabla */
 label {
     font-size: 12px;
     font-weight: 420;
@@ -20,4 +17,30 @@ label {
     background-color: #ece7d6;
     padding: 8px 15px;
     border-bottom: 1.5px solid #bdb9ab;
+}
+
+/* Tamaño de letra de celdas y filas sin borde */
+.mat-cell {
+    font-size: 12px;
+}
+
+/* Altura de las filas */
+.mat-row, .mat-header-row {
+    height: 20px;
+}
+
+/* Encabezados de las columnas */
+.mat-header-row {
+    background-color: #f4f4ea;
+}
+
+.mat-icon {
+    transform: scale(0.7);
+    color: red;
+}
+
+.aligned-with-icon{
+    position: absolute;
+    margin-top: 6.5px;
+    margin-left: 1px;
 }

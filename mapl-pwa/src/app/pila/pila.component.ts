@@ -45,7 +45,7 @@ export class PilaComponent implements OnInit {
 
   /**
    * Genera la suscripcion a partir del observable.
-   * Modifica los datos de la tabla.
+   * Actualiza los datos de la tabla.
    */
   refresh() {
     DataSegment.getInstance().dataAsObservable().subscribe((res) => {

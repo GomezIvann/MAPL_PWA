@@ -1,0 +1,13 @@
+' Ejemplo
+
+pushb 12
+pushb 13
+push 4
+add
+' Al ejecutar el "add" anterior ha aparecido
+' un Error en el panel "Incidencias
+' de Ejecución" (panel inferior derecho).
+' Pulsar "Retroceder" y comprobar
+' que no había en la pila dos enteros sino
+' un entero y dos char.
+pop

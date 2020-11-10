@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
+import { Incidencia } from 'src/logica/compilador/Incidencia';
 import { Logger } from 'src/logica/util/Logger';
 
 @Component({
@@ -7,12 +9,20 @@ import { Logger } from 'src/logica/util/Logger';
   styleUrls: ['./incidencias.component.css']
 })
 export class IncidenciasComponent implements OnInit {
-  logger: Logger;
 
-  constructor() {}
+  // Define las columnas mostradas y establece su orden de aparicion
+  displayedColumns: string[];
+  dataSource: MatTableDataSource<Incidencia>;
+
+  constructor() {
+    this.displayedColumns = ["identificador", "tipo", "linea", "message"];
+    this.dataSource = new MatTableDataSource<Incidencia>();
+  }
 
   ngOnInit(): void {
-    this.logger = Logger.getInstance();
+    Logger.getInstance().dataAsObservable().subscribe((res) => {
+      this.dataSource.data = res;
+    });
   }
 
 }

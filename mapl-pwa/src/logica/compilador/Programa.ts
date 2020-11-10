@@ -2,11 +2,12 @@ import { Grabadora } from '../instrucciones/Grabadora';
 import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { CadenaInb } from '../util/CadenaInb';
 import { Stack } from '../segmentoDatos/Stack';
-import { Consola } from './Consola';
 import { Label } from './Label';
 import { Linea } from './Linea';
 import { Memory } from '../segmentoDatos/Memoria';
 import { DataSegment } from '../segmentoDatos/SegmentoDatos';
+import { Logger } from '../util/Logger';
+import { EjecucionIncidencia } from './Incidencia';
 
 /**
  * Representa el programa asociado al archivo cargado por el usuario.
@@ -54,7 +55,7 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecuccionCompleta(): void {
-        while (!this._finalizado && this.hasCodigo())
+        while (!this._finalizado && this.hasCodigo() && !this.hasErrors())
             this.ejecucion();
     }
 
@@ -65,7 +66,7 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecutarSiguienteInstruccion(): void {
-        if (!this._finalizado && this.hasCodigo())
+        if (!this._finalizado && this.hasCodigo() && !this.hasErrors())
             this.ejecucion();
     }
 
@@ -77,7 +78,7 @@ export class Programa {
      *      2. Apuntar a la siguiente instruccion.
      *      3. Guardar el estado actual del programa tras la ejecucion, que representa el estado previo a la ejecucion
      *         de la siguiente instruccion.
-     * Si salta un error en la ejecucion de la instruccion, indica la linea donde se produjo y lo lanza de nuevo.
+     * Si salta un error en la ejecucion de la instruccion, añade informacion util como la linea donde se produjo.
      */
     private ejecucion() {
         try {
@@ -90,6 +91,8 @@ export class Programa {
             this.codigo[this._ip].grabadoras.push(new Grabadora(this.getPila(), anteriorIp));
         }
         catch (err) {
+            let incidencia = new EjecucionIncidencia(err.message, this.texto[this.getLineaByInstruccionActual()]);
+            Logger.getInstance().addIncidencia(incidencia);
             throw new Error("Línea " + this.codigo[this._ip].numero + ". " + err.message);
         }
     }
@@ -154,7 +157,7 @@ export class Programa {
      * @param indice de la instruccion hasta la que ejecutar (no incluida).
      */
     ejecutarHasta(indice: number): void {
-        if (!this._finalizado) {
+        if (!this._finalizado && !this.hasErrors()) {
             this.ejecucion();
             while (this._ip !== indice && !this._finalizado)
                 this.ejecucion();
@@ -214,6 +217,13 @@ export class Programa {
      */
     hasCodigo(): boolean {
         return this.codigo.length !== 0;
+    }
+
+    /**
+     * @returns true si hay incidencias registradas por el logger
+     */
+    hasErrors(): boolean {
+        return Logger.getInstance().hasIncidencias();
     }
 
     /**

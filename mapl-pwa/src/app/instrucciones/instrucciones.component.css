@@ -45,15 +45,26 @@ label {
 }
 
 /* Instruccion actual (IP) */
+.selected, .selectedFinished, .selectedWithErrors {
+    font-weight: 550;
+}
 .selected {
     background-color: #FFFF99;
-    font-weight: 550;
 }
 
 /* Instruccion actual (IP) HALT y programa finalizado sin errores */
 .selectedFinished {
     background-color: lightgreen;
-    font-weight: 550;
+}
+
+/* Instruccion actual (IP) HALT y pero se han registrado errores */
+.selectedWithErrors > .mat-column-contenido {
+    background-color: white;
+    color: red;
+}
+
+.selectedWithErrors > .mat-column-numeroInstruccion {
+    color: red;
 }
 
 /* Tamaño de letra de celdas y filas sin borde */
@@ -68,7 +79,7 @@ label {
     text-align: right;
     padding-right: 8px;
 }
-.mat-column-numeroInstruccion.mat-cell {
+.mat-column-numeroInstruccion {
     background-color: #f4f4ea;
 }
 .mat-column-contenido {

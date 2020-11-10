@@ -15,6 +15,8 @@ import { Call, Enter, Ret } from '../instrucciones/Funciones';
 import { Instruccion } from '../instrucciones/Instruccion';
 import { PrimitiveSizes, VariableDataType } from './DataTypes';
 import { Funcion } from '../compilador/Funcion';
+import { ParserIncidencia } from '../compilador/Incidencia';
+import { Logger } from './Logger';
 
 /**
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
@@ -363,7 +365,8 @@ export class Parser {
                         }
                     }
                     catch (err) {
-                        // Añade la linea donde se produjo el error para que el usuario tenga mas informacion sobre este.
+                        let incidencia = new ParserIncidencia(err.message, "Línea "+(index + 1), linea);
+                        Logger.getInstance().addIncidencia(incidencia);
                         throw new Error("Línea " + (index + 1) + ". " + err.message);
                     }
                 }
@@ -393,13 +396,16 @@ export class Parser {
                 this.functionForCall();
                 resolve(this.programa);
             };
+
             reader.readAsText(this.file);
             Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
         });
     }
 
-
-    private functionForCall() {
+    /**
+     * Asocia a las instrucciones Call su correspondiente funcion, gracias a la etiqueta.
+     */
+    private functionForCall(): void {
         this.programa.codigo.forEach(i => {
             if (i instanceof Call) {
                 let iCall = i as Call;

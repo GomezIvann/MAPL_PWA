@@ -15,7 +15,7 @@ import { Globals } from '../globals';
 export class InstruccionesComponent implements OnInit {
   // Lo recibe del componente padre app.component
   private _programa: Programa;
-  fileToUpload: File;
+  fileToUpload: File; // Fichero .txt seleccionado por el usuario
 
   // Objeto encargado de notificar al componente padre el cambio de referencia de programa (de producirse).
   @Output () programResponse: EventEmitter<Programa> = new EventEmitter();
@@ -123,7 +123,8 @@ export class InstruccionesComponent implements OnInit {
       Consola.getInstance().clean();
       this.programa = await parser.read();
       this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
-    } catch (e) {
+    } 
+    catch (err) {
       throw new Error("No se ha podido leer el archivo especificado.");
     }
   }

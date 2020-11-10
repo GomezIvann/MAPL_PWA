@@ -1,6 +1,7 @@
 .console-container {
     width: 660px;
     margin-right: 30px;
+    margin-bottom: 30px;
 }
 textarea, label {
     display: block;
