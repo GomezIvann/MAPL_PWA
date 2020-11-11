@@ -3,6 +3,8 @@ import { CadenaInb } from '../util/CadenaInb';
 import { DataType } from '../util/DataTypes';
 import { Stack } from '../segmentoDatos/Stack';
 import { DataSegment } from '../segmentoDatos/SegmentoDatos';
+import { Logger } from '../util/Logger';
+import { Incidencia } from '../compilador/Incidencia';
 
 /**
  * Clase encargada de grabar el estado del programa antes de la ejecuccion de la instruccion a la que esta asociada.
@@ -11,6 +13,8 @@ import { DataSegment } from '../segmentoDatos/SegmentoDatos';
  *      2. El segmento de datos.
  *      3. El valor de la cadena comun a todas las instrucciones INB hasta el momento.
  *      4. La consola con las salidas registradas hasta el momento.
+ *      5. Las incidencias registradas hasta el momento.
+ *      6. La anterior instruccion ejecutada (para poder deshacer ejecuciones no lineales).
  * Con esta informacion seriamos capaces de deshacer lo realizado por una instruccion.
  */
 export class Grabadora {
@@ -18,6 +22,7 @@ export class Grabadora {
     data: [DataType, boolean][];
     cadenaInb: string[];
     consola: string[];
+    incidencias: Incidencia[];
     anteriorIp: number;
 
     constructor(pila: Stack, anteriorIp: number) {
@@ -28,6 +33,7 @@ export class Grabadora {
         this.data = DataSegment.getInstance().data;
         this.cadenaInb = CadenaInb.getInstance().value;
         this.consola = Consola.getInstance().outputs;
+        this.incidencias = Logger.getInstance().incidencias;
     }
     
     /**
@@ -43,6 +49,7 @@ export class Grabadora {
         DataSegment.getInstance().data = this.data.slice();
         CadenaInb.getInstance().value = this.cadenaInb.slice();
         Consola.getInstance().outputs = this.consola.slice();
+        Logger.getInstance().incidencias = this.incidencias.slice();
         return this.getPila();
     }
     private getPila(): Stack {

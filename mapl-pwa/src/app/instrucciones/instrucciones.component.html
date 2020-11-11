@@ -4,7 +4,7 @@
         <mat-icon>cloud_upload</mat-icon> Subir
     </button>
     <input hidden onclick="this.value=''" (change)="cargar($event.target.files)" #fileInput type="file" accept=".txt">
-    <button id="ejecutar" (click)="ejecutar()" [disabled]="disableBotones()" 
+    <button id="ejecutar" (click)="ejecutar()" [disabled]="disableBotones()"
         matTooltip="Ejecutar programa hasta su finalización" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
@@ -12,11 +12,11 @@
         matTooltip="Retroceder al inicio del programa (la E/S se reutiliza)" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>refresh</mat-icon> Reiniciar
     </button>
-    <button id="retrocederInstruccion" (click)="retrocederInstruccion()" [disabled]="disableBotones() || programa.ip == 0" 
+    <button id="retrocederInstruccion" (click)="retrocederInstruccion()" [disabled]="this.programa.finalizado || !this.programa.hasCodigo() || programa.ip == 0" 
         matTooltip="Retroceder a la instrucción anterior" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>chevron_left</mat-icon> Retroceder
     </button>
-    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" [disabled]="disableBotones()" 
+    <button id="ejecutarInstruccion" (click)="ejecutarInstruccion()" [disabled]="disableBotones()"
         matTooltip="Ejecutar la instrucción actual" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>chevron_right</mat-icon> Ejecutar siguiente instrucción
     </button>
@@ -40,7 +40,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
             [ngClass]="{ 'selected': row.numeroInstruccion === programa.codigo[programa.ip].numero, 
                          'selectedFinished': (programa.finalizado && row.numeroInstruccion === programa.codigo[programa.ip].numero),
-                         'selectedWithErrors': (programa.hasErrors() && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
+                         'selectedWithErrors': (programa.hasIncidencias() && row.numeroInstruccion === programa.codigo[programa.ip].numero) }"
             [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
             (dblclick)="seleccionarInstruccion($event, row)"></tr>
     </table>

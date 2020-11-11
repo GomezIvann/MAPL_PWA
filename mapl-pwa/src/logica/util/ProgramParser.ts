@@ -21,9 +21,9 @@ import { Logger } from './Logger';
 /**
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
  */
-export class Parser {
-    file: File;             // Fichero de entrada
-    programa: Programa;     // Programa obtenido de la lectura del fichero
+export class ProgramParser {
+    private _file: File;             // Fichero de entrada
+    private _programa: Programa;     // Programa obtenido de la lectura del fichero
 
     private _tiposUsuario: Struct[];   // Tipos de usuario declarados durante la lectura del programa  
     private _funciones: Funcion[];     // Funciones del programa
@@ -40,13 +40,19 @@ export class Parser {
     private _contadorInstrucciones: number;  // Contador para el numero de instruccion. Aumenta en una unidad siempre que se lea una.
 
     constructor(file: File) {
-        this.file = file;
-        this.programa = new Programa();
+        this._file = file;
+        this._programa = new Programa();
         this._tiposUsuario = [];
         this._funciones = [];
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
         this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
         this._contadorInstrucciones = 0;
+
+        /**
+         * Se han de limpiar aqui ya que el Parser es el primero en hacer uso de estas clases, antes que el programa.
+         */
+        Logger.getInstance().clean();       // Limpiamos el registro de incidencias
+        Consola.getInstance().clean();      // Limpiamos la consola
     }
 
     /**
@@ -57,7 +63,6 @@ export class Parser {
      */
     read(): Promise<Programa> {
         const reader = new FileReader();
-
         return new Promise((resolve, reject) => {
             reader.onerror = () => {
                 reader.abort();
@@ -272,26 +277,26 @@ export class Parser {
                                 break;
                             case Lenguaje.JMP:
                                 var label = linea.trim().split(/\s+/)[1];
-                                this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this.programa), linea);
+                                this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.JZ:
                                 var label = lineaSinComentarios.split(/\s+/)[1];
-                                this.addInstruccion(new Jz(this._contadorInstrucciones, label, this.programa), linea);
+                                this.addInstruccion(new Jz(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.JNZ:
                                 var label = lineaSinComentarios.split(/\s+/)[1];
-                                this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this.programa), linea);
+                                this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.CALL:
                                 var label = lineaSinComentarios.split(/\s+/)[1];
-                                this.addInstruccion(new Call(this._contadorInstrucciones, label, this.programa), linea);
+                                this.addInstruccion(new Call(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.RET:
                                 if (!this._finInit)
                                     throw new Error("La función 'init' no puede contener otra función.");
 
                                 let params = lineaSinComentarios.replace(primeraPalabra, "").trim().split(","); // params = [<cte1>, <cte2>, <cte3>]
-                                let ret = new Ret(this._contadorInstrucciones, this.programa, params);
+                                let ret = new Ret(this._contadorInstrucciones, this._programa, params);
                                 this.addInstruccion(ret, linea);
                                 this._finFuncion = true; // Fin de la funcion actual leida
                                 funcionActual.sizeParams = ret.cte3;
@@ -308,14 +313,14 @@ export class Parser {
                                 this.addInstruccion(new Nop(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.HALT:
-                                this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), linea);
+                                this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), linea);
                                 this._finInit = true; // Fin de la funcion principal 'init'
                                 break;
                             case Lenguaje.WHITE_LINE:
                                 // Al hacer trim() cualquier linea vacia (por muchos espacios que la formen) se convierte en ""
                                 // asi se conserva la linea vacia y se interpretan todas igual.
                                 // Los comentarios tambien entran por aquí, ya que se eliminan al comienzo de la iteracion (variable 'lineaSinComentarios')
-                                this.programa.texto.push(new Linea(linea));
+                                this._programa.texto.push(new Linea(linea));
                                 break;
                             case Lenguaje.VAR:
                             case Lenguaje.DATA:
@@ -327,8 +332,8 @@ export class Parser {
                                     let nombre = definicion.split(":")[0].trim();
                                     let tipo = definicion.split(":")[1].trim();
 
-                                    this.definirVariableGlobal(tipo, nombre).forEach(variable => this.programa.memoria.storeGlobalVariable(variable));
-                                    this.programa.texto.push(new Linea(linea));
+                                    this.definirVariableGlobal(tipo, nombre).forEach(variable => this._programa.memoria.storeGlobalVariable(variable));
+                                    this._programa.texto.push(new Linea(linea));
                                 }
                                 else
                                     throw new Error("La declaración de la variable global está mal formada.");
@@ -346,41 +351,43 @@ export class Parser {
                                 break;
                             default:
                                 if (this.isValidLabel(lineaSinComentarios)) { // Es una etiqueta (o de funcion o de salto)
-                                    this.programa.labels.push(new Label(lineaSinComentarios, this._contadorInstrucciones));
-                                    this.programa.texto.push(new Linea(linea));
+                                    this._programa.labels.push(new Label(lineaSinComentarios, this._contadorInstrucciones));
+                                    this._programa.texto.push(new Linea(linea));
 
                                     // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
                                     // funcion. Fin de funcion pasa a ser false ya que estamos dentro de una funcion.
                                     if (this._finInit) {
                                         // NO se puede declarar una funcion dentro de otra.
                                         if (!this._finFuncion)
-                                            throw new Error("No se puede declarar una función dentro de otra.\n'" + linea.trim() + "'.");
+                                            throw new Error("No se puede declarar una función dentro de otra.");
 
                                         this._finFuncion = false;
                                         funcionActual = new Funcion(lineaSinComentarios);
                                     }
                                 }
                                 else
-                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!\n'" + linea.trim() + "'.");
+                                    throw new Error("¡Ninguna intrucción o comentario legible para MAPL!.");
                         }
                     }
                     catch (err) {
-                        let incidencia = new ParserIncidencia(err.message, "Línea "+(index + 1), linea);
+                        let incidencia = new ParserIncidencia(err.message);
+                        incidencia.identificador = "Línea " + (index + 1);
+                        incidencia.linea = lineaSinComentarios;
                         Logger.getInstance().addIncidencia(incidencia);
-                        throw new Error("Línea " + (index + 1) + ". " + err.message);
                     }
                 }
 
-
                 // Si no se ha leido ninguna instruccion...
-                if (!this.programa.hasCodigo())
-                    throw new Error("El fichero no contiene ninguna instrucción ejecutable.");
+                if (!this._programa.hasCodigo()) {
+                    let incidencia = new ParserIncidencia("El fichero no contiene ninguna instrucción ejecutable.");
+                    Logger.getInstance().addIncidencia(incidencia);
+                }
                 /** 
                  * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
                  * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
                  */
                 if (!this._finInit && this._funciones.length === 0) {
-                    this.addInstruccion(new Halt(this._contadorInstrucciones, this.programa), Lenguaje.HALT.toLowerCase());
+                    this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), Lenguaje.HALT.toLowerCase());
                     this._finInit = true; // Fin de la funcion principal 'init'
                 }
                 /**
@@ -388,17 +395,25 @@ export class Parser {
                  * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
                  * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
                  */
-                if (!this._finInit || !this._finFuncion)
-                    throw new Error("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
+                if (!this._finInit || !this._finFuncion) {
+                    let incidencia = new ParserIncidencia("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
                         + " en otra función, respectivamente.");
+                    Logger.getInstance().addIncidencia(incidencia);
+                }
 
-                this.programa.labelForInstruction();
+                try {
+                    this._programa.labelForInstruction();
+                }
+                catch (err) {
+                    let incidencia = new ParserIncidencia(err.message);
+                    Logger.getInstance().addIncidencia(incidencia);
+                }
                 this.functionForCall();
-                resolve(this.programa);
+                resolve(this._programa);
             };
 
-            reader.readAsText(this.file);
-            Consola.getInstance().addNewFileOutput(this.file.name); // Mostramos el nombre del fichero por consola.
+            reader.readAsText(this._file);
+            Consola.getInstance().addNewFileOutput(this._file.name); // Mostramos el nombre del fichero por consola.
         });
     }
 
@@ -406,7 +421,7 @@ export class Parser {
      * Asocia a las instrucciones Call su correspondiente funcion, gracias a la etiqueta.
      */
     private functionForCall(): void {
-        this.programa.codigo.forEach(i => {
+        this._programa.codigo.forEach(i => {
             if (i instanceof Call) {
                 let iCall = i as Call;
                 let funcion = this._funciones.find(f => f.nombre === iCall.labelNombre);
@@ -429,7 +444,7 @@ export class Parser {
         let declaracion = definicion[0].replace(primeraPalabra, "").trim(); // Elimina la directiva: "#type Persona: {" ---> "Persona: {"
         let nombreStruct = declaracion.split(":")[0].trim();
         let struct = new Struct(nombreStruct);
-        this.programa.texto.push(new Linea(definicion[0]));
+        this._programa.texto.push(new Linea(definicion[0]));
 
         // Cuerpo del struct: { ... }
         let cuerpo = definicion.join("\n").split("{")[1].replace("}", "").split("\n");
@@ -446,7 +461,7 @@ export class Parser {
                 else
                     throw new Error("La estructura '" + nombreStruct + "' contiene una propiedad (declaración de variable) mal formada: '" + lineaCuerpo + "'.");
             }
-            this.programa.texto.push(new Linea(definicion[i + 1]));
+            this._programa.texto.push(new Linea(definicion[i + 1]));
         }
         return struct;
     }
@@ -526,10 +541,10 @@ export class Parser {
      */
     private addInstruccion(i: Instruccion, linea: string) {
         if (this._finInit && this._finFuncion)
-            throw new Error("No puede haber una instruccion que no forme parte de una función.\n'" + linea.trim() + "'.");
+            throw new Error("No puede haber una instruccion que no forme parte de una función.");
 
-        this.programa.codigo.push(i);
-        this.programa.texto.push(new Linea(linea, this._contadorInstrucciones));
+        this._programa.codigo.push(i);
+        this._programa.texto.push(new Linea(linea, this._contadorInstrucciones));
         this._contadorInstrucciones++;
     }
 
@@ -538,9 +553,9 @@ export class Parser {
      * @param linea 
      */
     private isValidLabel(linea: string): boolean {
-        let label = this.programa.getLabelByNombre(linea);
+        let label = this._programa.getLabelByNombre(linea);
         if (label !== undefined)
-            throw new Error("Etiqueta repetida: '" + linea + "'.");
+            throw new Error("Etiqueta repetida.");
 
         return linea.endsWith(":");
     }

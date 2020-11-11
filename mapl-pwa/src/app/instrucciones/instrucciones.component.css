@@ -59,12 +59,8 @@ label {
 
 /* Instruccion actual (IP) HALT y pero se han registrado errores */
 .selectedWithErrors > .mat-column-contenido {
-    background-color: white;
-    color: red;
-}
-
-.selectedWithErrors > .mat-column-numeroInstruccion {
-    color: red;
+    background-color: rgb(255, 51, 51);
+    color: white;
 }
 
 /* Tamaño de letra de celdas y filas sin borde */

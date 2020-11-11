@@ -1,9 +1,8 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Consola } from 'src/logica/compilador/Consola';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
-import { Parser } from 'src/logica/util/Parser';
+import { ProgramParser } from 'src/logica/util/ProgramParser';
 import { Globals } from '../globals';
 
 
@@ -49,7 +48,7 @@ export class InstruccionesComponent implements OnInit {
   }
 
   disableBotones(): boolean {
-    return this.programa.finalizado || !this.programa.hasCodigo();
+    return !this.programa.isEjecutable();
   }
 
   reiniciarPrograma() {
@@ -119,9 +118,15 @@ export class InstruccionesComponent implements OnInit {
    */
   private async cargarPrograma() {
     try {
-      let parser = new Parser(this.fileToUpload);
-      Consola.getInstance().clean();
-      this.programa = await parser.read();
+      let parser = new ProgramParser(this.fileToUpload);
+      let programa = await parser.read();
+
+      if (!programa.hasIncidencias()) {
+        this.programa = programa;
+      }
+      else
+        this.programa = new Programa(); // Vaciamos el programa anterior
+
       this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
     } 
     catch (err) {

@@ -73,17 +73,23 @@ export class Mulf extends InstruccionFloat {
  */
 export class Div extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getSize()).value;
-        let value2 = stack.pop(this.getSize()).value;
-        let dt = new IntegerDataType(Math.trunc(value2 / value1));
+        let divisor = stack.pop(this.getSize()).value;
+        let dividendo = stack.pop(this.getSize()).value;
+        if (divisor === 0)
+            throw new Error("División por 0.");
+
+        let dt = new IntegerDataType(Math.trunc(dividendo / divisor));
         stack.push(dt, this.getSize());
     }
 }
 export class Divf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getSize()).value;
-        let value2 = stack.pop(this.getSize()).value;
-        let dt = new FloatDataType(value2 / value1);
+        let divisor = stack.pop(this.getSize()).value;
+        let dividendo = stack.pop(this.getSize()).value;
+        if (divisor === 0)
+            throw new Error("División por 0.");
+
+        let dt = new FloatDataType(dividendo / divisor);
         stack.push(dt, this.getSize());
     }
 }
@@ -94,9 +100,12 @@ export class Divf extends InstruccionFloat {
  */
 export class Mod extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
-        let value1 = stack.pop(this.getSize()).value;
-        let value2 = stack.pop(this.getSize()).value;
-        let dt = new IntegerDataType(value2 % value1);
+        let divisor = stack.pop(this.getSize()).value;
+        let dividendo = stack.pop(this.getSize()).value;
+        if (divisor === 0)
+            throw new Error("División por 0.");
+            
+        let dt = new IntegerDataType(dividendo % divisor);
         stack.push(dt, this.getSize());
     }
 }

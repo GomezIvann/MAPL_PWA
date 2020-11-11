@@ -34,7 +34,7 @@ export class Logger {
         return Logger.instance;
     }
     get incidencias(): Incidencia[] {
-        return this._incidencias;
+        return this._incidencias.slice();
     }
     set incidencias(value: Incidencia[]) {
         this._incidencias = value;
@@ -60,7 +60,17 @@ export class Logger {
         this._data$.next(this._incidencias);
     }
 
+    /**
+     * @returns true si se han registrado incidencias
+     */
     hasIncidencias(): boolean {
         return this._incidencias.length > 0;
+    }
+
+    /**
+     * Limpia el registro de incidencias.
+     */
+    clean(): void {
+        this.incidencias = [];
     }
 }

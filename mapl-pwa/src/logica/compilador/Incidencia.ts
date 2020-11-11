@@ -18,8 +18,8 @@ export abstract class Incidencia {
 }
 
 export class ParserIncidencia extends Incidencia {
-    constructor(message: string, identificador: string, linea: string) {
-        super(message, identificador, linea);
+    constructor(message: string) {
+        super(message, "", "");
         this.tipo = TiposError.Parser;
     }
     getContenido(): string {

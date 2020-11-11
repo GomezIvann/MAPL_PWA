@@ -8,6 +8,7 @@ import { Memory } from '../segmentoDatos/Memoria';
 import { DataSegment } from '../segmentoDatos/SegmentoDatos';
 import { Logger } from '../util/Logger';
 import { EjecucionIncidencia } from './Incidencia';
+import { Consola } from './Consola';
 
 /**
  * Representa el programa asociado al archivo cargado por el usuario.
@@ -27,7 +28,7 @@ export class Programa {
      * Propiedades relativas a la ejecucion.
      */
     private _ip: number;             // IP (segmento de código). Dirección de la instrucción actual
-    private _finalizado: boolean;    // true -> ejecucion del programa ha finalizado
+    private _finalizado: boolean;    // true -> ejecucion del programa ha finalizado, solo es reiniciable
 
     constructor() {
         this.codigo = [];
@@ -35,10 +36,9 @@ export class Programa {
         this.texto = [];
         this.pila = new Stack();
         this.memoria = new Memory();
-        CadenaInb.getInstance().clean();    // Limpiamos la cadena comun de las instrucciones Inb.
-        DataSegment.getInstance().clean();  // Limpiamos el segmento de datos.
         this._ip = 0;
         this._finalizado = false;
+        this.prepararEntorno();
     }
     get ip(): number {
         return this._ip;
@@ -47,6 +47,13 @@ export class Programa {
         return this._finalizado;
     }
 
+    /**
+     * Prepara todo lo necesario para una correcta ejecucion del programa.
+     */
+    private prepararEntorno(): void {
+        CadenaInb.getInstance().clean();    // Limpiamos la cadena comun de las instrucciones Inb
+        DataSegment.getInstance().clean();  // Limpiamos el segmento de datos
+    }
 
     /** 
      * Ejecuta todo el codigo, desde la instruccion actual hasta el final del programa (halt).
@@ -55,7 +62,7 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecuccionCompleta(): void {
-        while (!this._finalizado && this.hasCodigo() && !this.hasErrors())
+        while (this.isEjecutable())
             this.ejecucion();
     }
 
@@ -66,8 +73,35 @@ export class Programa {
      *      - Haber codigo disponible para ejecutar.
      */
     ejecutarSiguienteInstruccion(): void {
-        if (!this._finalizado && this.hasCodigo() && !this.hasErrors())
+        if (this.isEjecutable())
             this.ejecucion();
+    }
+
+    /**
+     * Ejecutar el codigo del programa hasta la instruccion especificada como parametro.
+     * Si es una instruccion anterior a la actual o la actual, ejecuta el programa hasta el final, o hasta que salte 
+     * una incidencia.
+     * 
+     * @param indice de la instruccion hasta la que ejecutar (no incluida).
+     */
+    ejecutarHasta(indice: number): void {
+        if (this.isEjecutable()) {
+            this.ejecucion();
+            while (this._ip !== indice && this.isEjecutable())
+                this.ejecucion();
+        }
+    }
+
+    /**
+     * Codigo a ejecutar por la instruccion HALT para el fin del programa.
+     */
+    finDeEjecucion(): void {
+        if (!this.pila.isEmpty())
+            throw new Error("El programa finaliza dejando valores en la pila.");
+
+        this._finalizado = true;
+        this._ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
+        alert("Fin de la ejecución del programa.");
     }
 
     /**
@@ -80,7 +114,7 @@ export class Programa {
      *         de la siguiente instruccion.
      * Si salta un error en la ejecucion de la instruccion, añade informacion util como la linea donde se produjo.
      */
-    private ejecucion() {
+    private ejecucion(): void {
         try {
             if (this._ip === 0)
                 this.codigo[this._ip].grabadoras.push(new Grabadora(this.getPila(), this._ip));
@@ -93,8 +127,14 @@ export class Programa {
         catch (err) {
             let incidencia = new EjecucionIncidencia(err.message, this.texto[this.getLineaByInstruccionActual()]);
             Logger.getInstance().addIncidencia(incidencia);
-            throw new Error("Línea " + this.codigo[this._ip].numero + ". " + err.message);
         }
+    }
+
+    /**
+     * Un programa es ejecutable siempre y cuando no tenga incidencias y este finalizado.
+     */
+    isEjecutable(): boolean {
+        return !this.hasIncidencias() && !this._finalizado && this.hasCodigo();
     }
 
     /**
@@ -104,12 +144,22 @@ export class Programa {
      *      2. Obtener la ultima grabadora de la nueva instruccion.
      *      3. Desgrabar su ultima ejecucion (sin eliminarla).
      * 
-     * Se puede retroceder hasta la primera instruccion siempre y cuando el programa no haya finalizado.
+     * Se puede retroceder, como límite, hasta la primera instruccion siempre y cuando el programa no haya finalizado.
+     * En caso de que el programa tenga errores de ejecucion, no se retrocede a la anterior instruccion, si no que se deshace la
+     * grabacion actual (ultimo punto sin errores del programa), ya que es la actual instruccion la que provoca el error, y por tanto
+     * el momento clave a analizar por el usuario.
      */
     retrocederUnaInstruccion(): void {
-        if (this._ip > 0 && !this._finalizado) {
+        if (this.hasIncidencias()) {
+            let length = this.codigo[this._ip].grabadoras.length;
+            let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
+            this.pila = grabPrevia.desgrabar();
+        }
+        else if (this._ip > 0 && !this._finalizado) {
             let grabActual = this.codigo[this._ip].grabadoras.pop();
             this._ip = grabActual.anteriorIp;
+
+            // No se saca la grabacion del listado para que, si vuelve a retroceder, se pueda obtener la anteriorIp
             let length = this.codigo[this._ip].grabadoras.length;
             let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
             this.pila = grabPrevia.desgrabar();
@@ -121,12 +171,23 @@ export class Programa {
      * comprendidas entre la actual hasta la que se retrocede.
      * 
      * Si selecciona la misma instruccion que a la que apunta actualmente IP solo se retrocedera en caso de que sea un bucle 
-     * (la instruccion tiene varias grabadoras). Este caso se suele dar en instrucciones de salto. Ej. 3 Relaciones Logicas y Saltos).
+     * (la instruccion tiene varias grabadoras). Este caso se suele dar en instrucciones de salto. Ej. 3 Relaciones Logicas y Saltos.
+     * 
+     * Si selecciona la misma instruccion que a la que apunta actualmente IP solo se retrocedera en dos casos:
+     *      - Es un bucle y por tanto tiene varias grabaciones (se ejecuta varias veces en el programa). 
+     *        Este caso se suele dar en instrucciones de salto. Ej. 3 Relaciones Logicas y Saltos.
+     *      - La instruccion actual es la causante de una incidencia, y por tanto, el momento previo al error es la ultima
+     *        grabacion de esta.
      * 
      * @param indice
      */
     retrocederHasta(indice: number): void {
-        if (!this._finalizado && this.codigo[indice].hasGrabadoras()) {
+        if (this._ip === indice && this.codigo[indice].hasGrabadoras() && this.hasIncidencias()) {
+            let length = this.codigo[this._ip].grabadoras.length;
+            let grabPrevia = this.codigo[this._ip].grabadoras[length - 1];
+            this.pila = grabPrevia.desgrabar();
+        }
+        else if (!this._finalizado && this.codigo[indice].hasGrabadoras()) {
             if (this._ip === indice) {
                 if (this.codigo[indice].grabadoras.length > 1) {
                     let grabActual = this.codigo[indice].grabadoras.pop();
@@ -148,32 +209,6 @@ export class Programa {
                 this.pila = grabPrevia.desgrabar();
             }
         }
-    }
-
-    /**
-     * Ejecutar el codigo del programa hasta la instruccion especificada por parametro.
-     * Si es una instruccion anterior a la actual, ejecuta el programa hasta el final.
-     * 
-     * @param indice de la instruccion hasta la que ejecutar (no incluida).
-     */
-    ejecutarHasta(indice: number): void {
-        if (!this._finalizado && !this.hasErrors()) {
-            this.ejecucion();
-            while (this._ip !== indice && !this._finalizado)
-                this.ejecucion();
-        }
-    }
-
-    /**
-     * Codigo a ejecutar por la instruccion HALT para el fin del programa.
-     */
-    finDeEjecucion(): void {
-        if (!this.pila.isEmpty())
-            throw new Error("El programa finaliza dejando valores en la pila.");
-
-        this._finalizado = true;
-        this._ip--; // -1 para que cuando finalice el programa ip quede apuntando a halt
-        alert("Fin de la ejecución del programa.");
     }
 
     /**
@@ -222,7 +257,7 @@ export class Programa {
     /**
      * @returns true si hay incidencias registradas por el logger
      */
-    hasErrors(): boolean {
+    hasIncidencias(): boolean {
         return Logger.getInstance().hasIncidencias();
     }
 
