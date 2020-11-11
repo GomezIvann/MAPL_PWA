@@ -7,8 +7,7 @@ import { Linea } from './Linea';
 import { Memory } from '../segmentoDatos/Memoria';
 import { DataSegment } from '../segmentoDatos/SegmentoDatos';
 import { Logger } from '../util/Logger';
-import { EjecucionIncidencia } from './Incidencia';
-import { Consola } from './Consola';
+import { EjecucionIncidencia, ParserIncidencia } from './Incidencia';
 
 /**
  * Representa el programa asociado al archivo cargado por el usuario.
@@ -268,13 +267,19 @@ export class Programa {
      * llegados a este punto, la etiqueta deberia de existir.
      */
     labelForInstruction(): void {
-        this.codigo.forEach(i => {
+        this.codigo.some(i => {
             if (i instanceof InstruccionLabel) {
                 let iLabel = i as InstruccionLabel;
                 let label = this.labels.find(label => label.nombre === iLabel.labelNombre);
 
-                if (label === undefined)
-                    throw new Error("La etiqueta '" + iLabel.labelNombre + "' no se ha encontrado en el fichero.");
+                if (label === undefined) {
+                    let incidencia = new ParserIncidencia("La etiqueta '" + iLabel.labelNombre + "' no se ha encontrado en el fichero.");
+                    let indexLinea = this.texto.findIndex(linea => linea.numeroInstruccion === i.numero);
+                    incidencia.identificador = "Línea " + (indexLinea + 1);
+                    incidencia.linea = this.texto[indexLinea].contenido;
+                    Logger.getInstance().addIncidencia(incidencia);
+                    return true;
+                }
 
                 iLabel.label = label;
             }

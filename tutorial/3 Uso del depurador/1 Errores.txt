@@ -1,24 +1,18 @@
-' Ejemplo
+' En esta carpeta se mostrar algunos de los posibles errores
+' que se pueden dar en la ejecución de un programa,
+' y como utilizar el depurador para entenderlos. 
+' Ejemplo 1
 
 pushb 12
 pushb 13
 push 4
 add
 ' Al ejecutar el "add" anterior ha aparecido
-' un Error en el panel "Incidencias
-' de Ejecución" (panel inferior derecho).
+' un Error en el panel "Incidencias" (panel inferior derecho).
 ' Pulsar "Retroceder" para comprobar
 ' que no había en la pila dos enteros sino
 ' un entero y dos char.
 pop
 
 
-
-
-
-
-
-
-
-
-
+halt

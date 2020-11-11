@@ -1,4 +1,4 @@
-import { VariableDataType } from '../util/DataTypes';
+import { PrimitiveDataType, VariableDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 export class Memory extends AbstractDataSegmentZone {
@@ -16,7 +16,7 @@ export class Memory extends AbstractDataSegmentZone {
      */
     store(address: number, variable: VariableDataType): void {
         if (address > this.dataSegment.SIZE)
-            throw new Error("Acceso a una zona de memoria no existente (de " + address + " a " + (address + variable.size - 1) + ").");
+            throw new Error("Acceso a una zona de memoria no existente (dir " + address + " a " + (address + variable.size - 1) + ").");
         else if (!this.isInsertable(address, variable.size))
             throw new Error("Se ha realizado una escritura parcial en memoria libre (dir " + address + ").");
 
@@ -40,16 +40,21 @@ export class Memory extends AbstractDataSegmentZone {
      *      - Si en el rango [address, address + tamaño de la variable] hay algun valor del tipo [undefined, true], es que esta ocupada
      *        parcialemente, debe retornar false.
      * Sin embargo, si la direccion coincide con la posicion inicial de una variable (ej. [new IntegerDataType(10), true]) 
-     * ya almacenada, el nuevo dato debe sobreescribir al antiguo, sin cambiarle el nombre. 
-     * En ese caso debe devolver true.
+     * ya almacenada, el nuevo dato debe sobreescribir al antiguo, sin cambiarle el nombre. En ese caso debe devolver true.
      * @param address 
      * @param size 
      */
     private isInsertable(address: number, size: number): boolean {
-        // Comienzo de variable ya insertada en memoria > se puede escribir
-        if (this.dataSegment.get(address) !== undefined && this.dataSegment.get(address)[1]
-            && this.dataSegment.get(address)[0] !== undefined)
+        /**
+         * La direccion coincide con un DataType (es decir el comienzo de lo que ocupa en memoria este).
+         *      - Si es una variable se sobreescribe, luego retornamos true
+         *      - Si es un PrimitiveDataType estamos acciendo a valores de la pila, luego es un error.
+         */
+        if (this.dataSegment.get(address) !== undefined && this.dataSegment.get(address)[1] && this.dataSegment.get(address)[0] !== undefined) {
+            if (this.dataSegment.get(address)[0] instanceof PrimitiveDataType)
+                throw new Error("Posible escritura ilegal sobre valor en la pila (dir " + address + " a " + (address + size - 1) + ").");
             return true;
+        }
 
         for (let i = 0; i < size; i++) {
             if (this.dataSegment.get(address + i) === undefined)

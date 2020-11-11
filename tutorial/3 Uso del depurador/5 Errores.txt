@@ -1,0 +1,17 @@
+' Ejemplo 5
+
+push 34
+push 76
+pop
+' ERROR: se han dejado valores sin usar 
+' en la pila al final de la ejecución.
+nop
+halt
+
+
+
+
+
+
+
+

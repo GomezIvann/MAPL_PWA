@@ -1,7 +1,7 @@
 # MAPL_PWA
 Reescribiendo la máquina didáctica MAPL como una PWA.
 
-## Juego de instrucciones disponible
+## Juego de instrucciones
 1. Manipulación de la pila:
    - pushb cte, pushi cte, pushf cte
    - loadb loadi loadf
@@ -40,7 +40,8 @@ Reescribiendo la máquina didáctica MAPL como una PWA.
    - jnz label (jump if no zero)
 8. Funciones
    - call label
-   - ret void
+   - ret cte1, cte2, cte3
+   - enter cte
 9. Otras:
    - halt
    - nop

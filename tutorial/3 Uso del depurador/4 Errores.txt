@@ -1,0 +1,17 @@
+' Ejemplo 4
+
+push 4
+push 5
+pusha 1020
+push 0
+store
+' ERROR: acceso a memoria que no
+' se corresponde con una variable.
+' El programa trata de escribir sobre un valor
+' de la pila, provocando un error
+nop
+
+
+
+
+

@@ -374,44 +374,44 @@ export class ProgramParser {
                         incidencia.identificador = "Línea " + (index + 1);
                         incidencia.linea = lineaSinComentarios;
                         Logger.getInstance().addIncidencia(incidencia);
+                        break; // Si hay una incidencia dejamos de leer el fichero
                     }
                 }
-
-                // Si no se ha leido ninguna instruccion...
-                if (!this._programa.hasCodigo()) {
-                    let incidencia = new ParserIncidencia("El fichero no contiene ninguna instrucción ejecutable.");
-                    Logger.getInstance().addIncidencia(incidencia);
-                }
-                /** 
-                 * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
-                 * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
-                 */
-                if (!this._finInit && this._funciones.length === 0) {
-                    this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), Lenguaje.HALT.toLowerCase());
-                    this._finInit = true; // Fin de la funcion principal 'init'
-                }
+                
                 /**
-                 * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede 
-                 * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
-                 * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
+                 * Si no hay errores lexicos en las instrucciones pasamos a realizar mas comprobaciones 
+                 * y finalizar la elaboracion del programa.
                  */
-                if (!this._finInit || !this._finFuncion) {
-                    let incidencia = new ParserIncidencia("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
-                        + " en otra función, respectivamente.");
-                    Logger.getInstance().addIncidencia(incidencia);
-                }
+                if (!this._programa.hasIncidencias()) {
+                    // Si no se ha leido ninguna instruccion...
+                    if (!this._programa.hasCodigo()) {
+                        let incidencia = new ParserIncidencia("El fichero no contiene ninguna instrucción ejecutable.");
+                        Logger.getInstance().addIncidencia(incidencia);
+                    }
+                    /** 
+                     * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
+                     * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
+                     */
+                    if (!this._finInit && this._funciones.length === 0) {
+                        this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), Lenguaje.HALT.toLowerCase());
+                        this._finInit = true; // Fin de la funcion principal 'init'
+                    }
+                    /**
+                     * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede 
+                     * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
+                     * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
+                     */
+                    if (!this._finInit || !this._finFuncion) {
+                        let incidencia = new ParserIncidencia("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
+                            + " en otra función, respectivamente.");
+                        Logger.getInstance().addIncidencia(incidencia);
+                    }
 
-                try {
                     this._programa.labelForInstruction();
+                    this.functionForCall();
                 }
-                catch (err) {
-                    let incidencia = new ParserIncidencia(err.message);
-                    Logger.getInstance().addIncidencia(incidencia);
-                }
-                this.functionForCall();
                 resolve(this._programa);
             };
-
             reader.readAsText(this._file);
             Consola.getInstance().addNewFileOutput(this._file.name); // Mostramos el nombre del fichero por consola.
         });

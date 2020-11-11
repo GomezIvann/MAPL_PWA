@@ -17,8 +17,8 @@ export class InstruccionesComponent implements OnInit {
   fileToUpload: File; // Fichero .txt seleccionado por el usuario
 
   // Objeto encargado de notificar al componente padre el cambio de referencia de programa (de producirse).
-  @Output () programResponse: EventEmitter<Programa> = new EventEmitter();
-  
+  @Output() programResponse: EventEmitter<Programa>;
+
   // Define las columnas mostradas y establece su orden de aparicion
   displayedColumns: string[];
 
@@ -26,10 +26,11 @@ export class InstruccionesComponent implements OnInit {
   private readonly ROW_HEIGHT: number = 20;
 
   constructor(public globals: Globals) {
+    this.programResponse = new EventEmitter();
     this.displayedColumns = ["numeroInstruccion", "contenido"];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   /**
    * Sobreescribimos el set y get para que cada vez que cambie el programa (idem el usuario carga uno nuevo).
@@ -97,11 +98,11 @@ export class InstruccionesComponent implements OnInit {
   scrollToActualInstruction() {
     let container = document.getElementById("instrucciones-container");
     container.scrollTo({
-      top: (this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT)-150,
+      top: (this.programa.getLineaByInstruccionActual() * this.ROW_HEIGHT) - 150,
       behavior: 'smooth', // animacion
     });
   }
-  
+
   cargar(files: FileList) {
     this.fileToUpload = files.item(0);
     let tipoTexto = /text.*/; // solo archivos de texto
@@ -117,20 +118,14 @@ export class InstruccionesComponent implements OnInit {
    * de programa (aquellos que lo necesitan).
    */
   private async cargarPrograma() {
-    try {
-      let parser = new ProgramParser(this.fileToUpload);
-      let programa = await parser.read();
+    let parser = new ProgramParser(this.fileToUpload);
+    let programa = await parser.read();
 
-      if (!programa.hasIncidencias()) {
-        this.programa = programa;
-      }
-      else
-        this.programa = new Programa(); // Vaciamos el programa anterior
+    if (!programa.hasIncidencias())
+      this.programa = programa;
+    else
+      this.programa = new Programa(); // Eliminamos el programa anterior
 
-      this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
-    } 
-    catch (err) {
-      throw new Error("No se ha podido leer el archivo especificado.");
-    }
+    this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
   }
 }
