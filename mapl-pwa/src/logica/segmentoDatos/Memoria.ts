@@ -73,7 +73,7 @@ export class Memory extends AbstractDataSegmentZone {
      */
     storeGlobalVariable(variable: VariableDataType): void {
         if (this.searchVariable(variable) !== undefined)
-            throw new Error("Existen dos variables definidas con el mismo identificador: '"+variable.name+"'.");
+            throw new Error("Existen dos variables definidas con el mismo identificador: '" + variable.name + "'.");
 
         this.store(this._globalVariablesAddress, variable);
         this._globalVariablesAddress += variable.size;
@@ -82,7 +82,7 @@ export class Memory extends AbstractDataSegmentZone {
      * Busca una variable por el nombre para ver si se encuentra repetida.
      * @param variable
      */
-    private searchVariable(variable: VariableDataType)  {
+    private searchVariable(variable: VariableDataType) {
         return this.dataSegment.data.find(tuple => {
             if (tuple === undefined || tuple[0] === undefined || !(tuple[0] instanceof VariableDataType))
                 return false;
@@ -101,18 +101,21 @@ export class Memory extends AbstractDataSegmentZone {
      * @returns DataType que expulsa
      */
     load(instructionSize: number, address: number): VariableDataType {
-        let value = this.dataSegment.get(address);
+        let tuple = this.dataSegment.get(address);
 
-        if (value === undefined) // Posicion vacia
+        if (tuple === undefined) // Posicion vacia
             throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir " + address
                 + "). Se introducirá basura en la pila.");
-        else if (value[0] === undefined && value[1]) // Lectura parcial (no es la direccion de comienzo de la variable)
+        else if (tuple[0] === undefined && tuple[1]) // Lectura parcial (no es la direccion de comienzo de la variable)
             throw new Error("Se ha realizado una lectura parcial en memoria libre (dir " + address + ").");
-        else if (!(value[0] instanceof VariableDataType)) // No se lee una variable (generalmente al intentar leer una direccion ocupada por un valor de la pila)
+        else if (!(tuple[0] instanceof VariableDataType)) // No se lee una variable (generalmente al intentar leer una direccion ocupada por un valor de la pila)
             throw new Error("Se lee una zona de memoria que no contiene una variable (dir " + address + ").");
+        else if (tuple[0].value === undefined) // Se lee una variable definida en memoria, pero que no has sido inicializada
+            throw new Error("Se lee la variable '" + tuple[0].name + "' la cual no ha sido inicializada. "
+                + "Se introducirá basura en la pila.");
 
         /**
-         * Llegados a este punto, la posicion a la que accedemos contiene una variable. 
+         * Llegados a este punto, la posicion a la que accedemos contiene una variable con un valor definido. 
          * Pasamos a realizar la comprobacion de tipos.
          */
         let variable = this.dataSegment.get(address)[0] as VariableDataType;

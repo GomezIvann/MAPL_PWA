@@ -19,7 +19,7 @@ inicia:
 	pushf 1000.5
 	storef
 
-	' personaLocal.sueldo = 1000.5;
+	' personaLocal.sueldo = 2000.5;
 	push bp
 	push -6
 	add
@@ -28,7 +28,7 @@ inicia:
 	pushf 2000.5
 	storef
 
-	' personaParam.sueldo = 1000.5;
+	' personaParam.sueldo = 3000.5;
 	push bp
 	push 4
 	add

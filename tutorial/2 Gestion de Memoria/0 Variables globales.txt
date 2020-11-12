@@ -20,7 +20,7 @@ main:
     pushf 10.5
     storef
 
-    ' i = 600
+    ' entero = 600
     pusha 5
     push 600
     store

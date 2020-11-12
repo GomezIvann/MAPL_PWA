@@ -16,7 +16,7 @@ asigna:
     push 79
     store
 
-    'vectorLocal[1] = 79;
+    'vectorLocal[1] = 80;
     push bp
     push -6
     add
@@ -27,7 +27,7 @@ asigna:
     push 80
     store
 
-    'vectorParam[1] = 79;
+    'vectorParam[1] = 81;
     push bp
     push 4
     add

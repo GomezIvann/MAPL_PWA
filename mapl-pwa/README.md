@@ -1,16 +1,15 @@
-# MaplPwa
+# Mapl-Pwa
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
+Este proyecto ha sido generado con [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
 
-## Development server
+## Servidor de desarrollo
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Ejecuta `ng serve` para un servidor de desarrollo. Se desplegará en la siguiente dirección: `http://localhost:4200/`. La aplicación se actualiza automáticamente cada vez que cambie un fichero fuente de esta.
 
 ## Build
 
-Run `ng build --prod` to build the project. The build artifacts will be stored in the `dist/` directory. The `--prod` flag is for a production build.
+Ejecuta `ng build --prod` para construir el proyecto. Este estará almacenado en el directorio `dist/`. Si además añades el flag `--prod` la versión construida será de producción, con la que podrás ver todas las ventajas de una PWA.
 
-Then, run `http-server -p 8080 -c-1 dist/mapl-pwa` to be able to display the web app in a server, so you can download it, as a
-common pwa. This just works with `http://127.0.0.1:8080` url.
+Después, ejecuta `http-server -p 8080 -c-1 dist/mapl-pwa` para poder ver la aplicación web desplegada en un servidor, pudiendo así descargarla o ver como su funcionamiento en un entorno real, como estaba pensada desde un principio. Se te proporcionarán dos URLs, solo `http://127.0.0.1:8080` es válido.
 
-If you don't have http-server, install the node package with this command: `npm install http-server -g`.
+Si no tienes este comando, puedes descargarlo usando el instalador de paquetes de Node con el comando `npm install http-server -g`.
