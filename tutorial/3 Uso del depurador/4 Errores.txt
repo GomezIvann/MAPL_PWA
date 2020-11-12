@@ -10,8 +10,3 @@ store
 ' El programa trata de escribir sobre un valor
 ' de la pila, provocando un error
 nop
-
-
-
-
-

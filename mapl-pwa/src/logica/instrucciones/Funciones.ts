@@ -18,7 +18,7 @@ export class Call extends InstruccionLabel {
         let lastBP: IntegerDataType  = new IntegerDataType(+stack.getBP());
 
         // Convertimos la cima de la pila en parametros de la funcion, de acuerdo a <cte3> de RET
-        stack.pushAsParameters(this.funcion.sizeParams);
+        stack.allocateParameters(this.funcion.sizeParams);
 
          // Creamos el Stack Frame y lo insertamos en la pila
         let sf: StackFrame = new StackFrame(returnDir, lastBP);
@@ -40,7 +40,7 @@ export class Enter extends Instruccion {
     }
 
     execute(stack: Stack, memory: Memory): void {
-        stack.allocateStackZone(this.cte);
+        stack.allocateLocalVariables(this.cte);
     }
 
     setConstante(cte: number): void {
@@ -58,9 +58,9 @@ export class Enter extends Instruccion {
 export class Ret extends Instruccion {
     private _programa: Programa;
 
-    cte1: number; // tamaño del valor de retorno (0 si no hay)
-    cte2: number; // tamaño de las variables locales de la función
-    cte3: number; // tamaño de los parámetros de la función
+    cte1: number; // size del valor de retorno (0 si no hay)
+    cte2: number; // size de las variables locales de la funcion
+    cte3: number; // size de los parametros de la funcion
 
     constructor(numeroInstruccion: number, programa: Programa, ctes: string[]){
 		super(numeroInstruccion);
@@ -102,9 +102,9 @@ export class Ret extends Instruccion {
         if (this.cte1 > 0) // Saca de la pila el valor de retorno de la funcion, si lo tiene
             returnedValue = stack.pop(this.cte1);
 
-        stack.eraseStackZone(this.cte2); // Elimina la zona de variables locales
+        stack.eraseLocalVariables(this.cte2); // Elimina la zona de variables locales
         this._programa.jumpTo(stack.popStackFrame(PrimitiveSizes.INTEGER)); // Saca el Stack Frame y coloca IP en la instruccion posterior al CALL
-        stack.eraseStackZone(this.cte3); // Elimina la zona de parametros
+        stack.eraseParameters(this.cte3); // Elimina la zona de parametros
 
         if (returnedValue !== undefined) // Si lo tenia, lo vuelve a insertar en la pila al final de la funcion
             stack.push(returnedValue, returnedValue.size);

@@ -52,8 +52,16 @@ export class Grabadora {
         Logger.getInstance().incidencias = this.incidencias.slice();
         return this.getPila();
     }
+
+    /**
+     * La pila es un caso especial, ya que se trata de un objeto mas complejo (contiene un array).
+     * Object.assign copia propiedad por propiedad y devuelve un objeto identico al original, sin ser una referencia a este.
+     * Dado que dentro de la pila hay un array, este si que lo pasa como referencia, al no ser un tipo primitivo y no saber copiarlo, 
+     * por lo que tendremos que realizar la copia manualmente.
+     */
     private getPila(): Stack {
-        let copy = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);
+        let copy: Stack = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);
+        copy.allocates = this.pila.allocates.slice();
         return copy;
     }
 }

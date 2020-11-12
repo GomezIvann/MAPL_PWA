@@ -1,4 +1,4 @@
-import { IntegerDataType, ParametroVariable, PrimitiveDataType } from '../util/DataTypes';
+import { IntegerDataType, ParametroVariable, PrimitiveDataType, VariableDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 /**
@@ -14,11 +14,17 @@ export class Stack extends AbstractDataSegmentZone {
      * BP (segmento de datos). Direccion del stack frame (direccion de retorno y antiguo BP) de la funcion actual.
      */
     private _bp: number;
+    /**
+     * Listado que contiene la ultima direccion de cada una de las zonas de variables locales de cada funcion
+     * del programa.
+     */
+    allocates: number[];
 
     constructor() {
         super();
         this._sp = this.dataSegment.SIZE;
         this._bp = this.dataSegment.SIZE;
+        this.allocates = [];
     }
 
     /**
@@ -45,38 +51,6 @@ export class Stack extends AbstractDataSegmentZone {
     }
 
     /**
-     * Usado por CALL para convertir los valores almacenados en la cima de la pila en parametros para la funcion, 
-     * de acuerdo al valor de cte3.
-     * 
-     * @param pdt PrimitiveDataType
-     * @param instructionSize 
-     */
-    pushAsParameters(sizeParams: number): void {
-        let cte3 = sizeParams;
-        let pdt: PrimitiveDataType;
-        let parametros: ParametroVariable[] = [];
-
-        while (cte3 !== 0) {
-            if (cte3 < 0)
-                throw new Error("Se esperaban en la cima de la pila "+sizeParams+" bytes."+ 
-                                "Sin embargo, ese valor no retira de la pila valores completos.");
-
-            pdt = this.pop(this.top().size); // Sacamos el valor en la cima
-            parametros.push(new ParametroVariable("Param", pdt, pdt.size)); // lo convertimos a parametro
-            cte3 -= pdt.size;
-        }
-
-        // Insertamos de nuevo los parametros (OJO, hay que conservar el orden inicial)
-        let i = 1;
-        parametros.reverse().forEach(p => {
-            this._sp -= p.size;
-            p.name += i;
-            this.dataSegment.add(p, this._sp);
-            i++;
-        });
-    }
-
-    /**
      * El puntero a la cima de la pila (SP) decrementa en cada extraccion 
      * de acuerdo al tamaño del dato extraido.
      * 
@@ -98,12 +72,19 @@ export class Stack extends AbstractDataSegmentZone {
 
     /**
      * Devuelve el dato ubicado la cima de la pila, sin sacarlo de esta.
+     * Lanza error si:
+     *      - La pila esta vacia.
+     *      - La cima de la pila esta vacia (variables locales sin inicializar).
+     *      - En la cima de la pila hay una variable (variables locales 
+     *        o variable almacenada en algun punto de cruce pila-memoria).
      * 
      * @returns PrimitiveDataType
      */
     top(): PrimitiveDataType {
         if (this.isEmpty())
             throw new Error("No había suficientes bytes en la pila para ejecutar la instrucción.");
+        else if (this.dataSegment.get(this._sp) === undefined || this.dataSegment.get(this._sp)[0] instanceof VariableDataType)
+            throw new Error("Los bytes retirados no son del tipo esperado.");
 
         return this.dataSegment.get(this._sp)[0] as PrimitiveDataType;
     }
@@ -161,15 +142,58 @@ export class Stack extends AbstractDataSegmentZone {
      * Reserva una zona de la pila para las variables locales de una funcion (ENTER <cte>)
      * @param cte sumatorio del tamaño de las variables locales de la funcion
      */
-    allocateStackZone(cte: number) {
+    allocateLocalVariables(cte: number): void {
         this._sp -= cte;
+        this.allocates.push(this._sp);
     }
 
     /**
      * Elimina la zona de la pila reservada por la funcion para las variables locales (ENTER <cte> === RET <cte1>, ..., ...)
      * @param cte sumatorio del tamaño de las variables locales de la funcion
      */
-    eraseStackZone(cte: number) {
+    eraseLocalVariables(cte: number): void {
+        this.dataSegment.deleteDataZone(this._sp, cte);
+        this._sp += cte;
+        this.allocates.pop();
+    }
+
+    /**
+     * Usado por CALL para convertir los valores almacenados en la cima de la pila en parametros para la funcion, 
+     * de acuerdo al valor de cte3.
+     * 
+     * @param pdt PrimitiveDataType
+     * @param instructionSize 
+     */
+    allocateParameters(sizeParams: number): void {
+        let cte3 = sizeParams;
+        let pdt: PrimitiveDataType;
+        let parametros: ParametroVariable[] = [];
+
+        while (cte3 !== 0) {
+            if (cte3 < 0)
+                throw new Error("Se esperaban en la cima de la pila " + sizeParams + " bytes." +
+                    "Sin embargo, ese valor no retira de la pila valores completos.");
+
+            pdt = this.pop(this.top().size); // Sacamos el valor en la cima
+            parametros.push(new ParametroVariable("Param", pdt, pdt.size)); // lo convertimos a parametro
+            cte3 -= pdt.size;
+        }
+
+        // Insertamos de nuevo los parametros (OJO, hay que conservar el orden inicial)
+        let i = 1;
+        parametros.reverse().forEach(p => {
+            this._sp -= p.size;
+            p.name += i;
+            this.dataSegment.add(p, this._sp);
+            i++;
+        });
+    }
+
+    /**
+     * Elimina la zona de la pila reservada por la funcion para los parametros de esta (RET ..., ..., <cte3>).
+     * @param cte 
+     */
+    eraseParameters(cte: number): void {
         this.dataSegment.deleteDataZone(this._sp, cte);
         this._sp += cte;
     }
@@ -181,7 +205,7 @@ export class Stack extends AbstractDataSegmentZone {
 export class StackFrame {
     returnDir: IntegerDataType;
     lastBP: IntegerDataType;
-    
+
     constructor(returnDir: IntegerDataType, lastBP: IntegerDataType) {
         this.returnDir = returnDir;
         this.lastBP = lastBP;

@@ -13,25 +13,27 @@ button {
     width: 19px;
 }
 
-
 /* Habilitar el scroll vertical para la tabla poniendole un alto fijo */
 .instrucciones-table-container {
     height: 430px;
     width: 660px;
     max-width: 100%;
     overflow: auto;
+    
+    display: flex;
+    flex-flow: column;  
 }
-label {
-    display: block;
+
+/* Linea vertical que rellena el contenido dejado en blanco por la tabla de instrucciones para la columna
+   numeroInstruccion. Simula la ocupacion total del div por parte de la tabla sin deformar ni estirar esta. */
+.vertical-line {
+    width: 66.1px;
+    height: 100%;
+    background-color: #f4f4ea;
+    float: left;
 }
 table {
     width: 100%;
-    /*  
-        Porcentaje restante del div que no usa el label. 
-        Sin este porcentaje la tabla, si su contenido ocupa menos del espacio disponible, no ocuparia todo 
-        y quedarian espacios en blanco.
-    */
-    height: 92.65%;
 }
 
 /* Label de la tabla */
@@ -74,8 +76,6 @@ label {
     width: 10%;
     text-align: right;
     padding-right: 8px;
-}
-.mat-column-numeroInstruccion {
     background-color: #f4f4ea;
 }
 .mat-column-contenido {

@@ -7,11 +7,3 @@ pop
 ' en la pila al final de la ejecución.
 nop
 halt
-
-
-
-
-
-
-
-

@@ -288,12 +288,12 @@ export class Programa {
 
     /**
      * Devuelve una copia del objeto Pila. 
-     * Explicacion de que se hace en el fichero ManipulacionPila > Instruccion DUP.
-     * 
+     * Explicacion del porque se hace asi esta en el fichero ManipulacionPila > Instruccion DUP.
      * @returns copia de la pila
      */
     getPila(): Stack {
-        let copy = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);
+        let copy: Stack = Object.assign(Object.create(Object.getPrototypeOf(this.pila)), this.pila);
+        copy.allocates = this.pila.allocates.slice();
         return copy;
     }
 }

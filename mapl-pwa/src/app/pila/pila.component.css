@@ -17,6 +17,11 @@ table {
     width: 100%;
 }
 
+/* Style para la zona de variables locales de una funcion (ENTER) */
+.locals {
+    background-color:#d9f5ff;
+}
+
 /* Label de las tablas */
 label {
     font-size: 12px;
@@ -32,7 +37,7 @@ label {
     font-size: 12px;
 }
 
-/* Porcentajes de ocupacion de los valores de cada columna, nos encabezados no inclusive */
+/* Porcentajes de ocupacion de los valores de cada columna */
 .mat-column-address.mat-cell {
     width: 17.5%;
     text-align: right;
@@ -50,7 +55,7 @@ label {
     font-size: 11px;
 }
 .mat-column-value.mat-cell {
-    border-bottom: 2px solid white;
+    border-bottom: 1.5px solid white;
     font-weight: 550;
 }
 

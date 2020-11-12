@@ -4,14 +4,3 @@ pushf 34.78
 pop
 ' ERROR: el pop solicita menos bytes de los que hay en la
 ' pila, lo que deja restos en esta.
-
-
-
-
-
-
-
-
-
-
-

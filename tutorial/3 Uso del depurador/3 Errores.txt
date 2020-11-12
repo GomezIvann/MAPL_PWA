@@ -5,13 +5,3 @@ load
 ' ERROR: lectura de una variable sin
 ' inicializar.
 pop
-
-
-
-
-
-
-
-
-
-

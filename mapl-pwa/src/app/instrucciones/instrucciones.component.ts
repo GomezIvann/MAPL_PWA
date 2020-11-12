@@ -121,11 +121,33 @@ export class InstruccionesComponent implements OnInit {
     let parser = new ProgramParser(this.fileToUpload);
     let programa = await parser.read();
 
-    if (!programa.hasIncidencias())
+    if (!programa.hasIncidencias()) {
       this.programa = programa;
-    else
+      this.cargarLineaVertical();
+    }
+    else {
       this.programa = new Programa(); // Eliminamos el programa anterior
+      this.eliminarLineaVertical();
+    }
 
     this.programResponse.emit(this._programa); // Notificamos al componente padre (app.component)
+  }
+
+  /**
+   * Cuando se carga un programa correctamente y este no ocupa la totalidad del div
+   * (porque es muy corto o tiene pocas instrucciones) se añade una linea vertical a este que simula la ocupacion 
+   * total del div por parte de la tabla de instrucciones sin deformar ni estirar esta ultima.
+   */
+  private cargarLineaVertical() {
+    let div = document.getElementById('vertical-line');
+    div.classList.add('vertical-line');
+  }
+
+  /**
+   * Lo opuesto al anterior metodo. Cuando el programa se incorrecto se deja de mostrar la linea vertical.
+   */
+  private eliminarLineaVertical() {
+    let div = document.getElementById('vertical-line');
+    div.classList.remove('vertical-line');
   }
 }

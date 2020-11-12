@@ -1,0 +1,20 @@
+' Ejemplo 0
+
+call main
+' ERROR de formación:
+' Falta un halt que delimite
+' el fin de la función principal init
+' del comienzo de la función 'main:'.
+' Una función no puede contener otra.
+main:
+    pushb 42
+    outb
+    call america
+    pushb 42
+    outb
+ret
+
+america:
+    push 1492
+    out
+ret

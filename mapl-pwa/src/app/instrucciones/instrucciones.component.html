@@ -44,4 +44,7 @@
             [style.cursor]="row.numeroInstruccion !== '' ? 'pointer' : 'auto'"
             (dblclick)="seleccionarInstruccion($event, row)"></tr>
     </table>
+    <!-- Rellena el contenido del div 'instrucciones-container' en blanco cuando el programa es muy pequeño -->
+    <!-- Si no se carga ningun programa o la carga es incorrecta es invisible -->
+    <div id="vertical-line"></div>
 </div>
