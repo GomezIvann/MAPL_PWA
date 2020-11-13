@@ -17,11 +17,6 @@ table {
     width: 100%;
 }
 
-/* Style para la zona de variables locales de una funcion (ENTER) */
-.locals {
-    background-color:#d9f5ff;
-}
-
 /* Label de las tablas */
 label {
     font-size: 12px;
@@ -32,36 +27,36 @@ label {
     border-bottom: 1.5px solid #bdb9ab;
 }
 
+/* Style para la zona de variables locales de una funcion (ENTER) */
+.locals {
+    background-color:#d9f5ff;
+}
+
 /* Tamaño de letra de celdas */
 .mat-cell {
     font-size: 12px;
 }
 
-/* Porcentajes de ocupacion de los valores de cada columna */
-.mat-column-address.mat-cell {
-    width: 17.5%;
-    text-align: right;
-    padding-right: 8px;
-}
-.mat-column-value.mat-cell {
-    width: 82.5%;
-    padding-left: 8px; /* margen celda */
+/* Altura de las filas */
+.mat-row {
+    height: 20px;
 }
 
 /* Selectores específicos gracias a matColumnDef */
-.mat-column-address.mat-cell {
+/* Porcentajes de ocupacion de los valores de cada columna */
+.mat-column-address {
+    width: 17.5%;
+    text-align: right;
+    padding-right: 8px;
     background-color:#f4f4ea;
     border-bottom-style: none;
     font-size: 11px;
 }
-.mat-column-value.mat-cell {
+.mat-column-value {
+    width: 82.5%;
+    padding-left: 8px; /* margen celda */
     border-bottom: 1.5px solid white;
     font-weight: 550;
-}
-
-/* Altura de las filas */
-.mat-row {
-    height: 20px;
 }
 
 /* Punteros */

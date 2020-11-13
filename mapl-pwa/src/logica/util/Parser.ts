@@ -21,7 +21,7 @@ import { Logger } from './Logger';
 /**
  * Clase encargada de la lectura del fichero y generacion del programa a partir de este.
  */
-export class ProgramParser {
+export class Parser {
     private _file: File;             // Fichero de entrada
     private _programa: Programa;     // Programa obtenido de la lectura del fichero
 

@@ -71,6 +71,11 @@ label {
     border-bottom-style: none;
 }
 
+/* Altura de las filas */
+.mat-row {
+    height: 20px;
+}
+
 /* Numero de instruccion ocupa el 10% del ancho de la tabla, el contenido de esta ocupa el 90% del ancho de la tabla */
 .mat-column-numeroInstruccion {
     width: 10%;
@@ -81,9 +86,4 @@ label {
 .mat-column-contenido {
     width: 90%;
     padding-left: 8px; /*margen celda*/
-}
-
-/* Altura de las filas */
-.mat-row {
-    height: 20px;
 }

@@ -2,7 +2,7 @@ import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
-import { ProgramParser } from 'src/logica/util/ProgramParser';
+import { Parser } from 'src/logica/util/Parser';
 import { Globals } from '../globals';
 
 
@@ -118,7 +118,7 @@ export class InstruccionesComponent implements OnInit {
    * de programa (aquellos que lo necesitan).
    */
   private async cargarPrograma() {
-    let parser = new ProgramParser(this.fileToUpload);
+    let parser = new Parser(this.fileToUpload);
     let programa = await parser.read();
 
     if (!programa.hasIncidencias()) {

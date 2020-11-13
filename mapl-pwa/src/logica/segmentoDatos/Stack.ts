@@ -15,10 +15,10 @@ export class Stack extends AbstractDataSegmentZone {
      */
     private _bp: number;
     /**
-     * Listado que contiene la ultima direccion de cada una de las zonas de variables locales de cada funcion
-     * del programa.
+     * Listado que contiene la dir de comienzo y la dir de fin de cada una de las zonas de variables locales de
+     * las funciones de un programa.
      */
-    allocates: number[];
+    allocates: [number, number][];
 
     constructor() {
         super();
@@ -144,7 +144,7 @@ export class Stack extends AbstractDataSegmentZone {
      */
     allocateLocalVariables(cte: number): void {
         this._sp -= cte;
-        this.allocates.push(this._sp);
+        this.allocates.push([this._sp, this._sp + cte]);
     }
 
     /**
@@ -196,6 +196,23 @@ export class Stack extends AbstractDataSegmentZone {
     eraseParameters(cte: number): void {
         this.dataSegment.deleteDataZone(this._sp, cte);
         this._sp += cte;
+    }
+
+    /**
+     * @param address 
+     * @returns true si la address pasada como parametro esta contenida en una zona de variables locales.
+     */
+    isLocalVariablesAddress(address: number): boolean {
+        return this.allocates.find(tuple => address >= tuple[0] && address <= tuple[1]) !== undefined;
+    }
+    
+    /**
+     * @param address 
+     * @returns true si la address pasada como parametro coincide con alguna de las dir de fin de alguna 
+     *          zona de variables locales.
+     */
+    isLocalVariablesEndAddress(address: number): boolean {
+        return this.allocates.find(tuple => address === tuple[0]) !== undefined;
     }
 }
 

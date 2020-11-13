@@ -273,7 +273,7 @@ export class Programa {
                 let label = this.labels.find(label => label.nombre === iLabel.labelNombre);
 
                 if (label === undefined) {
-                    let incidencia = new ParserIncidencia("No se ha encontrado ninguna etiqueta con ese nombre.");
+                    let incidencia = new ParserIncidencia("No se ha encontrado ninguna etiqueta con ese nombre en el programa.");
                     let indexLinea = this.texto.findIndex(linea => linea.numeroInstruccion === i.numero);
                     incidencia.identificador = "Línea " + (indexLinea + 1);
                     incidencia.linea = this.texto[indexLinea].contenido.trim();

@@ -1,9 +1,0 @@
-' Hey hey hey
-
-call main ' helloda
-halt
-
-main:
-    push 1425  
-    out
-ret 0, 0, 0

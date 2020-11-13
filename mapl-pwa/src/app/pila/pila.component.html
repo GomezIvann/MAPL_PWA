@@ -44,13 +44,13 @@
 
                 <ng-container *ngIf="tuple !== undefined; else second">{{ tuple[0] }}</ng-container>
                 <ng-template #second>
-                    <ng-container *ngIf="pila.allocates.includes(i);else third">Variables locales</ng-container>
+                    <ng-container *ngIf="pila.isLocalVariablesEndAddress(i); else third">Variables locales</ng-container>
                 </ng-template>
                 <ng-template #third>{{ tuple }}</ng-template>
             </td>
         </ng-container>
 
         <tr mat-row *matRowDef="let row; columns: displayedColumns; let i = index;"
-            [ngClass]="{ 'locals': (i >= pila.getSP() && row === undefined) }"></tr>
+            [ngClass]="{ 'locals': (pila.isLocalVariablesAddress(i) && row === undefined) }"></tr>
     </table>
 </div>
