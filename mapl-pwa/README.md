@@ -1,6 +1,8 @@
 # Mapl-Pwa
 
-Este proyecto ha sido generado con [Angular CLI](https://github.com/angular/angular-cli) version 10.1.0.
+Este proyecto ha sido generado con [Angular CLI](https://github.com/angular/angular-cli) versión 10.1.0. Para poder desplegar el proyecto se necesita Angular instalado localmente, puedes seguir los pasos de la [web oficial](https://angular.io/guide/setup-local) si no es el caso.
+
+Para poder arrancar el proyecto se necesitan los módulos de Node, los cuales no están incluidos en el proyecto, por lo que antes de ejecutar el servidor de desarrollo, debes generarlos con `npm install`.
 
 ## Servidor de desarrollo
 
