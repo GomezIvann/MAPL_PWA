@@ -28,7 +28,6 @@ ejemplo:
     add
     pushf 3.4
     Storef
-
 ret 0, 8, 6
 
 main:

@@ -1,6 +1,6 @@
 ' Ejemplo 6
 
-call noExiste ' helloda
+call noExiste
 ' ERROR: call llama a una funcion
 ' que no existe en el programa.
 halt

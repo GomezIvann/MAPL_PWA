@@ -43,5 +43,4 @@ main:
     add
     load
     out
-
-ret
+ret 0, 0, 0

@@ -62,5 +62,4 @@ main:
 	add
 	pushf 3000.0
 	storef
-
 ret

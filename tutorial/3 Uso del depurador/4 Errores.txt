@@ -8,5 +8,5 @@ store
 ' ERROR: acceso a memoria que no
 ' se corresponde con una variable.
 ' El programa trata de escribir sobre un valor
-' de la pila, provocando un error
+' de la pila, provocando un error.
 nop

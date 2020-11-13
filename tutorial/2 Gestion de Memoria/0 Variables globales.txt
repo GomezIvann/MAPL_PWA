@@ -29,5 +29,4 @@ main:
     pusha 7
     push 0
     store
-    
 ret
