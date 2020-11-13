@@ -14,13 +14,13 @@ export class Call extends InstruccionLabel {
     funcion: Funcion;
 
     execute(stack: Stack, memory: Memory): void {
-        let returnDir: IntegerDataType  = new IntegerDataType(+this.numero);
-        let lastBP: IntegerDataType  = new IntegerDataType(+stack.getBP());
+        let returnDir: IntegerDataType = new IntegerDataType(+this.numero);
+        let lastBP: IntegerDataType = new IntegerDataType(+stack.getBP());
 
         // Convertimos la cima de la pila en parametros de la funcion, de acuerdo a <cte3> de RET
         stack.allocateParameters(this.funcion.sizeParams);
 
-         // Creamos el Stack Frame y lo insertamos en la pila
+        // Creamos el Stack Frame y lo insertamos en la pila
         let sf: StackFrame = new StackFrame(returnDir, lastBP);
         stack.pushStackFrame(sf);
         this.programa.jumpTo(this.label.primeraInstruccion); // La ejecucion salta al inicio de la funcion
@@ -62,8 +62,8 @@ export class Ret extends Instruccion {
     cte2: number; // size de las variables locales de la funcion
     cte3: number; // size de los parametros de la funcion
 
-    constructor(numeroInstruccion: number, programa: Programa, ctes: string[]){
-		super(numeroInstruccion);
+    constructor(numeroInstruccion: number, programa: Programa, ctes: string[]) {
+        super(numeroInstruccion);
         this._programa = programa;
         this.setCtes(ctes);
     }
@@ -73,7 +73,7 @@ export class Ret extends Instruccion {
      * @param ctes
      */
     private setCtes(ctes: string[]): void {
-        if (ctes.length === 1) {
+        if (ctes.length === 1 && ctes[0] === "") { // RET VOID === RET 0, 0, 0
             this.cte1 = 0;
             this.cte2 = 0;
             this.cte3 = 0;
@@ -81,7 +81,7 @@ export class Ret extends Instruccion {
         else if (ctes.length === 3) {
             if (!Number.isSafeInteger(+ctes[0]) || !Number.isSafeInteger(+ctes[1]) || !Number.isSafeInteger(+ctes[2]))
                 throw new Error("Los parámetros de la instrucción RET tienen que ser enteros.");
-    
+
             this.setCte1(+ctes[0]);
             this.cte2 = +ctes[1];
             this.cte3 = +ctes[2];

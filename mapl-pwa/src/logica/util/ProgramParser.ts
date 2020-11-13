@@ -71,9 +71,10 @@ export class ProgramParser {
 
             reader.onload = (e) => {
                 let lineas = reader.result.toString().split("\n"); // Fichero divido en lineas
-                let primeraPalabra = ""; // Primera palabra de la linea
                 let linea = "";
                 let lineaSinComentarios = "";
+                let palabrasLinea = [];
+                let primeraPalabra = "";
                 let funcionActual: Funcion;
 
                 // LECTURA LINEA A LINEA
@@ -84,15 +85,14 @@ export class ProgramParser {
                      * (se siguen mostrando por pantalla, solo es interno).
                      */
                     lineaSinComentarios = linea.split("'")[0].trim();
+
                     /**
-                     * trim() elimina los espacios y terminadores de linea de un string (ubicados antes y despues del texto).
-                     * La expresion regular reemplaza todo el string por "" salvo la primera palabra que encuentra.
-                     * La primera palabra es aquella que se encuentra seguida de cualquier caracter que suponga un espacio en blanco (igual a [\r\n\t\f\v])
-                     * 
-                     * ej. "       hello  world       " --trim()--> "hello  world"
-                     *     "hello  world" --replace(REG_EXP)--> "hello"
+                     * Descompone la linea en palabras. Usa como separador cualquier tipo de espacio
+                     * No funcionaria con los espacios al principio y al final, pero de eso se encarga trim()
+                     * en lineaSinComentarios.
                      */
-                    primeraPalabra = lineaSinComentarios.replace(/\s.*/, "");
+                    palabrasLinea = lineaSinComentarios.split(/\s+/);
+                    primeraPalabra = palabrasLinea[0];
 
                     try {
                         /** 
@@ -105,214 +105,270 @@ export class ProgramParser {
                         switch (primeraPalabra.toUpperCase()) {
                             case Lenguaje.PUSH:
                             case Lenguaje.PUSHI:
-                                // Divide la linea con cualquier caracter de espacio en blanco (igual a [\r\n\t\f\v])
-                                var cte = lineaSinComentarios.split(/\s+/)[1];  // segunda palabra de la linea
+                                this.checkParametrosLinea(palabrasLinea);
+                                var cte = palabrasLinea[1];
                                 this.addInstruccion(new Push(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHF:
-                                var cte = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var cte = palabrasLinea[1];
                                 this.addInstruccion(new Pushf(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHB:
-                                var cte = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var cte = palabrasLinea[1];
                                 this.addInstruccion(new Pushb(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.PUSHA:
-                                var cte = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var cte = palabrasLinea[1];
                                 this.addInstruccion(new Pusha(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.POP:
                             case Lenguaje.POPI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Pop(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.POPF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Popf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.POPB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Popb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LOAD:
                             case Lenguaje.LOADI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Load(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LOADF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Loadf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LOADB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Loadb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.STORE:
                             case Lenguaje.STOREI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Store(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.STOREF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Storef(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.STOREB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Storeb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.DUP:
                             case Lenguaje.DUPI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Dup(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.DUPF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Dupf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.DUPB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Dupb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.ADD:
                             case Lenguaje.ADDI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Add(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.ADDF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Addf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.SUB:
                             case Lenguaje.SUBI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Sub(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.SUBF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Subf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.DIV:
                             case Lenguaje.DIVI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Div(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.DIVF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Divf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.MUL:
                             case Lenguaje.MULI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Mul(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.MULF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Mulf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.MOD:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Mod(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.IN:
                             case Lenguaje.INI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new In(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.INF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Inf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.INB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Inb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.OUT:
                             case Lenguaje.OUTI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Out(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.OUTF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Outf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.OUTB:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Outb(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.AND:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new And(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.OR:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Or(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.NOT:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Not(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.GT:
                             case Lenguaje.GTI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Gt(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.GTF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Gtf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LT:
                             case Lenguaje.LTI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Lt(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LTF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Ltf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.GE:
                             case Lenguaje.GEI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Ge(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.GEF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Gef(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LE:
                             case Lenguaje.LEI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Le(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.LEF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Lef(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.EQ:
                             case Lenguaje.EQI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Eq(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.EQF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Eqf(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.NE:
                             case Lenguaje.NEI:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Ne(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.NEF:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Nef(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.B2I:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new B2i(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.I2B:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new I2b(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.I2F:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new I2f(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.F2I:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new F2i(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.JMP:
-                                var label = linea.trim().split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var label = palabrasLinea[1];
                                 this.addInstruccion(new Jmp(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.JZ:
-                                var label = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var label = palabrasLinea[1];
                                 this.addInstruccion(new Jz(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.JNZ:
-                                var label = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var label = palabrasLinea[1];
                                 this.addInstruccion(new Jnz(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.CALL:
-                                var label = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var label = palabrasLinea[1];
                                 this.addInstruccion(new Call(this._contadorInstrucciones, label, this._programa), linea);
                                 break;
                             case Lenguaje.RET:
                                 if (!this._finInit)
                                     throw new Error("La función 'init' no puede contener otra función.");
 
-                                let params = lineaSinComentarios.replace(primeraPalabra, "").trim().split(","); // params = [<cte1>, <cte2>, <cte3>]
+                                let params = lineaSinComentarios.replace(primeraPalabra, "").trim().split(","); // params = ['<cte1>', '<cte2>', '<cte3>']
                                 let ret = new Ret(this._contadorInstrucciones, this._programa, params);
                                 this.addInstruccion(ret, linea);
                                 this._finFuncion = true; // Fin de la funcion actual leida
                                 funcionActual.sizeParams = ret.cte3;
-                                this._funciones.push(funcionActual);
+                                this._funciones.push(funcionActual); // La insertamos en las funciones del programa
                                 break;
                             case Lenguaje.ENTER:
                                 if (!this._finInit)
                                     throw new Error("La función 'init' no puede contener otra función.");
 
-                                var cte = lineaSinComentarios.split(/\s+/)[1];
+                                this.checkParametrosLinea(palabrasLinea);
+                                var cte = palabrasLinea[1];
                                 this.addInstruccion(new Enter(this._contadorInstrucciones, cte), linea);
                                 break;
                             case Lenguaje.NOP:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Nop(this._contadorInstrucciones), linea);
                                 break;
                             case Lenguaje.HALT:
+                                this.checkLineaSinParametros(palabrasLinea);
                                 this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), linea);
                                 this._finInit = true; // Fin de la funcion principal 'init'
                                 break;
@@ -362,7 +418,7 @@ export class ProgramParser {
                                             throw new Error("No se puede declarar una función dentro de otra.");
 
                                         this._finFuncion = false;
-                                        funcionActual = new Funcion(lineaSinComentarios);
+                                        funcionActual = new Funcion(lineaSinComentarios); // Creamos la funcion
                                     }
                                 }
                                 else
@@ -372,12 +428,12 @@ export class ProgramParser {
                     catch (err) {
                         let incidencia = new ParserIncidencia(err.message);
                         incidencia.identificador = "Línea " + (index + 1);
-                        incidencia.linea = lineaSinComentarios;
+                        incidencia.linea = linea.trim();
                         Logger.getInstance().addIncidencia(incidencia);
                         break; // Si hay una incidencia dejamos de leer el fichero
                     }
                 }
-                
+
                 /**
                  * Si no hay errores lexicos en las instrucciones pasamos a realizar mas comprobaciones 
                  * y finalizar la elaboracion del programa.
@@ -388,27 +444,30 @@ export class ProgramParser {
                         let incidencia = new ParserIncidencia("El fichero no contiene ninguna instrucción ejecutable.");
                         Logger.getInstance().addIncidencia(incidencia);
                     }
-                    /** 
-                     * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
-                     * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
-                     */
-                    if (!this._finInit && this._funciones.length === 0) {
-                        this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), Lenguaje.HALT.toLowerCase());
-                        this._finInit = true; // Fin de la funcion principal 'init'
+                    else {
+                        /**
+                         * Si la lectura del programa finaliza sin HALT, lo añade el sistema automaticamente,
+                         * siempre y cuando no haya funciones de por medio. En tal caso su ausencia es un error de formacion del usuario.
+                         */
+                        if (!this._finInit && this._funciones.length === 0) {
+                            this.addInstruccion(new Halt(this._contadorInstrucciones, this._programa), Lenguaje.HALT.toLowerCase());
+                            this._finInit = true; // Fin de la funcion principal 'init'
+                        }
+                        /**
+                         * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede
+                         * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
+                         * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
+                         */
+                        if (!this._finInit || !this._finFuncion) {
+                            let incidencia = new ParserIncidencia("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
+                                + " en otra función, respectivamente.");
+                            Logger.getInstance().addIncidencia(incidencia);
+                        }
+                        else {
+                            this._programa.labelForInstruction();
+                            this.functionForCall();
+                        }
                     }
-                    /**
-                     * Si el parser lanza este error quiere decir que o la funcion principal no se cerro (falta un HALT y no se puede 
-                     * añadir automaticamente al haber funciones de por medio) o alguna de las funciones
-                     * secundarias no se cerro (falta al menos un RET) y por tanto, la ejecución nunca finalizaria.
-                     */
-                    if (!this._finInit || !this._finFuncion) {
-                        let incidencia = new ParserIncidencia("La ejecución del programa nunca finaliza. Esto puede deberse a la falta de un HALT o RET en la función principal 'init' o"
-                            + " en otra función, respectivamente.");
-                        Logger.getInstance().addIncidencia(incidencia);
-                    }
-
-                    this._programa.labelForInstruction();
-                    this.functionForCall();
                 }
                 resolve(this._programa);
             };
@@ -418,7 +477,25 @@ export class ProgramParser {
     }
 
     /**
-     * Asocia a las instrucciones Call su correspondiente funcion, gracias a la etiqueta.
+     * Comprueba que la instruccion tiene solo un parametro (PUSH (i,f,a,b), JMP, JZ, JNZ, CALL y ENTER).
+     * @param lineaSinInstruccion 
+     */
+    private checkParametrosLinea(lineaSinInstruccion: string[]): void {
+        if (lineaSinInstruccion.length > 2)
+            throw new Error("Se esperaba que la instrucción tuviera un parámetro. Sin embargo, se obtuvieron más.");
+    }
+
+    /**
+     * Comprueba que la instruccion no tiene parametros (Aritmeticas, Logicas, Comparaciones, E/S, Conversiones y Otras).
+     * @param lineaSinInstruccion 
+     */
+    private checkLineaSinParametros(lineaSinInstruccion: string[]): void {
+        if (lineaSinInstruccion.length > 1)
+            throw new Error("Se esperaba que la instrucción no tuviera parámetros. Sin embargo, se ha leído al menos uno.");
+    }
+
+    /**
+     * Asocia a las instrucciones Call su correspondiente funcion gracias a la etiqueta.
      */
     private functionForCall(): void {
         this._programa.codigo.forEach(i => {

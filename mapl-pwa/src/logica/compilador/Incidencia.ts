@@ -1,14 +1,20 @@
-import { Instruccion } from '../instrucciones/Instruccion';
 import { Linea } from './Linea';
 
+/**
+ * Clase abstracta que deben extender las incidencias del sistema.
+ *      - Identificador: numero de linea si del parser, numero de instruccion si es de ejecucion.
+ *      - Tipo: de Parser o de Ejecucion.
+ *      - Descripcion: mensaje de error.
+ *      - Linea: contenido de la linea que provoca el error.
+ */
 export abstract class Incidencia {
     identificador: string;
-    message: string;
+    descripcion: string;
     tipo: TiposError;
     linea: string;
 
-    constructor(message: string, identificador: string, linea: string) {
-        this.message = message;
+    constructor(descripcion: string, identificador: string, linea: string) {
+        this.descripcion = descripcion;
         this.identificador = identificador;
         this.linea = linea;
     }
@@ -17,19 +23,27 @@ export abstract class Incidencia {
     }
 }
 
+/**
+ * Errores surgidos durante el parseo del fichero.
+ */
 export class ParserIncidencia extends Incidencia {
-    constructor(message: string) {
-        super(message, "", "");
+    constructor(descripcion: string) {
+        super(descripcion, "", "");
         this.tipo = TiposError.Parser;
     }
     getContenido(): string {
-        return "'" + this.linea + "'";
+        if (this.linea !== "")
+            return "'" + this.linea + "'";
+        return this.linea;
     }
 }
 
+/**
+ * Errores de ejecucion.
+ */
 export class EjecucionIncidencia extends Incidencia {
-    constructor(message: string, linea: Linea) {
-        super(message, linea.numeroInstruccion, linea.contenido);
+    constructor(descripcion: string, linea: Linea) {
+        super(descripcion, linea.numeroInstruccion, linea.contenido);
         this.tipo = TiposError.Ejecucion;
     }
 }

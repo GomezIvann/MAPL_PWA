@@ -15,7 +15,7 @@ export class Push extends InstruccionInteger implements InstruccionConCteInterfa
 
     constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
-        if (cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
+        if (cte === undefined || cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
             this.setConstante(cte);
     }
 
@@ -34,6 +34,8 @@ export class Push extends InstruccionInteger implements InstruccionConCteInterfa
             this.pdt = new IntegerDataType(+cte);
         }
         catch (err) {
+            if (cte === undefined)
+                throw new Error(err.message + " Sin embargo, no se encontró ningún valor.");
             throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
@@ -54,6 +56,8 @@ export class Pushf extends InstruccionFloat implements InstruccionConCteInterfac
             this.pdt = new FloatDataType(+cte);
         }
         catch (err) {
+            if (cte === undefined)
+                throw new Error(err.message + " Sin embargo, no se encontró ningún valor.");
             throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
@@ -74,6 +78,8 @@ export class Pushb extends InstruccionByte implements InstruccionConCteInterface
             this.pdt = new ByteDataType(+cte);
         }
         catch (err) {
+            if (cte === undefined)
+                throw new Error(err.message + " Sin embargo, no se encontró ningún valor.");
             throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }
@@ -83,7 +89,7 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
 
     constructor(numeroLinea: number, cte: string) {
         super(numeroLinea);
-        if (cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
+        if (cte === undefined || cte.toUpperCase() !== Lenguaje.REGISTRO_BP)
             this.setConstante(cte);
     }
 
@@ -94,10 +100,13 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
         stack.push(this.pdt, this.getSize());
     }
     setConstante(cte: string): void {
+        
         try {
             this.pdt = new AddressDataType(+cte);
         }
         catch (err) {
+            if (cte === undefined)
+                throw new Error(err.message + " Sin embargo, no se encontró ningún valor.");
             throw new Error(err.message + " En su lugar, se encontró '" + cte + "'.");
         }
     }

@@ -15,7 +15,7 @@ export class IncidenciasComponent implements OnInit {
   dataSource: MatTableDataSource<Incidencia>;
 
   constructor() {
-    this.displayedColumns = ["identificador", "tipo", "linea", "message"];
+    this.displayedColumns = ["identificador", "tipo", "linea", "descripcion"];
     this.dataSource = new MatTableDataSource<Incidencia>();
   }
 
