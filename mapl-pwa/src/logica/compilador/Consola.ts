@@ -43,7 +43,7 @@ export class Consola {
      * @param message salida
      */
     addOutputAndNewLine(message: string) {
-        if (!this._outputs[this._outputs.length-1].endsWith("\n"))
+        if (this._outputs.length >= 1 && !this._outputs[this._outputs.length-1].endsWith("\n"))
             this._outputs.push("\n>"+message+"\n");
         else
             this._outputs.push(">"+message+"\n");
