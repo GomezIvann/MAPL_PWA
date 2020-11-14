@@ -16,7 +16,7 @@ export class AppComponent {
    */
   programa: Programa;
 
-  constructor(public globals: Globals) {}
+  constructor() {}
 
   ngOnInit(): void {
     this.programa = new Programa();

@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Programa } from 'src/logica/compilador/Programa';
 
 import { InstruccionesComponent } from './instrucciones.component';
 
@@ -16,6 +17,7 @@ describe('InstruccionesComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(InstruccionesComponent);
     component = fixture.componentInstance;
+    component.programa = new Programa();
     fixture.detectChanges();
   });
 

@@ -62,7 +62,7 @@ export class Mulf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let value1 = stack.pop(this.getSize()).value;
         let value2 = stack.pop(this.getSize()).value;
-        let dt = new FloatDataType(value2 - value1);
+        let dt = new FloatDataType(value2 * value1);
         stack.push(dt, this.getSize());
     }
 }

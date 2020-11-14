@@ -33,8 +33,8 @@ export class InstruccionesComponent implements OnInit {
   ngOnInit(): void { }
 
   /**
-   * Sobreescribimos el set y get para que cada vez que cambie el programa (idem el usuario carga uno nuevo).
-   * El div haga scroll automatico a la cima del contenedor que muestra el fichero.
+   * Sobreescribimos el set y get para que cada vez que cambie el programa (idem el usuario carga uno nuevo)
+   * el div haga scroll automatico a la cima del contenedor que muestra el fichero.
    */
   @Input() set programa(value: Programa) {
     this._programa = value;
