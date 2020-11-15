@@ -8,6 +8,10 @@ Para poder arrancar el proyecto se necesitan los módulos de Node, los cuales no
 
 Ejecuta `ng serve` para un servidor de desarrollo. Se desplegará en la siguiente dirección: `http://localhost:4200/`. La aplicación se actualiza automáticamente cada vez que cambie un fichero fuente de esta.
 
+## Testing
+
+Ejecuta `ng test` para ejecutar las pruebas unitarias con Karma.
+
 ## Build
 
 Ejecuta `ng build --prod` para construir el proyecto. Este estará almacenado en el directorio `dist/`. Si además añades el flag `--prod` la versión construida será de producción, con la que podrás ver todas las ventajas de una PWA.
