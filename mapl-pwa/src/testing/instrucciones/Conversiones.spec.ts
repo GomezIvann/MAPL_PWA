@@ -1,13 +1,21 @@
+import { Consola } from 'src/logica/compilador/Consola';
 import { Programa } from "src/logica/compilador/Programa";
 import { B2i, F2i, I2b, I2f } from 'src/logica/instrucciones/Conversiones';
 import { Halt } from "src/logica/instrucciones/Otras";
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { ByteDataType, FloatDataType, IntegerDataType } from "src/logica/util/DataTypes";
+import { Logger } from 'src/logica/util/Logger';
 
 describe('Un programa en ejecución', () => {
     let programa: Programa;
     let halt: Halt;
 
     beforeEach(() => {
+        Logger.getInstance().clean();
+        Consola.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
     });

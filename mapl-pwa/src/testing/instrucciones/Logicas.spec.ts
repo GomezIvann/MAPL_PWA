@@ -1,13 +1,21 @@
+import { Consola } from 'src/logica/compilador/Consola';
 import { Programa } from 'src/logica/compilador/Programa';
 import { And, Not, Or } from "src/logica/instrucciones/Logicas";
 import { Halt } from 'src/logica/instrucciones/Otras';
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { IntegerDataType } from 'src/logica/util/DataTypes';
+import { Logger } from 'src/logica/util/Logger';
 
 describe('Un programa en ejecución con dos número enteros en la pila,', () => {
     let programa: Programa;
     let halt: Halt;
 
     beforeEach(() => {
+        Logger.getInstance().clean();
+        Consola.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
         programa.pila.push(new IntegerDataType(0), 2);

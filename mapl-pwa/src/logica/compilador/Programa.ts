@@ -14,7 +14,6 @@ import { EjecucionIncidencia, ParserIncidencia } from './Incidencia';
  */
 export class Programa {
     codigo: Instruccion[];  // Conjunto de instrucciones que forman el programa
-    labels: Label[];        // Etiquetas del programa
     texto: Linea[];         // Texto del programa
 
     /**
@@ -31,7 +30,6 @@ export class Programa {
 
     constructor() {
         this.codigo = [];
-        this.labels = [];
         this.texto = [];
         this.pila = new Stack();
         this.memoria = new Memory();
@@ -220,14 +218,6 @@ export class Programa {
     }
 
     /**
-     * Busca una etiqueta por el nombre.
-     * @param nombre 
-     */
-    getLabelByNombre(nombre: string): Label {
-        return this.labels.find(label => label.nombre === nombre);
-    }
-
-    /**
      * Devuelve el indice de la Linea correspondiente a la instruccion actual ejecutandose.
      * 
      * @returns index de la instruccion actual
@@ -258,32 +248,6 @@ export class Programa {
      */
     hasIncidencias(): boolean {
         return Logger.getInstance().hasIncidencias();
-    }
-
-    /**
-     * Asocia a las instrucciones que usan etiquetas el objeto Label con el mismo nombre.
-     * Este metodo se llama al finalizar la lectura del fichero en el parser.
-     * Controla los errores de etiquetas inexistentes referenciadas en instrucciones ya que,
-     * llegados a este punto, la etiqueta deberia de existir.
-     */
-    labelForInstruction(): void {
-        this.codigo.some(i => {
-            if (i instanceof InstruccionLabel) {
-                let iLabel = i as InstruccionLabel;
-                let label = this.labels.find(label => label.nombre === iLabel.labelNombre);
-
-                if (label === undefined) {
-                    let incidencia = new ParserIncidencia("No se ha encontrado ninguna etiqueta con ese nombre en el programa.");
-                    let indexLinea = this.texto.findIndex(linea => linea.numeroInstruccion === i.numero);
-                    incidencia.identificador = "Línea " + (indexLinea + 1);
-                    incidencia.linea = this.texto[indexLinea].contenido.trim();
-                    Logger.getInstance().addIncidencia(incidencia);
-                    return true;
-                }
-
-                iLabel.label = label;
-            }
-        });
     }
 
     /**

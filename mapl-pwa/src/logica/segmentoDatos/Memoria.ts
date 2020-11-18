@@ -121,10 +121,10 @@ export class Memory extends AbstractDataSegmentZone {
         let variable = this.dataSegment.get(address)[0] as VariableDataType;
         if (variable.size > instructionSize)
             throw new Error("La lectura transfiere menos bytes de los que tiene '" + variable.name + "'. La variable tiene "
-                + variable.size + " y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
+                + variable.size + " bytes y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
         else if (variable.size < instructionSize)
             throw new Error("La lectura transfiere más bytes de los que tiene '" + variable.name + "'. La variable tiene "
-                + variable.size + " y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
+                + variable.size + " bytes y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
 
         return variable;
     }

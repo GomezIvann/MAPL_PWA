@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { DataType, PrimitiveDataType, VariableDataType } from '../util/DataTypes';
+import { DataType } from '../util/DataTypes';
 
 /**
  * Zona comun de memoria para los valores y variables de la pila y memoria, respectivamente, en la ejecucion de un

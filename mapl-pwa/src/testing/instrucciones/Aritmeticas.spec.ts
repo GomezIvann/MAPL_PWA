@@ -1,7 +1,10 @@
+import { Consola } from 'src/logica/compilador/Consola';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
 import { Add, Addf, Div, Divf, Mod, Mul, Mulf, Sub, Subf } from 'src/logica/instrucciones/Aritmeticas';
 import { Halt } from 'src/logica/instrucciones/Otras';
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { FloatDataType, IntegerDataType } from 'src/logica/util/DataTypes';
 import { Logger } from 'src/logica/util/Logger';
 
@@ -10,11 +13,14 @@ describe('Un programa en ejecución con dos número enteros en la pila,', () => 
     let halt: Halt;
 
     beforeEach(() => {
+        Logger.getInstance().clean();
+        Consola.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
         programa.pila.push(new IntegerDataType(20), 2); // PUSH 10
         programa.pila.push(new IntegerDataType(10), 2); // PUSH 20
-        Logger.getInstance().clean();
     });
 
     it('al ejecutar la instrucción ADD, coloca en la cima de esta la suma de ambos', () => {

@@ -2,17 +2,22 @@ import { Consola } from 'src/logica/compilador/Consola';
 import { Programa } from "src/logica/compilador/Programa";
 import { In, Inb, Inf, Out, Outb, Outf } from 'src/logica/instrucciones/EntradaSalida';
 import { Halt } from "src/logica/instrucciones/Otras";
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
 import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { IntegerDataType, FloatDataType, ByteDataType } from 'src/logica/util/DataTypes';
+import { Logger } from 'src/logica/util/Logger';
 
 describe('Un programa en ejecución,', () => {
     let programa: Programa;
     let halt: Halt;
 
     beforeEach(() => {
+        Consola.getInstance().clean();
+        Logger.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
-        Consola.getInstance().clean();
     });
 
     it('al ejecutar la instrucción IN, mete el entero introducido por el usuario en la pila', () => {

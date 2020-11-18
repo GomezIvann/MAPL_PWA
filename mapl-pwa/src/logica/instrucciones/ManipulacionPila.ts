@@ -100,7 +100,6 @@ export class Pusha extends InstruccionAddress implements InstruccionConCteInterf
         stack.push(this.pdt, this.getSize());
     }
     setConstante(cte: string): void {
-        
         try {
             this.pdt = new AddressDataType(+cte);
         }
@@ -146,7 +145,7 @@ export class Store extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, this.getSize());
         memory.store(address, vt);
     }
 }
@@ -154,7 +153,7 @@ export class Storef extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, this.getSize());
         memory.store(address, vt);
     }
 }
@@ -162,7 +161,7 @@ export class Storeb extends InstruccionByte {
     execute(stack: Stack, memory: Memory): void {
         let value = stack.pop(this.getSize());
         let address = stack.pop(PrimitiveSizes.ADDRESS).value;
-        let vt: VariableDataType = new VariableDataType("Var" + address, value, value.size);
+        let vt: VariableDataType = new VariableDataType("Var" + address, value, this.getSize());
         memory.store(address, vt);
     }
 }

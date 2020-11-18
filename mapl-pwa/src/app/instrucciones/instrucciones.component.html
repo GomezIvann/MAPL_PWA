@@ -8,11 +8,11 @@
         matTooltip="Ejecutar programa hasta su finalización" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>play_circle_outline</mat-icon> Ejecutar
     </button>
-    <button id="reiniciar" (click)="reiniciarPrograma()" [disabled]="!programa.hasCodigo()" 
+    <button id="reiniciar" (click)="reiniciarPrograma()" [disabled]="!programa.hasCodigo() || programa.ip === 0" 
         matTooltip="Retroceder al inicio del programa (la E/S se reutiliza)" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>refresh</mat-icon> Reiniciar
     </button>
-    <button id="retrocederInstruccion" (click)="retrocederInstruccion()" [disabled]="this.programa.finalizado || !this.programa.hasCodigo() || programa.ip == 0" 
+    <button id="retrocederInstruccion" (click)="retrocederInstruccion()" [disabled]="this.programa.finalizado || !this.programa.hasCodigo() || programa.ip === 0" 
         matTooltip="Retroceder a la instrucción anterior" [matTooltipShowDelay]="globals.toolTipDelay" mat-raised-button>
             <mat-icon>chevron_left</mat-icon> Retroceder
     </button>

@@ -1,6 +1,9 @@
+import { Consola } from 'src/logica/compilador/Consola';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from 'src/logica/compilador/Programa';
 import { Halt } from "src/logica/instrucciones/Otras";
+import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { IntegerDataType } from 'src/logica/util/DataTypes';
 import { Logger } from 'src/logica/util/Logger';
 
@@ -9,11 +12,14 @@ describe('Un programa,', () => {
     let halt: Halt;
 
     beforeEach(() => {
+        Logger.getInstance().clean();
+        Consola.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(0, programa);
         programa.codigo.push(halt);
         programa.texto.push(new Linea("halt", 0));
-        Logger.getInstance().clean();
     });
 
     it('al ejecutar la instrucción HALT, finaliza su ejecución', () => {

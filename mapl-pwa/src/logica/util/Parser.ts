@@ -12,7 +12,7 @@ import { Lenguaje, Tipos } from '../compilador/Lenguaje';
 import { Programa } from '../compilador/Programa';
 import { Linea } from '../compilador/Linea';
 import { Call, Enter, Ret } from '../instrucciones/Funciones';
-import { Instruccion } from '../instrucciones/Instruccion';
+import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { PrimitiveSizes, VariableDataType } from './DataTypes';
 import { Funcion } from '../compilador/Funcion';
 import { ParserIncidencia } from '../compilador/Incidencia';
@@ -27,6 +27,7 @@ export class Parser {
 
     private _tiposUsuario: Struct[];   // Tipos de usuario declarados durante la lectura del programa  
     private _funciones: Funcion[];     // Funciones del programa
+    private _labels: Label[];                    // Etiquetas del programa
 
     /**
      * Todas estas variables son para deteccion de errores de programa que puedan ayudar al usuario a formarlo correctamente, dando un mensaje de error
@@ -44,6 +45,7 @@ export class Parser {
         this._programa = new Programa();
         this._tiposUsuario = [];
         this._funciones = [];
+        this._labels = [];
         this._finFuncion = true; // Inicialmente no sabemos si abran funciones o no
         this._finInit = false;   // Inicialmente estamos dentro de la funcion 'init'
         this._contadorInstrucciones = 0;
@@ -407,7 +409,7 @@ export class Parser {
                                 break;
                             default:
                                 if (this.isValidLabel(lineaSinComentarios)) { // Es una etiqueta (o de funcion o de salto)
-                                    this._programa.labels.push(new Label(lineaSinComentarios, this._contadorInstrucciones));
+                                    this._labels.push(new Label(lineaSinComentarios, this._contadorInstrucciones));
                                     this._programa.texto.push(new Linea(linea));
 
                                     // Si leemos un Label fuera de la funcion principal 'init' es que es una declaracion de una
@@ -464,7 +466,7 @@ export class Parser {
                             Logger.getInstance().addIncidencia(incidencia);
                         }
                         else {
-                            this._programa.labelForInstruction();
+                            this.labelForInstruction();
                             this.functionForCall();
                         }
                     }
@@ -569,7 +571,7 @@ export class Parser {
             let tipoArray = definicion.split("*")[1].trim();
             let struct = this._tiposUsuario.find(s => s.nombre === tipoArray);
 
-            if (Number.isSafeInteger(length)) {
+            if (Number.isSafeInteger(length) && (+length) > 0) {
                 for (let i = 0; i < length; i++) {
                     if (struct !== undefined)
                         variables = [...variables, ...struct.getVariables(nombre + "[" + i + "]")];
@@ -578,7 +580,7 @@ export class Parser {
                 }
             }
             else
-                throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero).")
+                throw new Error("No es posible determinar el tamaño del Array (este debe ser un entero positivo).")
         }
         else {
             let struct = this._tiposUsuario.find(s => s.nombre === definicion);
@@ -630,11 +632,37 @@ export class Parser {
      * @param linea 
      */
     private isValidLabel(linea: string): boolean {
-        let label = this._programa.getLabelByNombre(linea);
+        let label = this._labels.find(label => label.nombre === linea);
+
         if (label !== undefined)
             throw new Error("Etiqueta repetida.");
 
         return linea.endsWith(":");
+    }
+
+    /**
+     * Asocia a las instrucciones que usan etiquetas el objeto Label con el mismo nombre.
+     * Este metodo se llama al finalizar la lectura del fichero en el parser.
+     * Controla los errores de etiquetas inexistentes referenciadas en instrucciones ya que,
+     * llegados a este punto, la etiqueta deberia de existir.
+     */
+    private labelForInstruction(): void {
+        this._programa.codigo.some(i => {
+            if (i instanceof InstruccionLabel) {
+                let iLabel = i as InstruccionLabel;
+                let label = this._labels.find(label => label.nombre === iLabel.labelNombre);
+
+                if (label === undefined) {
+                    let incidencia = new ParserIncidencia("No se ha encontrado ninguna etiqueta con ese nombre en el programa.");
+                    let indexLinea = this._programa.texto.findIndex(linea => linea.numeroInstruccion === i.numero);
+                    incidencia.identificador = "Línea " + (indexLinea + 1);
+                    incidencia.linea = this._programa.texto[indexLinea].contenido.trim();
+                    Logger.getInstance().addIncidencia(incidencia);
+                    return true; // Finaliza el bucle some
+                }
+                iLabel.label = label;
+            }
+        });
     }
 }
 
