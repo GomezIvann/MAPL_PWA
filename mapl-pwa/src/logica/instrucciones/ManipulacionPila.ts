@@ -1,7 +1,7 @@
 import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
 import { Memory } from '../segmentoDatos/Memoria';
 import { Stack } from '../segmentoDatos/Stack';
-import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger, InstruccionConCteInterface } from './Instruccion';
+import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
 import { Lenguaje } from '../compilador/Lenguaje';
 
 
@@ -10,7 +10,14 @@ import { Lenguaje } from '../compilador/Lenguaje';
  * ----------------------PUSH---------------------------
  * -----------------------------------------------------
  */
-export class Push extends InstruccionInteger implements InstruccionConCteInterface {
+/**
+ * Interfaz a implementar por las instrucciones push
+ */
+export interface InstruccionPushInterface {
+	pdt: PrimitiveDataType;
+	setConstante(cte: string): void;
+}
+export class Push extends InstruccionInteger implements InstruccionPushInterface {
     pdt: PrimitiveDataType;
 
     constructor(numeroLinea: number, cte: string) {
@@ -40,7 +47,7 @@ export class Push extends InstruccionInteger implements InstruccionConCteInterfa
         }
     }
 }
-export class Pushf extends InstruccionFloat implements InstruccionConCteInterface {
+export class Pushf extends InstruccionFloat implements InstruccionPushInterface {
     pdt: PrimitiveDataType;
 
     constructor(numeroLinea: number, cte: string) {
@@ -62,7 +69,7 @@ export class Pushf extends InstruccionFloat implements InstruccionConCteInterfac
         }
     }
 }
-export class Pushb extends InstruccionByte implements InstruccionConCteInterface {
+export class Pushb extends InstruccionByte implements InstruccionPushInterface {
     pdt: PrimitiveDataType;
 
     constructor(numeroLinea: number, cte: string) {
@@ -84,7 +91,7 @@ export class Pushb extends InstruccionByte implements InstruccionConCteInterface
         }
     }
 }
-export class Pusha extends InstruccionAddress implements InstruccionConCteInterface {
+export class Pusha extends InstruccionAddress implements InstruccionPushInterface {
     pdt: PrimitiveDataType;
 
     constructor(numeroLinea: number, cte: string) {

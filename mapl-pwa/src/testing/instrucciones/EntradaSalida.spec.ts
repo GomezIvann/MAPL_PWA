@@ -76,9 +76,12 @@ describe('Un programa en ejecución,', () => {
     let halt: Halt;
 
     beforeEach(() => {
+        Consola.getInstance().clean();
+        Logger.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
-        Consola.getInstance().clean();
     });
 
     it('al ejecutar la instrucción OUT, imprime por consola el entero en la cima de la pila', () => {

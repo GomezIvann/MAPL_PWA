@@ -1,7 +1,7 @@
 import { Consola } from 'src/logica/compilador/Consola';
 import { Linea } from 'src/logica/compilador/Linea';
 import { Programa } from "src/logica/compilador/Programa";
-import { Dup, Dupb, Dupf, Load, Loadb, Loadf, Pop, Popb, Popf, Push, Pusha, Pushb, Pushf } from "src/logica/instrucciones/ManipulacionPila";
+import { Dup, Dupb, Dupf, Load, Loadb, Loadf, Pop, Popb, Popf, Push, Pusha, Pushb, Pushf, Store, Storeb, Storef } from "src/logica/instrucciones/ManipulacionPila";
 import { Halt } from "src/logica/instrucciones/Otras";
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
 import { CadenaInb } from 'src/logica/util/CadenaInb';
@@ -212,21 +212,6 @@ describe('Un programa en ejecución,', () => {
         halt = new Halt(1, programa);
     });
 
-});
-
-describe('Un programa en ejecución,', () => {
-    let programa: Programa;
-    let halt: Halt;
-
-    beforeEach(() => {
-        Logger.getInstance().clean();
-        Consola.getInstance().clean();
-        CadenaInb.getInstance().clean();
-        DataSegment.getInstance().clean();
-        programa = new Programa();
-        halt = new Halt(1, programa);
-    });
-
     it('al ejecutar la instrucción DUP, duplica el entero en la cima de la pila, volviendo a insertar este.', () => {
         const instruccion = new Dup(0);
         const pop = new Pop(1);
@@ -422,5 +407,61 @@ describe('Un programa en ejecución,', () => {
         programa.ejecutarSiguienteInstruccion();
         expect(Logger.getInstance().incidencias[0].descripcion).toContain("La lectura transfiere menos bytes de los que tiene 'Var0'."
                 +" La variable tiene 4 bytes y se han leído 2 por lo que se introduzirá basura en la pila.");
+    });
+});
+
+describe('Un programa en ejecución,', () => {
+    let programa: Programa;
+    let halt: Halt;
+
+    beforeEach(() => {
+        Logger.getInstance().clean();
+        Consola.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
+        programa = new Programa();
+        halt = new Halt(1, programa);
+    });
+
+    it('al ejecutar la instrucción STORE, guarda en memoria el entero de la cima de la pila', () => {
+        const instruccion = new Store(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.pila.push(new AddressDataType(0), 2); // Dir 0
+        programa.pila.push(new IntegerDataType(64), 2);
+
+        programa.ejecutarSiguienteInstruccion();
+        let dt = DataSegment.getInstance().get(0)[0];
+        expect(dt).toBeInstanceOf(VariableDataType);
+        let variable: VariableDataType = dt as VariableDataType;
+        expect(variable.value.value).toEqual(64);
+    });
+
+    it('al ejecutar la instrucción STOREF, guarda en memoria el real de la cima de la pila', () => {
+        const instruccion = new Storef(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.pila.push(new AddressDataType(0), 2);
+        programa.pila.push(new FloatDataType(100.5), 4);
+
+        programa.ejecutarSiguienteInstruccion();
+        let dt = DataSegment.getInstance().get(0)[0];
+        expect(dt).toBeInstanceOf(VariableDataType);
+        let variable: VariableDataType = dt as VariableDataType;
+        expect(variable.value.value).toEqual(100.5);
+    });
+
+    it('al ejecutar la instrucción STOREB, guarda en memoria el char de la cima de la pila', () => {
+        const instruccion = new Storeb(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.pila.push(new AddressDataType(0), 2);
+        programa.pila.push(new ByteDataType(110), 1);
+
+        programa.ejecutarSiguienteInstruccion();
+        let dt = DataSegment.getInstance().get(0)[0];
+        expect(dt).toBeInstanceOf(VariableDataType);
+        let variable: VariableDataType = dt as VariableDataType;
+        expect(variable.value.value).toEqual(110);
     });
 });

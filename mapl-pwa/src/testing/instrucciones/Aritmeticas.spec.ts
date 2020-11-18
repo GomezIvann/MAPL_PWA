@@ -85,11 +85,14 @@ describe('Un programa en ejecución con dos número reales en la pila,', () => {
     let halt: Halt;
 
     beforeEach(() => {
+        Consola.getInstance().clean();
+        Logger.getInstance().clean();
+        CadenaInb.getInstance().clean();
+        DataSegment.getInstance().clean();
         programa = new Programa();
         halt = new Halt(1, programa);
         programa.pila.push(new FloatDataType(30.75), 4);
         programa.pila.push(new FloatDataType(10.25), 4);
-        Logger.getInstance().clean();
     });
 
     it('al ejecutar la instrucción ADDF, coloca en la cima de esta la suma de ambos', () => {
