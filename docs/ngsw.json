@@ -1,7 +1,7 @@
 {
   "configVersion": 1,
-  "timestamp": 1605739814036,
-  "index": "/index.html",
+  "timestamp": 1605740563340,
+  "index": "/MAPL_PWA/index.html",
   "assetGroups": [
     {
       "name": "app",
@@ -11,13 +11,13 @@
         "ignoreVary": true
       },
       "urls": [
-        "/favicon.ico",
-        "/index.html",
-        "/main.80c6b5e6adfd87c98a82.js",
-        "/manifest.webmanifest",
-        "/polyfills.08cdd93a9921fbb99ed7.js",
-        "/runtime.f9956ac3c2762746a398.js",
-        "/styles.37d9796d366888af8c80.css"
+        "/MAPL_PWA/favicon.ico",
+        "/MAPL_PWA/index.html",
+        "/MAPL_PWA/main.80c6b5e6adfd87c98a82.js",
+        "/MAPL_PWA/manifest.webmanifest",
+        "/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js",
+        "/MAPL_PWA/runtime.f9956ac3c2762746a398.js",
+        "/MAPL_PWA/styles.37d9796d366888af8c80.css"
       ],
       "patterns": []
     },
@@ -29,35 +29,35 @@
         "ignoreVary": true
       },
       "urls": [
-        "/assets/icons/compilador-128x128.png",
-        "/assets/icons/compilador-144x144.png",
-        "/assets/icons/compilador-152x152.png",
-        "/assets/icons/compilador-192x192.png",
-        "/assets/icons/compilador-384x384.png",
-        "/assets/icons/compilador-512x512.png",
-        "/assets/icons/compilador-72x72.png",
-        "/assets/icons/compilador-96x96.png"
+        "/MAPL_PWA/assets/icons/compilador-128x128.png",
+        "/MAPL_PWA/assets/icons/compilador-144x144.png",
+        "/MAPL_PWA/assets/icons/compilador-152x152.png",
+        "/MAPL_PWA/assets/icons/compilador-192x192.png",
+        "/MAPL_PWA/assets/icons/compilador-384x384.png",
+        "/MAPL_PWA/assets/icons/compilador-512x512.png",
+        "/MAPL_PWA/assets/icons/compilador-72x72.png",
+        "/MAPL_PWA/assets/icons/compilador-96x96.png"
       ],
       "patterns": []
     }
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/icons/compilador-128x128.png": "73ef53c89c8ddd33cf088ed2d781bbebeaaaf012",
-    "/assets/icons/compilador-144x144.png": "e91aa5b88854f8f94dc28cabbfb0f23a74dd343f",
-    "/assets/icons/compilador-152x152.png": "80bfe55c2775631fec2367e7ddef9c0da08c233b",
-    "/assets/icons/compilador-192x192.png": "7ce1899a10b785ced286a04f05f485b6819be215",
-    "/assets/icons/compilador-384x384.png": "63cb65ca39ca12181d273590739165858f4e4915",
-    "/assets/icons/compilador-512x512.png": "1764179d2f78ed39ee50253a45451410cf537b54",
-    "/assets/icons/compilador-72x72.png": "52a65ae8b3ca8db69bc6fbc10dad7ff72be3cae6",
-    "/assets/icons/compilador-96x96.png": "99c7b3c93f22da2872eba6ee74d615a3f5b7a66a",
-    "/favicon.ico": "e92a62e42d1070ecf11c995f6b43e798512dc8b5",
-    "/index.html": "07aee43305c9beab0efa8c273f6cbbfe086283a9",
-    "/main.80c6b5e6adfd87c98a82.js": "849fd79035a64b9d1ea6fe3d380126286c544ab2",
-    "/manifest.webmanifest": "0adcbf4e2af8b7c81e53714abf5860c4c4831ae1",
-    "/polyfills.08cdd93a9921fbb99ed7.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
-    "/runtime.f9956ac3c2762746a398.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
-    "/styles.37d9796d366888af8c80.css": "f7b7e3bc5642549f6800a23a347f16f75ae511ea"
+    "/MAPL_PWA/assets/icons/compilador-128x128.png": "73ef53c89c8ddd33cf088ed2d781bbebeaaaf012",
+    "/MAPL_PWA/assets/icons/compilador-144x144.png": "e91aa5b88854f8f94dc28cabbfb0f23a74dd343f",
+    "/MAPL_PWA/assets/icons/compilador-152x152.png": "80bfe55c2775631fec2367e7ddef9c0da08c233b",
+    "/MAPL_PWA/assets/icons/compilador-192x192.png": "7ce1899a10b785ced286a04f05f485b6819be215",
+    "/MAPL_PWA/assets/icons/compilador-384x384.png": "63cb65ca39ca12181d273590739165858f4e4915",
+    "/MAPL_PWA/assets/icons/compilador-512x512.png": "1764179d2f78ed39ee50253a45451410cf537b54",
+    "/MAPL_PWA/assets/icons/compilador-72x72.png": "52a65ae8b3ca8db69bc6fbc10dad7ff72be3cae6",
+    "/MAPL_PWA/assets/icons/compilador-96x96.png": "99c7b3c93f22da2872eba6ee74d615a3f5b7a66a",
+    "/MAPL_PWA/favicon.ico": "e92a62e42d1070ecf11c995f6b43e798512dc8b5",
+    "/MAPL_PWA/index.html": "75a78adca5605a5d597cfc4267921063e15dce3a",
+    "/MAPL_PWA/main.80c6b5e6adfd87c98a82.js": "849fd79035a64b9d1ea6fe3d380126286c544ab2",
+    "/MAPL_PWA/manifest.webmanifest": "0adcbf4e2af8b7c81e53714abf5860c4c4831ae1",
+    "/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
+    "/MAPL_PWA/runtime.f9956ac3c2762746a398.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",
+    "/MAPL_PWA/styles.37d9796d366888af8c80.css": "f7b7e3bc5642549f6800a23a347f16f75ae511ea"
   },
   "navigationUrls": [
     {
