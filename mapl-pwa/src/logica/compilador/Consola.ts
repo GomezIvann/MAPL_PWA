@@ -3,13 +3,13 @@
  */
 export class Consola {
     private static instance: Consola;
-    private _outputs: string[];
+    private _salidas: string[];
 
     /**
      * Constructor privado para evitar new Consola.
      */
     private constructor() {
-        this._outputs = [];
+        this._salidas = [];
     }
 
     /**
@@ -24,56 +24,56 @@ export class Consola {
         
         return Consola.instance;
     }
-    set outputs(value: string[]) {
-        this._outputs = value;
+    set salidas(value: string[]) {
+        this._salidas = value;
     }
-    get outputs(): string[] {
-        return this._outputs.slice();
+    get salidas(): string[] {
+        return this._salidas.slice();
     }
 
     /**
      * Añade una nueva salida a la consola.
      * @param message salida
      */
-    addOutput(message: string) {
-        this._outputs.push(message);
+    addSalida(message: string): void {
+        this._salidas.push(message);
     }
     /**
      * Añade a la consola una nueva salida y un salto de linea.
      * @param message salida
      */
-    addOutputAndNewLine(message: string) {
-        if (this._outputs.length >= 1 && !this._outputs[this._outputs.length-1].endsWith("\n"))
-            this._outputs.push("\n>"+message+"\n");
+    addSalidaConNuevaLinea(message: string): void {
+        if (this._salidas.length >= 1 && !this._salidas[this._salidas.length-1].endsWith("\n"))
+            this._salidas.push("\n>"+message+"\n");
         else
-            this._outputs.push(">"+message+"\n");
+            this._salidas.push(">"+message+"\n");
     }
     /**
      * Añade el nombre del fichero leido.
      * @param message 
      */
-    addNewFileOutput(message: string) {
-        this._outputs.push("c:\\>"+message+"\n");
+    addNewFileSalida(message: string): void {
+        this._salidas.push("c:\\>"+message+"\n");
     }
     /**
      * Devuelve todas las salidas registradas por consola.
      * @param message salida
      */
-    outputsAsString(): string {
-        return this._outputs.join("");
+    salidasAsString(): string {
+        return this._salidas.join("");
     }
     /**
      * Limpia la consola para un nuevo programa.
      */
-    clean() {
-        this._outputs = [];
+    clean(): void {
+        this._salidas = [];
     }
     /**
      * Limpia la consola para una nueva ejecucion del programa.
      * Esto es, vaciar todo menos el nombre del archivo
      */
-    reiniciar() {
-        let file = this._outputs[0];
-        this._outputs = [file];
+    reiniciar(): void {
+        let file = this._salidas[0];
+        this._salidas = [file];
     }
 }

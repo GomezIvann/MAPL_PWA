@@ -55,7 +55,7 @@ export class Logger {
      * Añade una indicencia al registro.
      * @param i Incidencia
      */
-    addIncidencia(i: Incidencia) {
+    addIncidencia(i: Incidencia): void {
         this._incidencias.push(i);
         this._data$.next(this._incidencias);
     }

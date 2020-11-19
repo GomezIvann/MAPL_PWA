@@ -7,13 +7,13 @@ import { environment } from '../environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConsolaComponent } from './consola/consola.component';
 import { InstruccionesComponent } from './instrucciones/instrucciones.component';
-import { PilaComponent } from './pila/pila.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTableModule } from '@angular/material/table';
 import { IncidenciasComponent } from './incidencias/incidencias.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Globals } from './globals';
+import { SegmentoDatosComponent } from './segmento-datos/segmento-datos.component';
 
 
 @NgModule({
@@ -21,8 +21,8 @@ import { Globals } from './globals';
     AppComponent,
     ConsolaComponent,
     InstruccionesComponent,
-    PilaComponent,
-    IncidenciasComponent
+    IncidenciasComponent,
+    SegmentoDatosComponent
   ],
   imports: [
     BrowserModule,

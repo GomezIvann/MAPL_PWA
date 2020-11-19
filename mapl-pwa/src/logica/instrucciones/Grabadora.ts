@@ -32,7 +32,7 @@ export class Grabadora {
         // Siempre se guarda una copia
         this.data = DataSegment.getInstance().data;
         this.cadenaInb = CadenaInb.getInstance().value;
-        this.consola = Consola.getInstance().outputs;
+        this.consola = Consola.getInstance().salidas;
         this.incidencias = Logger.getInstance().incidencias;
     }
     
@@ -48,7 +48,7 @@ export class Grabadora {
     desgrabar(): Stack {
         DataSegment.getInstance().data = this.data.slice();
         CadenaInb.getInstance().value = this.cadenaInb.slice();
-        Consola.getInstance().outputs = this.consola.slice();
+        Consola.getInstance().salidas = this.consola.slice();
         Logger.getInstance().incidencias = this.incidencias.slice();
         return this.getPila();
     }

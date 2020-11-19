@@ -1,6 +1,6 @@
 <div class="main-container">
     <app-instrucciones id="instrucciones" [programa]="programa" (programResponse)="recibirProgramaTrasUpload($event)"></app-instrucciones>
-    <app-pila id="pila" [pila]="programa.pila"></app-pila>
+    <app-segmento-datos id="segData" [pila]="programa.pila"></app-segmento-datos>
     <app-consola id="consola"></app-consola>
     <app-incidencias id="incidencias"></app-incidencias>
 </div>

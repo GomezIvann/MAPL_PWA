@@ -13,7 +13,4 @@ export class Linea {
         else
             this.numeroInstruccion = "";
     }
-    print(): string {
-        return this.numeroInstruccion + this.contenido + "\n";
-    }
 }

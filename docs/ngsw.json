@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1605744476091,
+  "timestamp": 1605802925650,
   "index": "https://gomezivann.github.io/MAPL_PWA/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "https://gomezivann.github.io/MAPL_PWA/favicon.ico",
         "https://gomezivann.github.io/MAPL_PWA/index.html",
-        "https://gomezivann.github.io/MAPL_PWA/main.2e82941bd09436b5a483.js",
+        "https://gomezivann.github.io/MAPL_PWA/main.e2550dfebc1ca8ad02d5.js",
         "https://gomezivann.github.io/MAPL_PWA/manifest.webmanifest",
         "https://gomezivann.github.io/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js",
         "https://gomezivann.github.io/MAPL_PWA/runtime.f9956ac3c2762746a398.js",
@@ -52,8 +52,8 @@
     "https://gomezivann.github.io/MAPL_PWA/assets/icons/compilador-72x72.png": "52a65ae8b3ca8db69bc6fbc10dad7ff72be3cae6",
     "https://gomezivann.github.io/MAPL_PWA/assets/icons/compilador-96x96.png": "99c7b3c93f22da2872eba6ee74d615a3f5b7a66a",
     "https://gomezivann.github.io/MAPL_PWA/favicon.ico": "e92a62e42d1070ecf11c995f6b43e798512dc8b5",
-    "https://gomezivann.github.io/MAPL_PWA/index.html": "6fe07354bd4cf40aaaac648c6784732a57ece48d",
-    "https://gomezivann.github.io/MAPL_PWA/main.2e82941bd09436b5a483.js": "00328a44f1e6e2a8058ef64b12a496c13fd002c3",
+    "https://gomezivann.github.io/MAPL_PWA/index.html": "acd64b68b504f0614901685935749d397dc10862",
+    "https://gomezivann.github.io/MAPL_PWA/main.e2550dfebc1ca8ad02d5.js": "babffa647122097bce3fbfa58b240481fdea35b1",
     "https://gomezivann.github.io/MAPL_PWA/manifest.webmanifest": "0adcbf4e2af8b7c81e53714abf5860c4c4831ae1",
     "https://gomezivann.github.io/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
     "https://gomezivann.github.io/MAPL_PWA/runtime.f9956ac3c2762746a398.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

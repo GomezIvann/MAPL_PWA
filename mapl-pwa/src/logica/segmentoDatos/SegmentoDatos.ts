@@ -64,7 +64,7 @@ export class DataSegment {
      * @param value
      * @param address 
      */
-    add(value: DataType, address: number) {
+    add(value: DataType, address: number): void {
         this._actualSize += value.size;
         if (this.isFull())
             throw new Error("Overflow del segmento de datos. No se pueden insertar más bytes.");
@@ -103,7 +103,7 @@ export class DataSegment {
     /**
      * Vacia el segmento de datos.
      */
-    clean() {
+    clean(): void {
         this.data = new Array<[DataType, boolean]>(this.SIZE);
         this._actualSize = 0;
     }
@@ -131,7 +131,7 @@ export class DataSegment {
      * @param startDir direccion de comienzo de la zona
      * @param zoneSize tamaño de la zona
      */
-    deleteDataZone(startDir: number, zoneSize: number) {
+    deleteDataZone(startDir: number, zoneSize: number): void {
         this._actualSize -= zoneSize;
         for(let i = 0; i < zoneSize; i++)
             delete this._data[startDir+i]; // igual que this._data[address] = undefined

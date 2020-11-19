@@ -31,7 +31,7 @@ describe('Un programa en ejecución,', () => {
 
         expect(window.prompt).toHaveBeenCalledWith("[in] Escriba un número entero:");
         expect(programa.pila.top().value).toEqual(25);
-        expect(Consola.getInstance().outputs[0]).toEqual(">Escriba un entero: 25\n");
+        expect(Consola.getInstance().salidas[0]).toEqual(">Escriba un entero: 25\n");
     });
 
     it('al ejecutar la instrucción INF, mete el real introducido por el usuario en la pila', () => {
@@ -44,7 +44,7 @@ describe('Un programa en ejecución,', () => {
 
         expect(window.prompt).toHaveBeenCalledWith("[in] Escriba un número real:");
         expect(programa.pila.top().value).toEqual(25.75);
-        expect(Consola.getInstance().outputs[0]).toEqual(">Escriba un real: 25.75\n");
+        expect(Consola.getInstance().salidas[0]).toEqual(">Escriba un real: 25.75\n");
     });
 
     it('al ejecutar la instrucción INB, mete un char de la cadena introducida por el usuario en la pila', () => {
@@ -61,7 +61,7 @@ describe('Un programa en ejecución,', () => {
         expect(window.prompt).toHaveBeenCalledWith("[in] Escriba una cadena de caracteres (cada inb posterior insertará uno de ellos):");
         expect(programa.pila.top().value).toEqual(97);
         expect(CadenaInb.getInstance().value[2]).toEqual("b");
-        expect(Consola.getInstance().outputs[0]).toEqual(">Escriba una cadena: abc\n");
+        expect(Consola.getInstance().salidas[0]).toEqual(">Escriba una cadena: abc\n");
 
         // Si se vuelve a llamar a INB comprobamos que sigue con la cadena anterior (si su longitud es > 1)
         programa.ejecutarSiguienteInstruccion();
@@ -92,7 +92,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(value, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Consola.getInstance().outputs[0]).toEqual(value.toString());
+        expect(Consola.getInstance().salidas[0]).toEqual(value.toString());
     });
 
     it('al ejecutar la instrucción OUTF, imprime por consola el real en la cima de la pila', () => {
@@ -103,7 +103,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(value, 4);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Consola.getInstance().outputs[0]).toEqual(value.toString());
+        expect(Consola.getInstance().salidas[0]).toEqual(value.toString());
     });
 
     it('al ejecutar la instrucción OUTB, imprime por consola el char en la cima de la pila', () => {
@@ -115,6 +115,6 @@ describe('Un programa en ejecución,', () => {
         programa.ejecutarSiguienteInstruccion();
 
         programa.ejecutarSiguienteInstruccion();
-        expect(JSON.stringify(Consola.getInstance().outputs[0])).toEqual(value.toString());
+        expect(JSON.stringify(Consola.getInstance().salidas[0])).toEqual(value.toString());
     });
 });

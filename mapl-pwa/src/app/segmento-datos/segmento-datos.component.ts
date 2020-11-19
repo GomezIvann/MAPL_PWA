@@ -1,18 +1,16 @@
-import { Input } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { DataType } from 'src/logica/util/DataTypes';
-import { Stack } from 'src/logica/segmentoDatos/Stack';
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
+import { Stack } from 'src/logica/segmentoDatos/Stack';
+import { DataType } from 'src/logica/util/DataTypes';
 import { Globals } from '../globals';
 
-
 @Component({
-  selector: 'app-pila',
-  templateUrl: './pila.component.html',
-  styleUrls: ['./pila.component.css']
+  selector: 'app-segmento-datos',
+  templateUrl: './segmento-datos.component.html',
+  styleUrls: ['./segmento-datos.component.css']
 })
-export class PilaComponent implements OnInit {
+export class SegmentoDatosComponent implements OnInit {
   // Lo recibe del componente padre app.component.
   private _pila: Stack;
 
@@ -41,7 +39,7 @@ export class PilaComponent implements OnInit {
     return this._pila;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void { }
 
   /**
    * Genera la suscripcion a partir del observable.

@@ -42,7 +42,7 @@ export class CadenaInb {
     isVacia(): boolean {
         return this._value.length === 0;
     }
-    clean() {
+    clean(): void {
         this._value = [];
     }
 }

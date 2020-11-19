@@ -85,7 +85,7 @@ export class Memory extends AbstractDataSegmentZone {
      * Busca una variable por el nombre para ver si se encuentra repetida.
      * @param variable
      */
-    private searchVariable(variable: VariableDataType) {
+    private searchVariable(variable: VariableDataType): [DataType, boolean] {
         return this.dataSegment.data.find(tuple => {
             if (tuple === undefined || tuple[0] === undefined || !(tuple[0] instanceof VariableDataType))
                 return false;
@@ -131,7 +131,7 @@ export class Memory extends AbstractDataSegmentZone {
      * @param tuple 
      * @param address 
      */
-    private isCargable(tuple: [DataType, boolean], address: number) {
+    private isCargable(tuple: [DataType, boolean], address: number): void {
         if (tuple === undefined) // Posicion vacia
             throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir " + address
                 + "). Se introducirá basura en la pila.");

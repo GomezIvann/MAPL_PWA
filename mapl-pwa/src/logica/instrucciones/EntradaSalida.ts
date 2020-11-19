@@ -21,7 +21,7 @@ export class In extends InstruccionInteger {
         stack.push(dt, this.getSize());
 
         // Mostramos el entero por consola
-        Consola.getInstance().addOutputAndNewLine("Escriba un entero: "+dt.value);
+        Consola.getInstance().addSalidaConNuevaLinea("Escriba un entero: "+dt.value);
     }
 }
 export class Inf extends InstruccionFloat {
@@ -35,7 +35,7 @@ export class Inf extends InstruccionFloat {
         stack.push(dt, this.getSize());
 
         // Mostramos el real por consola
-        Consola.getInstance().addOutputAndNewLine("Escriba un real: "+dt.value);
+        Consola.getInstance().addSalidaConNuevaLinea("Escriba un real: "+dt.value);
     }
 }
 export class Inb extends InstruccionByte {
@@ -54,7 +54,7 @@ export class Inb extends InstruccionByte {
             stack.push(dt, this.getSize());
 
             // Mostramos la cadena completa por consola
-            Consola.getInstance().addOutputAndNewLine("Escriba una cadena: "+insertedValue.trim());
+            Consola.getInstance().addSalidaConNuevaLinea("Escriba una cadena: "+insertedValue.trim());
         }
         else {
             let dt = new ByteDataType(this.cadena.getChar().charCodeAt(0));
@@ -70,13 +70,13 @@ export class Inb extends InstruccionByte {
 export class Out extends InstruccionInteger {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getSize());
-        Consola.getInstance().addOutput(dt.toString());
+        Consola.getInstance().addSalida(dt.toString());
     }
 }
 export class Outf extends InstruccionFloat {
     execute(stack: Stack, memory: Memory): void {
         let dt = stack.pop(this.getSize());
-        Consola.getInstance().addOutput(dt.toString());
+        Consola.getInstance().addSalida(dt.toString());
     }
 }
 export class Outb extends InstruccionByte {
@@ -87,6 +87,6 @@ export class Outb extends InstruccionByte {
          * En este caso si que necesitamos que interprete los caracteres especiales como \n (nueva linea)
          * o \t (tabulacion).
          */
-        Consola.getInstance().addOutput(String.fromCharCode(dt.value));
+        Consola.getInstance().addSalida(String.fromCharCode(dt.value));
     }
 }

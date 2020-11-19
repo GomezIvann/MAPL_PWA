@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PilaComponent } from './pila.component';
+import { SegmentoDatosComponent } from './segmento-datos.component';
 
-describe('PilaComponent', () => {
-  let component: PilaComponent;
-  let fixture: ComponentFixture<PilaComponent>;
+describe('SegmentoDatosComponent', () => {
+  let component: SegmentoDatosComponent;
+  let fixture: ComponentFixture<SegmentoDatosComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ PilaComponent ]
+      declarations: [ SegmentoDatosComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PilaComponent);
+    fixture = TestBed.createComponent(SegmentoDatosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
