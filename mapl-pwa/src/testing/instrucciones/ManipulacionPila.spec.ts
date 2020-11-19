@@ -329,7 +329,20 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("Se lee una zona de memoria que no ha sido inicializada (dir 10). Se introducirá basura en la pila.");
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se lee una zona de memoria que no ha sido inicializada (dir 10). Se introducirá basura en la pila.");
+    });
+
+    it('al ejecutar la instrucción LOAD a una dirección fuera del rango [0-1024], se registra una incidencia.', () => {
+        const instruccion = new Load(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("load", 0));
+        programa.texto.push(new Linea("halt", 1));
+        const address = new AddressDataType(1070);
+        programa.pila.push(address, 2);
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Acceso a una zona de memoria no existente (dir 1070 a 1071).");
     });
 
     it('al ejecutar la instrucción LOAD a una dirección que no es la de comienzo de la variable, se registra una incidencia.', () => {
@@ -344,7 +357,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("Se ha realizado una lectura parcial en memoria libre (dir 1).");
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se ha realizado una lectura parcial en memoria libre (dir 1).");
     });
 
     it('al ejecutar la instrucción LOAD a una dirección que contiene un valor de la pila, se registra una incidencia.', () => {
@@ -359,7 +372,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("Se lee una zona de memoria que no contiene una variable (dir 1022).");
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se lee una zona de memoria que no contiene una variable (dir 1022).");
     });
 
     it('al ejecutar la instrucción LOAD a una dirección que contiene una variable sin inicializar, se registra una incidencia.', () => {
@@ -374,7 +387,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("Se lee la variable 'Var0' la cual no ha sido inicializada. Se introducirá basura en la pila.");
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se lee la variable 'Var0' la cual no ha sido inicializada. Se introducirá basura en la pila.");
     });
 
     it('al ejecutar la instrucción LOADF, se piden más bytes de los que hay en esa posición, se registra una incidencia.', () => {
@@ -389,7 +402,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("La lectura transfiere más bytes de los que tiene 'Var0'."
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("La lectura transfiere más bytes de los que tiene 'Var0'."
                 +" La variable tiene 2 bytes y se han leído 4 por lo que se introduzirá basura en la pila.");
     });
 
@@ -405,7 +418,7 @@ describe('Un programa en ejecución,', () => {
         programa.pila.push(address, 2);
 
         programa.ejecutarSiguienteInstruccion();
-        expect(Logger.getInstance().incidencias[0].descripcion).toContain("La lectura transfiere menos bytes de los que tiene 'Var0'."
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("La lectura transfiere menos bytes de los que tiene 'Var0'."
                 +" La variable tiene 4 bytes y se han leído 2 por lo que se introduzirá basura en la pila.");
     });
 });
@@ -463,5 +476,91 @@ describe('Un programa en ejecución,', () => {
         expect(dt).toBeInstanceOf(VariableDataType);
         let variable: VariableDataType = dt as VariableDataType;
         expect(variable.value.value).toEqual(110);
+    });
+
+    it('al ejecutar la instrucción STOREB, si accede a una posición fuera del rango [0-1024], registra una incidencia.', () => {
+        const instruccion = new Storeb(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("store", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new AddressDataType(1025), 2);
+        programa.pila.push(new ByteDataType(110), 1);
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Acceso a una zona de memoria no existente (dir 1025 a 1025).");
+    });
+
+    it('al ejecutar la instrucción STORE, si escribe menos bytes de los que ocupa la variable ya en memoria, registra una incidencia.', () => {
+        const instruccion = new Store(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("store", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new AddressDataType(0), 2);
+        programa.pila.push(new IntegerDataType(10), 2);
+        programa.memoria.store(0, new VariableDataType("Var0", new FloatDataType(3.5), 4)); // Variable en memoria
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se escriben menos bytes de los que ocupa 'Var0'. La variable ocupa 4 bytes y se están escribiendo 2.");
+    });
+
+    it('al ejecutar la instrucción STOREF, si escribe mas bytes de los que ocupa la variable ya en memoria, registra una incidencia.', () => {
+        const instruccion = new Storef(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("storef", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new AddressDataType(0), 2);
+        programa.pila.push(new FloatDataType(1.5), 4);
+        programa.memoria.store(0, new VariableDataType("Var0", new IntegerDataType(1), 2)); // Variable en memoria
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se escriben más bytes de los que ocupa 'Var0'. La variable ocupa 2 bytes y se están escribiendo 4.");
+    });
+
+    it('al ejecutar la instrucción STORE, escribe sobre una variable sin cubrir todos sus bytes, registra una incidencia.', () => {
+        const instruccion = new Store(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("store", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new AddressDataType(1), 2);
+        programa.pila.push(new IntegerDataType(10), 2);
+        programa.memoria.store(0, new VariableDataType("Var0", new FloatDataType(4.5), 4)); // Variable en memoria
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Se ha realizado una escritura parcial en memoria libre (dir 1).");
+    });
+
+    it('al ejecutar la instrucción STORE, si escribe sobre un valor de la pila, registra una incidencia.', () => {
+        const instruccion = new Store(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("store", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new IntegerDataType(1), 2);
+        programa.pila.push(new AddressDataType(1022), 2);
+        programa.pila.push(new IntegerDataType(10), 2);
+
+        programa.ejecutarSiguienteInstruccion();
+        expect(Logger.getInstance().incidencias[0].descripcion).toEqual("Posible escritura ilegal sobre valor en la pila (dir 1022 a 1023).");
+    });
+
+    it('al ejecutar la instrucción STORE, se puede sobreescribir una variable siempre y cuando ocupen todos sus bytes.', () => {
+        const instruccion = new Storef(0);
+        programa.codigo.push(instruccion);
+        programa.codigo.push(halt);
+        programa.texto.push(new Linea("storef", 0));
+        programa.texto.push(new Linea("halt", 1));
+        programa.pila.push(new AddressDataType(0), 2);
+        programa.pila.push(new FloatDataType(350.25), 4);
+        programa.memoria.store(0, new VariableDataType("Var0", new FloatDataType(4.5), 4)); // Variable en memoria
+
+        programa.ejecutarSiguienteInstruccion();
+        let dt = DataSegment.getInstance().get(0)[0];
+        expect(dt).toBeInstanceOf(VariableDataType);
+        let variable: VariableDataType = dt as VariableDataType;
+        expect(variable.value.value).toEqual(350.25);
     });
 });

@@ -1,4 +1,4 @@
-import { PrimitiveDataType, VariableDataType } from '../util/DataTypes';
+import { DataType, PrimitiveDataType, VariableDataType } from '../util/DataTypes';
 import { AbstractDataSegmentZone } from './SegmentoDatos';
 
 export class Memory extends AbstractDataSegmentZone {
@@ -15,7 +15,7 @@ export class Memory extends AbstractDataSegmentZone {
      * @param instructionSize 
      */
     store(address: number, variable: VariableDataType): void {
-        if (address > this.dataSegment.SIZE)
+        if (address > this.dataSegment.SIZE || address < 0)
             throw new Error("Acceso a una zona de memoria no existente (dir " + address + " a " + (address + variable.size - 1) + ").");
         else if (!this.isInsertable(address, variable.size))
             throw new Error("Se ha realizado una escritura parcial en memoria libre (dir " + address + ").");
@@ -24,8 +24,11 @@ export class Memory extends AbstractDataSegmentZone {
         if (this.dataSegment.get(address) !== undefined) {
             let storedVariable = this.dataSegment.get(address)[0] as VariableDataType;
 
-            if (variable.size !== storedVariable.size)
+            if (variable.size > storedVariable.size)
                 throw new Error("Se escriben más bytes de los que ocupa '" + storedVariable.name + "'. La variable ocupa " + storedVariable.size +
+                    " bytes y se están escribiendo " + variable.size + ".");
+            else if (variable.size < storedVariable.size)
+                throw new Error("Se escriben menos bytes de los que ocupa '" + storedVariable.name + "'. La variable ocupa " + storedVariable.size +
                     " bytes y se están escribiendo " + variable.size + ".");
 
             // Dado que estamos 'modificando' una variable en memoria, conservamos su nombre
@@ -103,19 +106,13 @@ export class Memory extends AbstractDataSegmentZone {
     load(instructionSize: number, address: number): VariableDataType {
         let tuple = this.dataSegment.get(address);
 
-        if (tuple === undefined) // Posicion vacia
-            throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir " + address
-                + "). Se introducirá basura en la pila.");
-        else if (tuple[0] === undefined && tuple[1]) // Lectura parcial (no es la direccion de comienzo de la variable)
-            throw new Error("Se ha realizado una lectura parcial en memoria libre (dir " + address + ").");
-        else if (!(tuple[0] instanceof VariableDataType)) // No se lee una variable (generalmente al intentar leer una direccion ocupada por un valor de la pila)
-            throw new Error("Se lee una zona de memoria que no contiene una variable (dir " + address + ").");
-        else if (tuple[0].value === undefined) // Se lee una variable definida en memoria, pero que no has sido inicializada
-            throw new Error("Se lee la variable '" + tuple[0].name + "' la cual no ha sido inicializada. "
-                + "Se introducirá basura en la pila.");
+        if (address > this.dataSegment.SIZE || address < 0)
+            throw new Error("Acceso a una zona de memoria no existente (dir " + address + " a " + (address + instructionSize - 1) + ").");
+
+        this.isCargable(tuple, address);
 
         /**
-         * Llegados a este punto, la posicion a la que accedemos contiene una variable con un valor definido. 
+         * Llegados a este punto, la posicion a la que accedemos contiene una variable definida. 
          * Pasamos a realizar la comprobacion de tipos.
          */
         let variable = this.dataSegment.get(address)[0] as VariableDataType;
@@ -127,5 +124,23 @@ export class Memory extends AbstractDataSegmentZone {
                 + variable.size + " bytes y se han leído " + instructionSize + " por lo que se introduzirá basura en la pila.");
 
         return variable;
+    }
+
+    /**
+     * Metodo que se asegura de que en la a la que accede load contiene una variable definida. 
+     * @param tuple 
+     * @param address 
+     */
+    private isCargable(tuple: [DataType, boolean], address: number) {
+        if (tuple === undefined) // Posicion vacia
+            throw new Error("Se lee una zona de memoria que no ha sido inicializada (dir " + address
+                + "). Se introducirá basura en la pila.");
+        else if (tuple[0] === undefined && tuple[1]) // Lectura parcial (no es la direccion de comienzo de la variable)
+            throw new Error("Se ha realizado una lectura parcial en memoria libre (dir " + address + ").");
+        else if (!(tuple[0] instanceof VariableDataType)) // No se lee una variable (generalmente al intentar leer una direccion ocupada por un valor de la pila)
+            throw new Error("Se lee una zona de memoria que no contiene una variable (dir " + address + ").");
+        else if (tuple[0].value === undefined) // Se lee una variable definida en memoria, pero que no has sido inicializada
+            throw new Error("Se lee la variable '" + tuple[0].name + "' la cual no ha sido inicializada. "
+                + "Se introducirá basura en la pila.");
     }
 }

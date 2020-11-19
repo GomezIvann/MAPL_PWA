@@ -8,7 +8,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "deployment": "ng build --prod --output-path ../docs --base-href /MAPL_PWA/"
+    "deployment": "ng build --prod --output-path ../docs --base-href https://gomezivann.github.io/MAPL_PWA/"
   },
   "private": true,
   "dependencies": {
