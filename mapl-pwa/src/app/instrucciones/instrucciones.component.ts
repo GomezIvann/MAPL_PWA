@@ -1,7 +1,7 @@
 import { EventEmitter, Input, Output } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
-import { Linea } from 'src/logica/compilador/Linea';
-import { Programa } from 'src/logica/compilador/Programa';
+import { Linea } from 'src/logica/depurador/Linea';
+import { Programa } from 'src/logica/depurador/Programa';
 import { Parser } from 'src/logica/util/Parser';
 import { Globals } from '../globals';
 

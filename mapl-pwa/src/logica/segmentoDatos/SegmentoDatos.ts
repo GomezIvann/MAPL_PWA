@@ -6,7 +6,7 @@ import { DataType } from '../util/DataTypes';
  * programa.
  * 
  * Implementado como un Singleton para facilitar el reinicio del segmento de datos al final de cada 
- * ejecucion y con la carga de un nuevo programa. La seccion de datos de la pila deberia quedar vacia (SP = 1024)
+ * ejecucion y con la carga de un nuevo programa (misma razon que CadenaInb). La seccion de datos de la pila deberia quedar vacia (SP = 1024)
  * pero la seccion de la memoria se debe vaciar al final de la ejecucion manualmente.
  * Tiene sentido que solo haya una instancia del Segmento de datos usada indistintamente por la memoria y por la pila.
  */
@@ -32,7 +32,7 @@ export class DataSegment {
 
     /**
      * Objeto encargado de generar y emitir los eventos de actualizacion
-     * del almacen de datos (esto es, la variable stack).
+     * del almacen de datos (esto es, la variable data en DataSegment).
      * El sujeto se actualiza en todos los sitios donde se actualice el segmento de datos (add, remove y clean)
      */
     private _data$: Subject<[DataType, boolean][]>;

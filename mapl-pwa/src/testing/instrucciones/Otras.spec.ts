@@ -1,6 +1,6 @@
-import { Consola } from 'src/logica/compilador/Consola';
-import { Linea } from 'src/logica/compilador/Linea';
-import { Programa } from 'src/logica/compilador/Programa';
+import { Consola } from 'src/logica/depurador/Consola';
+import { Linea } from 'src/logica/depurador/Linea';
+import { Programa } from 'src/logica/depurador/Programa';
 import { Halt } from "src/logica/instrucciones/Otras";
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';
 import { CadenaInb } from 'src/logica/util/CadenaInb';

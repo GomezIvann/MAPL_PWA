@@ -1,5 +1,5 @@
 import { Observable, Subject } from 'rxjs';
-import { Incidencia } from '../compilador/Incidencia';
+import { Incidencia } from '../depurador/Incidencia';
 
 /**
  * SINGLETON: Logger con las incidencias de la ejecucion del programa.

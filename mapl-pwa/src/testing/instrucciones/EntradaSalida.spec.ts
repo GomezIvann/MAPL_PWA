@@ -1,5 +1,5 @@
-import { Consola } from 'src/logica/compilador/Consola';
-import { Programa } from "src/logica/compilador/Programa";
+import { Consola } from 'src/logica/depurador/Consola';
+import { Programa } from "src/logica/depurador/Programa";
 import { In, Inb, Inf, Out, Outb, Outf } from 'src/logica/instrucciones/EntradaSalida';
 import { Halt } from "src/logica/instrucciones/Otras";
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';

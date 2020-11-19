@@ -62,7 +62,7 @@ export class ParametroVariable extends VariableDataType {
 }
 
 /**
- * Datos de tipos primitivos que usan los programas del compilador. Cada uno de estos datos tiene asociado un tamaño (size).
+ * Datos de tipos primitivos que usan los programas del depurador. Cada uno de estos datos tiene asociado un tamaño (size).
  * Pueden ser:
  *      - Entero (Integer o int): 2 bytes.
  *      - Flotantes (Float): 4 bytes.

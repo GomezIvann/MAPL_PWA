@@ -1,5 +1,5 @@
-import { Label } from '../compilador/Label';
-import { Programa } from '../compilador/Programa';
+import { Label } from '../depurador/Label';
+import { Programa } from '../depurador/Programa';
 import { PrimitiveSizes } from '../util/DataTypes';
 import { Stack } from '../segmentoDatos/Stack';
 import { Grabadora } from './Grabadora';

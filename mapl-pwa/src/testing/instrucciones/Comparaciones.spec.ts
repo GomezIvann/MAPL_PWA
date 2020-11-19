@@ -1,5 +1,5 @@
-import { Consola } from 'src/logica/compilador/Consola';
-import { Programa } from 'src/logica/compilador/Programa';
+import { Consola } from 'src/logica/depurador/Consola';
+import { Programa } from 'src/logica/depurador/Programa';
 import { Eq, Eqf, Ge, Gef, Gt, Gtf, Le, Lef, Lt, Ltf, Ne, Nef } from "src/logica/instrucciones/Comparaciones";
 import { Halt } from 'src/logica/instrucciones/Otras';
 import { DataSegment } from 'src/logica/segmentoDatos/SegmentoDatos';

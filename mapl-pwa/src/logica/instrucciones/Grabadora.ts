@@ -1,10 +1,10 @@
-import { Consola } from '../compilador/Consola';
+import { Consola } from '../depurador/Consola';
 import { CadenaInb } from '../util/CadenaInb';
 import { DataType } from '../util/DataTypes';
 import { Stack } from '../segmentoDatos/Stack';
 import { DataSegment } from '../segmentoDatos/SegmentoDatos';
 import { Logger } from '../util/Logger';
-import { Incidencia } from '../compilador/Incidencia';
+import { Incidencia } from '../depurador/Incidencia';
 
 /**
  * Clase encargada de grabar el estado del programa antes de la ejecuccion de la instruccion a la que esta asociada.

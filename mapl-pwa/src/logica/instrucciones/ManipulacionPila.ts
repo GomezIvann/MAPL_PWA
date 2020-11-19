@@ -2,7 +2,7 @@ import { AddressDataType, ByteDataType, FloatDataType, IntegerDataType, Primitiv
 import { Memory } from '../segmentoDatos/Memoria';
 import { Stack } from '../segmentoDatos/Stack';
 import { InstruccionAddress, InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
-import { Lenguaje } from '../compilador/Lenguaje';
+import { Lenguaje } from '../depurador/Lenguaje';
 
 
 /**

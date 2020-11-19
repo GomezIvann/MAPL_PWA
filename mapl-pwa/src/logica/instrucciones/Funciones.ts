@@ -1,9 +1,9 @@
-import { Programa } from '../compilador/Programa';
+import { Programa } from '../depurador/Programa';
 import { IntegerDataType, ParametroVariable, PrimitiveDataType, PrimitiveSizes, VariableDataType } from '../util/DataTypes';
 import { Stack, StackFrame } from '../segmentoDatos/Stack';
 import { Memory } from '../segmentoDatos/Memoria';
 import { Instruccion, InstruccionLabel } from './Instruccion';
-import { Funcion } from '../compilador/Funcion';
+import { Funcion } from '../depurador/Funcion';
 
 /**
  * -----------------------------------------------------

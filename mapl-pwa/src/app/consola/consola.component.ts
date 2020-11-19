@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Consola } from 'src/logica/compilador/Consola';
+import { Consola } from 'src/logica/depurador/Consola';
 
 @Component({
   selector: 'app-consola',

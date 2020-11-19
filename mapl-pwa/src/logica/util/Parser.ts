@@ -6,16 +6,16 @@ import { And, Not, Or } from '../instrucciones/Logicas';
 import { Dup, Pop, Push, Pushf, Pushb, Popb, Popf, Dupb, Dupf, Load, Loadb, Loadf, Store, Storef, Storeb, Pusha } from '../instrucciones/ManipulacionPila';
 import { Halt, Nop } from '../instrucciones/Otras';
 import { Jmp, Jnz, Jz } from '../instrucciones/Salto';
-import { Consola } from '../compilador/Consola';
-import { Label } from '../compilador/Label';
-import { Lenguaje, Tipos } from '../compilador/Lenguaje';
-import { Programa } from '../compilador/Programa';
-import { Linea } from '../compilador/Linea';
+import { Consola } from '../depurador/Consola';
+import { Label } from '../depurador/Label';
+import { Lenguaje, Tipos } from '../depurador/Lenguaje';
+import { Programa } from '../depurador/Programa';
+import { Linea } from '../depurador/Linea';
 import { Call, Enter, Ret } from '../instrucciones/Funciones';
 import { Instruccion, InstruccionLabel } from '../instrucciones/Instruccion';
 import { PrimitiveSizes, VariableDataType } from './DataTypes';
-import { Funcion } from '../compilador/Funcion';
-import { ParserIncidencia } from '../compilador/Incidencia';
+import { Funcion } from '../depurador/Funcion';
+import { ParserIncidencia } from '../depurador/Incidencia';
 import { Logger } from './Logger';
 
 /**

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Incidencia } from 'src/logica/compilador/Incidencia';
+import { Incidencia } from 'src/logica/depurador/Incidencia';
 import { Logger } from 'src/logica/util/Logger';
 
 @Component({

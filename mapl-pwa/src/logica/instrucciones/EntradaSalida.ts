@@ -1,7 +1,7 @@
 import { ByteDataType, FloatDataType, IntegerDataType } from '../util/DataTypes';
 import { Stack } from '../segmentoDatos/Stack';
 import { InstruccionByte, InstruccionFloat, InstruccionInteger } from './Instruccion';
-import { Consola } from '../compilador/Consola';
+import { Consola } from '../depurador/Consola';
 import { Memory } from '../segmentoDatos/Memoria';
 import { CadenaInb } from '../util/CadenaInb';
 

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Programa } from 'src/logica/compilador/Programa';
+import { Programa } from 'src/logica/depurador/Programa';
 
 import { InstruccionesComponent } from './instrucciones.component';
 

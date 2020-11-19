@@ -1,6 +1,6 @@
 
 /**
- * SINGLETON: Cadena comun para las instrucciones Inb (una unica instancia)
+ * SINGLETON: Cadena comun para las instrucciones Inb (una unica instancia).
  * Se hace necesario un singleton debido a que la cadena se debe reiniciar al final de la ejecucion
  * completa del programa. Si pasasemos esta variable por referencia, como todo en TypeScript, funcionaria tambien, 
  * pero solo una iteracion, ya que en la siguiente seguirian usando las instrucciones Inb esa instancia, que podria 

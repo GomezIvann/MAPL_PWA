@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { Programa } from 'src/logica/compilador/Programa';
-import { Globals } from './globals';
+import { Programa } from 'src/logica/depurador/Programa';
 
 @Component({
   selector: 'app-root',
