@@ -3,6 +3,7 @@
     height: 211px;
     max-width: 100%;
     overflow: auto;
+    margin-bottom: 30px;
 }
 label {
     display: block;
