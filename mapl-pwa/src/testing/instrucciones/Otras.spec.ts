@@ -7,7 +7,7 @@ import { CadenaInb } from 'src/logica/util/CadenaInb';
 import { IntegerDataType } from 'src/logica/util/DataTypes';
 import { Logger } from 'src/logica/util/Logger';
 
-describe('Un programa,', () => {
+describe('Un programa en ejecución,', () => {
     let programa: Programa;
     let halt: Halt;
 

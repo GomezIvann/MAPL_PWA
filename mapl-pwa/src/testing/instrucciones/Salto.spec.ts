@@ -1,6 +1,5 @@
 import { Consola } from "src/logica/depurador/Consola";
 import { Label } from 'src/logica/depurador/Label';
-import { Linea } from "src/logica/depurador/Linea";
 import { Programa } from "src/logica/depurador/Programa";
 import { Sub } from 'src/logica/instrucciones/Aritmeticas';
 import { Dup, Push } from 'src/logica/instrucciones/ManipulacionPila';
@@ -8,12 +7,10 @@ import { Halt } from "src/logica/instrucciones/Otras";
 import { Jmp, Jnz, Jz } from 'src/logica/instrucciones/Salto';
 import { DataSegment } from "src/logica/segmentoDatos/SegmentoDatos";
 import { CadenaInb } from "src/logica/util/CadenaInb";
-import { IntegerDataType } from "src/logica/util/DataTypes";
 import { Logger } from "src/logica/util/Logger";
 
-describe('Un programa,', () => {
+describe('Un programa en ejecución,', () => {
     let programa: Programa;
-    let halt: Halt;
 
     beforeEach(() => {
         Logger.getInstance().clean();

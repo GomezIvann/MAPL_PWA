@@ -92,8 +92,8 @@ describe('Un programa en ejecución con dos número reales en la pila,', () => {
     let halt: Halt;
 
     beforeEach(() => {
-        Consola.getInstance().clean();
         Logger.getInstance().clean();
+        Consola.getInstance().clean();
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
         programa = new Programa();

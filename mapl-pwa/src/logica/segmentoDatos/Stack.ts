@@ -144,7 +144,7 @@ export class Stack extends AbstractDataSegmentZone {
      */
     allocateLocalVariables(cte: number): void {
         this._sp -= cte;
-        this.allocates.push([this._sp, this._sp + cte]);
+        this.allocates.push([this._sp, this._sp + cte - 1]);
     }
 
     /**
@@ -171,7 +171,7 @@ export class Stack extends AbstractDataSegmentZone {
 
         while (cte3 !== 0) {
             if (cte3 < 0)
-                throw new Error("Se esperaban en la cima de la pila " + sizeParams + " bytes." +
+                throw new Error("Se esperaban en la cima de la pila " + sizeParams + " bytes de parámetros. " +
                     "Sin embargo, ese valor no retira de la pila valores completos.");
 
             pdt = this.pop(this.top().size); // Sacamos el valor en la cima

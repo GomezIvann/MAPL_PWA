@@ -12,8 +12,8 @@ describe('Un programa en ejecución,', () => {
     let halt: Halt;
 
     beforeEach(() => {
-        Consola.getInstance().clean();
         Logger.getInstance().clean();
+        Consola.getInstance().clean();
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
         programa = new Programa();
@@ -76,8 +76,8 @@ describe('Un programa en ejecución,', () => {
     let halt: Halt;
 
     beforeEach(() => {
-        Consola.getInstance().clean();
         Logger.getInstance().clean();
+        Consola.getInstance().clean();
         CadenaInb.getInstance().clean();
         DataSegment.getInstance().clean();
         programa = new Programa();

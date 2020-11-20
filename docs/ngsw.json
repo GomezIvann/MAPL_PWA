@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1605815850910,
+  "timestamp": 1605830495839,
   "index": "https://gomezivann.github.io/MAPL_PWA/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "https://gomezivann.github.io/MAPL_PWA/favicon.ico",
         "https://gomezivann.github.io/MAPL_PWA/index.html",
-        "https://gomezivann.github.io/MAPL_PWA/main.9600d2c759916c45fba1.js",
+        "https://gomezivann.github.io/MAPL_PWA/main.37f4c53cbad2995ad76c.js",
         "https://gomezivann.github.io/MAPL_PWA/manifest.webmanifest",
         "https://gomezivann.github.io/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js",
         "https://gomezivann.github.io/MAPL_PWA/runtime.f9956ac3c2762746a398.js",
@@ -52,8 +52,8 @@
     "https://gomezivann.github.io/MAPL_PWA/assets/icons/depurador-72x72.png": "52a65ae8b3ca8db69bc6fbc10dad7ff72be3cae6",
     "https://gomezivann.github.io/MAPL_PWA/assets/icons/depurador-96x96.png": "99c7b3c93f22da2872eba6ee74d615a3f5b7a66a",
     "https://gomezivann.github.io/MAPL_PWA/favicon.ico": "e92a62e42d1070ecf11c995f6b43e798512dc8b5",
-    "https://gomezivann.github.io/MAPL_PWA/index.html": "1a2e19ac15a46d1fc78677d728d255f0b479557e",
-    "https://gomezivann.github.io/MAPL_PWA/main.9600d2c759916c45fba1.js": "babffa647122097bce3fbfa58b240481fdea35b1",
+    "https://gomezivann.github.io/MAPL_PWA/index.html": "eaa72735f5ddf7766d9176a94f2bf5f055b6596e",
+    "https://gomezivann.github.io/MAPL_PWA/main.37f4c53cbad2995ad76c.js": "1eb08472bcb9bdda38d578462a8277e0bcf8c254",
     "https://gomezivann.github.io/MAPL_PWA/manifest.webmanifest": "ec8c1608d5896bd4569dedc8afbc1e9d2e331c47",
     "https://gomezivann.github.io/MAPL_PWA/polyfills.08cdd93a9921fbb99ed7.js": "578360d24ce37383f261c7ef63b1f822d28e8dde",
     "https://gomezivann.github.io/MAPL_PWA/runtime.f9956ac3c2762746a398.js": "a9aafcf49f49145093fc831efd9b8e2f6c71bb9c",

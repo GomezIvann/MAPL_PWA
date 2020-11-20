@@ -8,5 +8,6 @@ export class Funcion {
 
     constructor (nombre: string) {
         this.nombre = nombre;
+        this.sizeParams = 0;
     }
 }
