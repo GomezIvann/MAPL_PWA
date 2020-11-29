@@ -49,6 +49,6 @@ export class EjecucionIncidencia extends Incidencia {
 }
 
 export enum TiposError {
-    Parser = "Parser",
+    Parser = "Lectura",
     Ejecucion = "Ejecución"
 }
