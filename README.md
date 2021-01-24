@@ -1,5 +1,5 @@
 # MAPL_PWA
-Reescribiendo la máquina didáctica MAPL como una PWA.
+**Trabajo de fin de carrera**. Reescribiendo la máquina didáctica MAPL como una PWA.
 
 ## Juego de instrucciones
 1. Manipulación de la pila:
