@@ -1,5 +1,5 @@
 # MAPL_PWA
-**Trabajo de fin de carrera**. Reescribiendo la máquina didáctica MAPL como una PWA.
+**Trabajo de fin de carrera**. Reescribiendo la máquina didáctica MAPL como una PWA gracias al framework Angular.
 
 ## Juego de instrucciones
 1. Manipulación de la pila:
