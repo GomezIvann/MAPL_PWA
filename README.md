@@ -33,15 +33,15 @@
 6. Conversiones:
    - `i2b` (int to byte)
    - `b2i f2i` (byte to int, float to int)
-   - i2f (int to float)
+   - `i2f` (int to float)
 7. Salto:
-   - jmp label
-   - jz label (jump if zero)
-   - jnz label (jump if no zero)
+   - `jmp label`
+   - `jz label` (jump if zero)
+   - `jnz label` (jump if no zero)
 8. Funciones
-   - call label
-   - ret cte1, cte2, cte3
-   - enter cte
+   - `call label`
+   - `ret cte1, cte2, cte3`
+   - `enter cte`
 9. Otras:
-   - halt
-   - nop
+   - `halt`
+   - `nop`
